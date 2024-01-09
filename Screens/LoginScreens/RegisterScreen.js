@@ -1,13 +1,31 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
 
 const RegisterScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [isButtonactive, setButtonactive] = useState(false);
+  const ButtonStatus = () => {
+    if (email != '' && name != '') {
+      setButtonactive(true);
+    } else {
+      setButtonactive(false);
+    }
+  }
+  useEffect(() => {
+    ButtonStatus();
+  }, [email, name]);
+  console.log(name);
+  console.log(email);
+  console.log(isButtonactive);
   return (
     <View>
-      <TextInput placeholder="이름" />
+      <TextInput placeholder="이름" onChangeText={setName}/>
       <View style={{flexDirection:'row', alignItems: 'center'}}>
-        <TextInput placeholder="이메일" />
-        <TouchableOpacity onPress={() => navigation.navigate('Authentication')}>
+        <TextInput placeholder="이메일" onChangeText={setEmail} />
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Authentication')} 
+          disabled={!isButtonactive}>
           <Text>인증번호 받기</Text>
         </TouchableOpacity>
       </View>
@@ -15,5 +33,5 @@ const RegisterScreen = ({navigation}) => {
   )
   
 }; 
-
+  
 export default RegisterScreen;
