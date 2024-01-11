@@ -14,7 +14,6 @@ const Home = () => null
 const Profile = () => null
 const Settings = () => null
 
-
 function BottomTabNavigator() {
   return (
     <Tab.Navigator initialRouteName='Home'>
@@ -39,7 +38,15 @@ const App = () => {
       });
       return unsubscribe;
   },[]);
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await messaging().getToken();
+      console.log(token);
+      // You can use the token or set it in the state here
+    };
 
+    getToken();
+  }, []);
     React.useEffect(() => {
         console.log("이펙트시작");
         setTimeout(() => {
