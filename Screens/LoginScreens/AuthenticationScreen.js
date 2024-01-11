@@ -4,21 +4,23 @@ import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 const AuthenticationScreen = ({navigation}) => {
   const [randomCode, setRandomCode] = useState('');
   const [authCode, setAuthCode] = useState('');
-  const [isButtonactive, setButtonactive] = useState(true);
+  const [isButtonactive, setButtonactive] = useState(false);
   
   const creatRandomCode = () => {
     setRandomCode(String (Math.floor(Math.random() * 1000000)).padStart(6, '0'));
-  }
+  };
   useEffect(() => {
     creatRandomCode();
   }, []);
+
   const checkAuthCode = () => {
     if (randomCode == authCode) {
       navigation.navigate('PasswordRegister');
     } else {
       Alert.alert('인증번호가 일치하지 않습니다.');
     }
-  }
+  };
+
   const changeButtonStatus = () => { 
     if (authCode != '') {
       setButtonactive(true);
@@ -26,7 +28,7 @@ const AuthenticationScreen = ({navigation}) => {
     else {
       setButtonactive(false);
     }
-  }
+  };
   useEffect(() => {
     changeButtonStatus();
   }, [authCode]);

@@ -5,22 +5,24 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [isButtonactive, setButtonactive] = useState(false);
+
   const changeButtonStatus = () => {
     if (email != '' && name != '') {
       setButtonactive(true);
     } else {
       setButtonactive(false);
     }
-  }
+  };
   useEffect(() => {
     changeButtonStatus();
   }, [email, name]);
+
   console.log(name);
   console.log(email);
   console.log(isButtonactive);
   return (
     <View>
-      <TextInput placeholder="이름" value={name}onChangeText={setName}/>
+      <TextInput placeholder="이름" value={name} onChangeText={setName}/>
       <View style={{flexDirection:'row', alignItems: 'center'}}>
         <TextInput placeholder="이메일" value={email} onChangeText={setEmail} />
         <TouchableOpacity 
