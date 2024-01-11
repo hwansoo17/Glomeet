@@ -3,6 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AuthStackScreen from './Screens/StackScreens/AuthStackScreen';
+import messaging from '@react-native-firebase/messaging';
+import {AsyncStorage} from 'react-native';
+import {useEffect} from "react";
+import pushNoti from "./pushNoti";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,15 +25,27 @@ function BottomTabNavigator() {
   )
 };
 
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('[백그라운드에서 수신한 메시지]', remoteMessage);
+    await pushNoti.displayNoti(remoteMessage);
+});
+
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(true);
-  
-  React.useEffect(() => {
-    console.log("이펙트시작");
-    setTimeout(() => {
-      setIsLoggedIn(false);
-    }, 2000);
-  });
+    const [isLoggedIn, setIsLoggedIn] = React.useState(true);
+  useEffect(() => {
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+          console.log('[온 앱 메시지]',remoteMessage);
+          pushNoti.displayNoti(remoteMessage);
+      });
+      return unsubscribe;
+  },[]);
+
+    React.useEffect(() => {
+        console.log("이펙트시작");
+        setTimeout(() => {
+            setIsLoggedIn(false);
+        }, 2000);
+    },[]);
 
   return (
     <NavigationContainer>
