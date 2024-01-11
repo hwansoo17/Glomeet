@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "625875313291",
+    "project_id": "glomeet-f03b2",
+    "storage_bucket": "glomeet-f03b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625875313291:android:7dd659d64be39e3aeb6a8e",
+        "android_client_info": {
+          "package_name": "com.glomeet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9910CaMQ3mTYMkK0lEQh5FrjC-91kpho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
