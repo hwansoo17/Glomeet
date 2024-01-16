@@ -46,6 +46,7 @@ const PasswordRegisterScreen = ({route, navigation}) => {
       });
       const data = await response.json();
       console.log(data);
+      Alert.alert('회원가입이 완료되었습니다.');
       navigation.navigate('Login');
     } else {
       Alert.alert('비밀번호가 일치하지 않습니다.');
