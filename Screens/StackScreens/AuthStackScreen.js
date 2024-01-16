@@ -1,20 +1,20 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../LoginScreens/LoginScreen';
-import AuthenticationScreen from '../LoginScreens/AuthenticationScreen';
-import PasswordRegisterScreen from '../LoginScreens/PasswordRegisterScreen';
-import EmailAuthScreen from '../LoginScreens/EmailAuthScreen';
+import LoginScreen from '../AuthScreens/LoginScreen';
+import AuthenticationScreen from '../AuthScreens/AuthenticationScreen';
+import RegisterScreen from '../AuthScreens/RegisterScreen';
+import EmailAuthScreen from '../AuthScreens/EmailAuthScreen';
 const Stack = createNativeStackNavigator();
 
 
 
 const AuthStackScreen = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Login'>
       <Stack.Screen name="Login" component={LoginScreen}/>
       <Stack.Screen name="EmailAuth" component={EmailAuthScreen}/>
       <Stack.Screen name="Authentication" component={AuthenticationScreen}/>
-      <Stack.Screen name="PasswordRegister" component={PasswordRegisterScreen}/>
+      <Stack.Screen name="Register" component={RegisterScreen}/>
     </Stack.Navigator>
   )
 };

@@ -1,49 +1,69 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AuthStackScreen from './Screens/StackScreens/AuthStackScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import HomeStackScreen from './Screens/StackScreens/HomeStackScreen';
+import MatchingStackScreen from './Screens/StackScreens/MatchingStackScreen';
+import MeetingStackScreen from './Screens/StackScreens/MeetingStackScreen';
+import ChattingStackScreen from './Screens/StackScreens/ChattingStackScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const Home = () => null
-const Profile = () => null
-const Settings = () => null
-
 
 function BottomTabNavigator() {
   return (
     <Tab.Navigator initialRouteName='Home'>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen 
+      name="홈" 
+      component={HomeStackScreen}
+      options={{ headerShown: false }} />
+      <Tab.Screen 
+      name="매칭" 
+      component={MatchingStackScreen}
+      options={{ headerShown: false }} />
+      <Tab.Screen 
+      name="미팅" 
+      component={MeetingStackScreen}
+      options={{ headerShown: false }} />
+      <Tab.Screen 
+      name="채팅" 
+      component={ChattingStackScreen}
+      options={{ headerShown: false }} />
     </Tab.Navigator>
   )
 };
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(true);
-  
-  React.useEffect(() => {
-    console.log("이펙트시작");
-    setTimeout(() => {
-      setIsLoggedIn(false);
-    }, 2000);
-  });
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem('token')
+    .then((value) => {
+      if (value) {
+        setInitialRoute('Root');
+      } else {
+        setInitialRoute('Auth');
+      }
+    })
+  }, []);
+
+  if (initialRoute === null) {
+    return null;
+  }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {isLoggedIn ? (
+      <Stack.Navigator initialRouteName={initialRoute}>
         <Stack.Screen 
         name="Root" 
         component={BottomTabNavigator}
         options={{ headerShown: false }}/>
-        ):(
         <Stack.Screen
         name="Auth"
         component={AuthStackScreen}
-        options={{ headerShown: false }}/>)}
+        options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
