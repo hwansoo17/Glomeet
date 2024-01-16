@@ -27,7 +27,9 @@ end
 
 target 'Glomeet' do
   config = use_native_modules!
-
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  inherit! :complete
   use_react_native!(
     :path => config[:reactNativePath],
     # Enables Flipper.
