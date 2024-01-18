@@ -32,15 +32,11 @@ const EmailAuthScreen = ({navigation}) => {
         },
         body: JSON.stringify({email: email})
       });
-
-      const data = await response.json();
-      console.log(data);
-
-      if (data.valid) {
+      console.log(response.status);
+      if (response.status == 200) {
         code = String (Math.floor(Math.random() * 1000000)).padStart(6, '0')
         setRandomCode(code);
         console.log(randomCode);
-        Alert.alert('인증번호가 전송되었습니다.');
         const response = await fetch(config.SERVER_URL+'/mail/auth', {
           method: 'POST',
           headers: {
@@ -48,6 +44,11 @@ const EmailAuthScreen = ({navigation}) => {
           },
           body: JSON.stringify({email: email, randomCode: code})
         });
+        if (response.status == 200) {
+          Alert.alert('인증번호가 전송되었습니다.');
+        } else {
+          Alert.alert('인증번호 전송에 실패하였습니다.');
+        }
         console.log(code);
       }else {
         Alert.alert('이미 가입된 이메일입니다.');
@@ -58,7 +59,7 @@ const EmailAuthScreen = ({navigation}) => {
   console.log(authCode)
   const checkAuthCode = () => {
     if (randomCode == authCode) {
-      navigation.navigate('PasswordRegister', {email: email});
+      navigation.navigate('Register', {email: email});
     } else {
       Alert.alert('인증번호가 일치하지 않습니다.');
     }

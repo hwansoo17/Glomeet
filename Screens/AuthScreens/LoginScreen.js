@@ -9,25 +9,31 @@ const LoginScreen = ({navigation}) => {
     
   const login = async () => {
     try {
+      const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await fetch(config.SERVER_URL+'/auth/signIn', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email: email, password: password})
+        body: JSON.stringify({email: email, password: password, fcmToken: fcmToken})
       });
       if (response.status == 200) {
         const data = await response.json();
-        await AsyncStorage.setItem('token', data.token)
+        await AsyncStorage.setItem('email', email).then(() => {
+          console.log('Email saved')
+        });
+        await AsyncStorage.setItem('token', data.accessToken)
+        await AsyncStorage.setItem('token', data.refreshToken)
         .then(() => {
           console.log('Token saved');
         })
-        navigation.reset({ routes: [{ name: 'Root' }],
-        });
+        console.log(data);
+        navigation.navigate('Root', {screen: 'Home'});
       } else {
         Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.');
       }
       console.log(response.status)
+      
     } catch (e) {
       console.log(e);
     }
@@ -53,6 +59,10 @@ const LoginScreen = ({navigation}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('EmailAuth')}>
         <Text>회원가입</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Root')}>
+        <Text>홈스크린</Text>
       </TouchableOpacity>
     </View>
   )

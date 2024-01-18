@@ -11,6 +11,10 @@ import ChattingStackScreen from './Screens/StackScreens/ChattingStackScreen';
 import messaging from '@react-native-firebase/messaging';
 import pushNoti from "./pushNoti";
 
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('[백그라운드에서 수신한 메시지]', remoteMessage);
+  await pushNoti.displayNoti(remoteMessage);
+});
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -38,11 +42,6 @@ function BottomTabNavigator() {
   )
 };
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('[백그라운드에서 수신한 메시지]', remoteMessage);
-    await pushNoti.displayNoti(remoteMessage);
-});
-
 const App = () => {
   const [initialRoute, setInitialRoute] = useState(null);
 
@@ -56,28 +55,28 @@ const App = () => {
       }
     })
   }, []);
+
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
         console.log('[온 앱 메시지]',remoteMessage);
         pushNoti.displayNoti(remoteMessage);
     });
     return unsubscribe;
-},[]);
-useEffect(() => {
-  const getToken = async () => {
-    const token = await messaging().getToken();
-    console.log(token);
-    // You can use the token or set it in the state here
-  };
+  }, []);
 
-  getToken();
-}, []);
+  useEffect(() => {
+    const getFcmToken = async () => {
+      const fcmToken = await messaging().getToken();
+      await AsyncStorage.setItem('fcmToken', fcmToken);
+      console.log(fcmToken);
+    };
+
+    getFcmToken();
+  }, []);
 
   if (initialRoute === null) {
     return null;
   }
-
-
 
   return (
     <NavigationContainer>

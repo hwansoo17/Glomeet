@@ -1,4 +1,4 @@
-import notifee, {AndroidImportance, AndroidColor} from '@notifee/react-native';
+import notifee, {AndroidImportance} from '@notifee/react-native';
 
 const displayNotification = async message => {
     const channelAnnouncement = await notifee.createChannel({
@@ -8,8 +8,8 @@ const displayNotification = async message => {
     });
 
     await notifee.displayNotification({
-        title: message.notification.title,
-        body: message.notification.body,
+        title: message.data.title,
+        body: message.data.body,
         android: {
             channelId: channelAnnouncement,
             smallIcon: 'ic_launcher',

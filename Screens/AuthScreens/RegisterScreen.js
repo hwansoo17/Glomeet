@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import config from '../../config';
-const PasswordRegisterScreen = ({route, navigation}) => {
+const RegisterScreen = ({route, navigation}) => {
   const {email} = route.params;
   const [nickName, setNickName] = useState('');
   const [password, setPassword] = useState('');
@@ -16,9 +16,9 @@ const PasswordRegisterScreen = ({route, navigation}) => {
       },
       body: JSON.stringify({nickName : nickName})
     });
-    const data = await response.json();
+    console.log(response.status);
 
-    if (data.valid) {
+    if (response.status == 200) {
       Alert.alert('사용 가능한 닉네임입니다.');
     } else {
       Alert.alert('이미 사용중인 닉네임입니다.');
@@ -44,13 +44,15 @@ const PasswordRegisterScreen = ({route, navigation}) => {
         },
         body: JSON.stringify({email: email, nickName: nickName, password: password})
       });
-      const data = await response.json();
-      console.log(data);
-      Alert.alert('회원가입이 완료되었습니다.');
-      navigation.navigate('Login');
+      if (response.status == 200) {
+        Alert.alert('회원가입이 완료되었습니다.');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('회원가입에 실패하였습니다.');
+      }
     } else {
-      Alert.alert('비밀번호가 일치하지 않습니다.');
-    }
+      Alert.alert('비밀번호가 일치하지 않습니다.');    
+    };
   };
 
 console.log(typeof(password));
@@ -83,4 +85,4 @@ console.log(typeof(password));
   
 }
 
-export default PasswordRegisterScreen;
+export default RegisterScreen;
