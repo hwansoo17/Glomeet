@@ -8,7 +8,7 @@ const MatchingMainScreen = ({navigation}) => {
         <View>
             <Text>MatchingMainScreen</Text>
             <TouchableOpacity onPress={() => navigation.navigate('MatchingFilter')}>
-                <Text>필터</Text>
+                <Text>매칭하러 가기</Text>
             </TouchableOpacity>
         </View>
     )
