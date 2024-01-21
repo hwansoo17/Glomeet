@@ -13,7 +13,7 @@ import pushNoti from "./pushNoti";
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('[백그라운드에서 수신한 메시지]', remoteMessage);
-  await pushNoti.displayNoti(remoteMessage);
+  await pushNoti.displayNoti(remoteMessage.data.title, remoteMessage.data.body);
 });
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,7 +59,7 @@ const App = () => {
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
         console.log('[온 앱 메시지]',remoteMessage);
-        pushNoti.displayNoti(remoteMessage);
+        pushNoti.displayNoti(remoteMessage.data.title, remoteMessage.data.body);
     });
     return unsubscribe;
   }, []);

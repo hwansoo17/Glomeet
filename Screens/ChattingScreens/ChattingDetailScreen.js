@@ -1,6 +1,7 @@
 import React,{useState, useLayoutEffect, useEffect} from "react";
 import {View, Text, TouchableOpacity, TextInput, FlatList} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import pushNoti from '../../pushNoti'
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 
@@ -19,7 +20,9 @@ const ChattingDetailScreen = ({route, navigation}) => {
 
             ws.onmessage = (e) => {
                 const newMessage = JSON.parse(e.data);
+                console.log(newMessage);
                 setMessages(prevMessages => [...prevMessages, newMessage]);
+                pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
             }
 
             ws.onerror = (e) => {
@@ -36,7 +39,6 @@ const ChattingDetailScreen = ({route, navigation}) => {
             if (socket) {
             socket.close();
         }}
-        
     }, []);
     console.log(socket);
     const {chat} = route.params;

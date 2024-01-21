@@ -1,6 +1,6 @@
 import notifee, {AndroidImportance} from '@notifee/react-native';
 
-const displayNotification = async message => {
+const displayNotification = async (title, body) => {
     const channelAnnouncement = await notifee.createChannel({
         id: 'default',
         name: '글로밋',
@@ -8,8 +8,8 @@ const displayNotification = async message => {
     });
 
     await notifee.displayNotification({
-        title: message.data.title,
-        body: message.data.body,
+        title: title,
+        body: body,
         android: {
             channelId: channelAnnouncement,
             smallIcon: 'ic_launcher',
@@ -18,5 +18,5 @@ const displayNotification = async message => {
 };
 
 export default {
-    displayNoti: remoteMessage => displayNotification(remoteMessage),
+    displayNoti: (title, body) => displayNotification(title, body),
 };
