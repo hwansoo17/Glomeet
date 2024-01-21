@@ -22,8 +22,8 @@ const LoginScreen = ({navigation}) => {
         await AsyncStorage.setItem('email', email).then(() => {
           console.log('Email saved')
         });
-        await AsyncStorage.setItem('token', data.accessToken)
-        await AsyncStorage.setItem('token', data.refreshToken)
+        await AsyncStorage.setItem('accessToken', data.accessToken)
+        await AsyncStorage.setItem('refreshToken', data.refreshToken)
         .then(() => {
           console.log('Token saved');
         })

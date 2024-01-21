@@ -18,7 +18,7 @@ const HomeMainScreen = ({navigation}) => {
       await AsyncStorage.removeItem('email').then(() => {
         console.log('Email removed');
       });
-      await AsyncStorage.removeItem('token').then(() => {
+      await AsyncStorage.removeItem('accessToken').then(() => {
         console.log('Token removed');
       });
       navigation.replace('Auth');
