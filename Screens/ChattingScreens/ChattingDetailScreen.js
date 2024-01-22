@@ -2,6 +2,7 @@ import React,{useState, useLayoutEffect, useEffect} from "react";
 import {View, Text, TouchableOpacity, TextInput, FlatList} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import pushNoti from '../../pushNoti'
+import config from '../../config'
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 
@@ -13,7 +14,7 @@ const ChattingDetailScreen = ({route, navigation}) => {
         AsyncStorage.getItem('email').then(email => {
             setEmail(email);
             console.log(email);
-            const ws = new WebSocket('ws://52.78.219.76:8080/chat?email='+email);
+            const ws = new WebSocket(config.WebSocket_URL+email);
             ws.onopen = () => {
                 console.log('connected');
             };
@@ -45,6 +46,7 @@ const ChattingDetailScreen = ({route, navigation}) => {
     const [message, setMessage] = useState('');
 
     const sendMessage = () => {
+        console.log(message);
         if (socket && message.trim()) {
             const newMessage = {message: message, senderEmail: email, chatRoomId: chat.id };
             socket.send(JSON.stringify(newMessage));
@@ -72,7 +74,7 @@ const ChattingDetailScreen = ({route, navigation}) => {
         )
     };
 
-    console.log(message);
+    
     return (
         <View style={{flex:1, backgroundColor: 'white'}}>
             <FlatList

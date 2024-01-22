@@ -22,6 +22,7 @@ const EmailAuthScreen = ({navigation}) => {
   }, [email]);
 
   const AuthCodeSend = async () => {
+    console.log(email)
     if (!emailValid) {
       Alert.alert('이메일 형식이 올바르지 않습니다.');
     } else {
@@ -55,9 +56,9 @@ const EmailAuthScreen = ({navigation}) => {
       };
     };
   };
-  console.log(email)
-  console.log(authCode)
+
   const checkAuthCode = () => {
+    console.log(randomCode, authCode);
     if (randomCode == authCode) {
       navigation.navigate('Register', {email: email});
     } else {
