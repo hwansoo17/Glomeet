@@ -10,38 +10,40 @@ const ChattingDetailScreen = ({route, navigation}) => {
     const [socket, setSocket] = useState(null);
     const [messages, setMessages] = useState([]);
     const [email, setEmail] = useState('');
+    
     useEffect(() => {
-        AsyncStorage.getItem('email').then(email => {
+        const getEmail = async () => {
+            const email = await AsyncStorage.getItem('email');
             setEmail(email);
-            console.log(email);
-            const ws = new WebSocket(config.WebSocket_URL+email);
-            ws.onopen = () => {
-                console.log('connected');
-            };
+        }
+        getEmail();
+        const ws = new WebSocket(config.WebSocket_URL+email);
+        ws.onopen = () => {
+            console.log('connected');
+        };
 
-            ws.onmessage = (e) => {
-                const newMessage = JSON.parse(e.data);
-                console.log(newMessage);
-                setMessages(prevMessages => [...prevMessages, newMessage]);
-                pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
-            }
+        ws.onmessage = (e) => {
+            const newMessage = JSON.parse(e.data);
+            console.log(newMessage);
+            setMessages(prevMessages => [...prevMessages, newMessage]);
+            pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
+        }
 
-            ws.onerror = (e) => {
-                console.log(e.message);
-            }
+        ws.onerror = (e) => {
+            console.log(e.message);
+        }
 
-            ws.onclose = (e) => {
-                console.log('websocket closed');
-            }
+        ws.onclose = (e) => {
+            console.log('websocket closed');
+        }
 
-            setSocket(ws);
-        })
+        setSocket(ws);
+
         return () => {
-            if (socket) {
-            socket.close();
-        }}
+            ws.close();
+        }
     }, []);
-    console.log(socket);
+    
     const {chat} = route.params;
     const [message, setMessage] = useState('');
 
