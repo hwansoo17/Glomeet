@@ -1,52 +1,54 @@
-import React,{useState, useLayoutEffect, useEffect} from "react";
+import React,{useState, useLayoutEffect, useEffect, useRef} from "react";
 import {View, Text, TouchableOpacity, TextInput, FlatList} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import pushNoti from '../../pushNoti'
 import config from '../../config'
+import { useActiveChatRoom } from '../../ActiveChatRoomContext';
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
-
+const email = 'playground99@ajou.ac.kr'; 
 const ChattingDetailScreen = ({route, navigation}) => {
     const [socket, setSocket] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [email, setEmail] = useState('');
-    
+    const { setActiveChatRoomId } = useActiveChatRoom();
+    const ws = useRef(null);
     useEffect(() => {
-        const getEmail = async () => {
-            const email = await AsyncStorage.getItem('email');
-            setEmail(email);
+        if (!ws.current) {
+        ws.current = new WebSocket(config.WebSocket_URL+email);
+            console.log(ws);
+            ws.current.onopen = () => {
+                console.log('개인채팅방에 연결됐습니다.');
+            };
         }
-        getEmail();
-        const ws = new WebSocket(config.WebSocket_URL+email);
-        ws.onopen = () => {
-            console.log('connected');
-        };
+            ws.current.onmessage = (e) => {
+                const newMessage = JSON.parse(e.data);
+                console.log(newMessage);
+                setMessages(prevMessages => [...prevMessages, newMessage]);
+            };
 
-        ws.onmessage = (e) => {
-            const newMessage = JSON.parse(e.data);
-            console.log(newMessage);
-            setMessages(prevMessages => [...prevMessages, newMessage]);
-            pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
-        }
+            ws.current.onerror = (e) => {
+                console.log(e.message);
+            };
 
-        ws.onerror = (e) => {
-            console.log(e.message);
-        }
+            ws.current.onclose = (e) => {
+                console.log('websocket closed');
+            };
 
-        ws.onclose = (e) => {
-            console.log('websocket closed');
-        }
+            setSocket(ws);
 
-        setSocket(ws);
-
-        return () => {
-            ws.close();
-        }
     }, []);
-    
-    const {chat} = route.params;
-    const [message, setMessage] = useState('');
 
+    const {chat} = route.params;
+    
+    const [message, setMessage] = useState('');
+    useEffect(() => {
+        // 채팅방에 들어갈 때 활성화된 채팅방 ID 설정
+        setActiveChatRoomId(chat.id);
+        return () => {
+          // 채팅방에서 나갈 때 활성화된 채팅방 ID 해제
+          setActiveChatRoomId(null);
+        };
+      }, [chat.id]);
     const sendMessage = () => {
         console.log(message);
         if (socket && message.trim()) {

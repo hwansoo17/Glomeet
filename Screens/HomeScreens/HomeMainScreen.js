@@ -21,12 +21,16 @@ const HomeMainScreen = ({navigation}) => {
       await AsyncStorage.removeItem('accessToken').then(() => {
         console.log('Token removed');
       });
+      await AsyncStorage.removeItem('refreshToken').then(() => {
+        console.log('Token removed');
+      });
       navigation.replace('Auth');
       console.log('로그아웃 성공');
     } else {
       console.log('로그아웃 실패');
     }
   }
+
   return (
     <View>
       <Text>MainScreen</Text>

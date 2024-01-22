@@ -9,6 +9,7 @@ const topTab = createMaterialTopTabNavigator();
 
 const ChattingMainScreen = ({navigation}) => {
     
+
     return (
         <topTab.Navigator>
             <topTab.Screen name="매칭" component={MatchingChatListScreen}/>
