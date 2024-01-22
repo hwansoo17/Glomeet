@@ -17,6 +17,7 @@ const LoginScreen = ({navigation}) => {
         },
         body: JSON.stringify({email: email, password: password, fcmToken: fcmToken})
       });
+      console.log(email, password)
       if (response.status == 200) {
         const data = await response.json();
         await AsyncStorage.setItem('email', email).then(() => {
@@ -39,8 +40,7 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
-  console.log(email);
-  console.log(password);
+
   return (
     <View>
       <TextInput 
