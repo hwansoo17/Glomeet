@@ -8,6 +8,7 @@ const LoginScreen = ({navigation}) => {
 
     
   const login = async () => {
+    console.log(email, password)
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await fetch(config.SERVER_URL+'/auth/signIn', {
@@ -17,7 +18,6 @@ const LoginScreen = ({navigation}) => {
         },
         body: JSON.stringify({email: email, password: password, fcmToken: fcmToken})
       });
-      console.log(email, password)
       if (response.status == 200) {
         const data = await response.json();
         await AsyncStorage.setItem('email', email).then(() => {

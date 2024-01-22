@@ -55,7 +55,6 @@ const RegisterScreen = ({route, navigation}) => {
     };
   };
 
-console.log(typeof(password));
   return (
     <View>
       <View style={{flexDirection:'row', alignItems: 'center'}}>
