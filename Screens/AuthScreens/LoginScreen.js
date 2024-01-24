@@ -16,7 +16,7 @@ const LoginScreen = ({navigation}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email: email, password: password, fcmToken: fcmToken})
+        body: JSON.stringify({email: email, password: password, fcmToken: 'aaaa'})
       });
       if (response.status == 200) {
         const data = await response.json();
