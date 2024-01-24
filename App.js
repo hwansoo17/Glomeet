@@ -43,10 +43,26 @@ function BottomTabNavigator() {
   )
 };
 
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+    const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    // const apnsToken = await messaging().getAPNSToken(); 이거 원래 쓴다는데 이거 안쓰고도 됨;
+  if (enabled) {
+      const fcmToken = await messaging().getToken();
+      console.log('fcmtoken: ' + fcmToken);
+      await AsyncStorage.setItem('fcmToken', fcmToken);
+    } else {
+      console.log('알림 비활성화한 유저');
+    }
+}
+
 const App = () => {
   const [initialRoute, setInitialRoute] = useState(null);
-
+  requestUserPermission();
   const checkLoginStatus = async () => {
+     
     const email = await AsyncStorage.getItem('email');
     const accessToken = await AsyncStorage.getItem('accessToken');
     const refreshToken = await AsyncStorage.getItem('refreshToken');
@@ -106,13 +122,12 @@ const App = () => {
 
   useEffect(() => {
     const getFcmToken = async () => {
-      const fcmToken = await messaging().getToken();
-      await AsyncStorage.setItem('fcmToken', fcmToken);
-      console.log('fcm토큰'+fcmToken);
-    };
-
+        const fcmToken = await messaging().getToken();
+        await AsyncStorage.setItem('fcmToken', fcmToken);  
+        return;
+      }
     getFcmToken();
-  }, []);
+  }, [])
 
   if (initialRoute === null) {
     return null;
