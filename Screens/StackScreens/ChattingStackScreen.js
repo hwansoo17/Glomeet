@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChattingMainScreen from '../ChattingScreens/ChattingMainScreen';
 import ChattingDetailScreen from '../ChattingScreens/ChattingDetailScreen';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { useContext } from "react";
 const Stack = createNativeStackNavigator();
 
 const ChattingStackScreen = ({navigation, route}) => {
