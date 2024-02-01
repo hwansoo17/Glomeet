@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as StompJs from "@stomp/stompjs";
 import config from "./config";
 import EventEmitter from "react-native-eventemitter";
-import { Alert } from "react-native";
 
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
@@ -74,13 +73,16 @@ export const WebSocketProvider = ({ children }) => {
     try {
       const accessToken = await AsyncStorage.getItem("accessToken");
       const clientData = new StompJs.Client({
-        brokerURL: "ws://localhost:8080/ws/chat",
+        brokerURL: config.WebSocket_URL,
+        forceBinaryWSFrames: true,
+        appendMissingNULLonIncoming: true,
+        logRawCommunication: true,
         connectHeaders: {
           accessToken: accessToken,
         },
         reconnectDelay : 0,
         debug: function(str) {
-          // console.log(str);
+          // console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
         },
       });
 

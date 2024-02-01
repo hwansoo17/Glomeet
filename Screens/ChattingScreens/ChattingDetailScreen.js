@@ -24,7 +24,6 @@ const ChattingDetailScreen = ({ route, navigation }) => {
     const messageListener = (message) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
-      console.log("메시지 리스너 작동");
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
@@ -56,7 +55,7 @@ const ChattingDetailScreen = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message);
+    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000");
 
     setMessage("");
   };

@@ -11,7 +11,6 @@ const LoginScreen = ({navigation}) => {
   const login = async () => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
-      console.log(fcmToken)
       const response = await fetch(config.SERVER_URL+'/auth/signIn', {
         method: 'POST',
         headers: {
