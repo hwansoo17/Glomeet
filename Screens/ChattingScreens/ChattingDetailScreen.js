@@ -3,33 +3,30 @@ import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import config from "../../config";
+import { useWebSocket } from "../../WebSocketProvider";
 
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const ChattingDetailScreen = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const webSocketClient = useWebSocket();
 
   const chat = route.params.chat;
-  const client = route.params.client;
-
-  LogBox.ignoreLogs([
-    " Non-serializable values were found in the navigation state",
-  ]);
 
   useEffect(() => {
-
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
     };
 
-    const messageListener = EventEmitter.addListener("newMessage", (message) => {
+    const messageListener = (message) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
-      console.log('메시지 리스너 작동');
+      console.log("메시지 리스너 작동");
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+    };
 
     const getMessageList = async () => {
       const accessToken = await AsyncStorage.getItem("accessToken");
@@ -44,32 +41,22 @@ const ChattingDetailScreen = ({ route, navigation }) => {
       const data = await response.json();
       setMessages(data);
     };
-
-    initialize().then(getMessageList).then(messageListener);
-    // initialize().then(r => messageListener());
+    initialize().then(getMessageList)
+      .then(() => EventEmitter.on("newMessage", messageListener));
 
     return () => {
       setMessages([]);
-      messageListener.removeListener("newMessage")
+      // messageListener.removeListener("newMessage")
+      EventEmitter.removeListener("newMessage", messageListener);
     };
   }, []);
-
-  const [message, setMessage] = useState("");
 
   const sendMessage = () => {
     if (message === "") {
       return;
     }
 
-    client.publish({
-      destination: "/pub/chat/" + chat.id,
-      Headers: "application/json",
-      body: JSON.stringify({
-        senderEmail: email,
-        chatRoomId: chat.id,
-        message: message,
-      }),
-    });
+    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message);
 
     setMessage("");
   };

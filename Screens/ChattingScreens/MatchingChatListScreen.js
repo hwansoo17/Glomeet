@@ -2,22 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import config from "../../config";
-import * as StompJs from "@stomp/stompjs";
-import EventEmitter from "react-native-eventemitter";
 
 const MatchingChatListScreen = ({ navigation }) => {
   const [chatData, setChatdata] = useState([]);
   let [client, changeClient] = useState(null);
-  const TextEncodingPolyfill = require("text-encoding");
-  Object.assign("global", {
-    TextEncoder: TextEncodingPolyfill.TextEncoder,
-    TextDecoder: TextEncodingPolyfill.TextDecoder,
-  });
-
-  const handleWebSocketMessage = (message) => {
-    // 메시지 이벤트를 발생시킴
-    EventEmitter.emit("newMessage", message);
-  };
 
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
@@ -58,45 +46,12 @@ const MatchingChatListScreen = ({ navigation }) => {
       console.log("토큰 재발급 실패");
       return [];
     }
-    ;
-  };
+  }
 
-  const connectWebSocket = async (chatData) => {
-    // 소켓 연결
-    try {
-      const accessToken = await AsyncStorage.getItem("accessToken");
-      const clientdata = new StompJs.Client({
-        brokerURL: "ws://localhost:8080/ws/chat",
-        connectHeaders: {
-          accessToken: accessToken,
-        },
-        debug: function(str) {
-          // console.log(str);
-        },
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-      });
-
-      // 구독 (내가 속해있는 채팅방 등록하는)
-      clientdata.onConnect = () => {
-        chatData.forEach((chat) => {
-          clientdata.subscribe("/sub/chat/" + chat.id, (message) => {
-            handleWebSocketMessage(message);
-          });
-        });
-        changeClient(clientdata); // 클라이언트 갱신
-      };
-
-      clientdata.activate(); // 클라이언트 활성화
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedChatData = await getChatList();
-      connectWebSocket(fetchedChatData);
     };
     fetchData();
   }, []);
