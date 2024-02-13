@@ -24,11 +24,11 @@ const MatchingChatListScreen = ({ navigation }) => {
       setChatdata(chatData);
       return chatData;
     } else {
-      return reIssueToken();
+      return reIssueToken(email, refreshToken);
     }
   };
 
-  const reIssueToken = async () => {
+  const reIssueToken = async (email, refreshToken) => {
     const tokenResponse = await fetch(config.SERVER_URL + "/token/re-issue", {
       method: "POST",
       headers: {
@@ -38,7 +38,7 @@ const MatchingChatListScreen = ({ navigation }) => {
     });
 
     if (tokenResponse.status == 200) {
-      const data = await response.json();
+      const data = await tokenResponse.json();
       await AsyncStorage.setItem("accessToken", data.accessToken);
       await AsyncStorage.setItem("refreshToken", data.refreshToken);
       return getChatList();
