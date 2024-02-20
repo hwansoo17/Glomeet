@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
-import config from '../../config';
-const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr$/;
+import { api } from '../../api';
+const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+//const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
 const EmailAuthScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [emailValid, setEmailValid] = useState(false);
@@ -16,6 +17,10 @@ const EmailAuthScreen = ({navigation}) => {
       setButtonactive(false);
     }
   };
+  const createRandomCode = () => {
+    return String(Math.floor(Math.random() * 1000000)).padStart(6, '0')  
+  }
+
   useEffect(() => {
     changeButtonStatus();
     setEmailValid(emailRegEx.test(email));
@@ -25,38 +30,40 @@ const EmailAuthScreen = ({navigation}) => {
     console.log(email)
     if (!emailValid) {
       Alert.alert('이메일 형식이 올바르지 않습니다.');
-    } else {
-      const response = await fetch(config.SERVER_URL+'/auth/emailCheck', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email})
-      });
+      return;
+    } 
+    try {
+      const response = await api.post('/auth/emailCheck', {email})
       console.log(response.status);
-      if (response.status == 200) {
-        code = String (Math.floor(Math.random() * 1000000)).padStart(6, '0')
-        setRandomCode(code);
-        console.log(randomCode);
-        const response = await fetch(config.SERVER_URL+'/mail/auth', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email: email, randomCode: code})
-        });
         if (response.status == 200) {
-          Alert.alert('인증번호가 전송되었습니다.');
-        } else {
-          Alert.alert('인증번호 전송에 실패하였습니다.');
-        }
-        console.log(code);
-      }else {
-        Alert.alert('이미 가입된 이메일입니다.');
+          const code = createRandomCode()
+          console.log(code);
+          try {
+            const response = await api.post('/mail/auth', {email, randomCode: code});
+            if (response.status == 200) {
+              console.log(code);
+              console.log(response.status);
+              setRandomCode(code);
+              Alert.alert('인증번호가 전송되었습니다.');
+            };
+          } catch (error) {
+            if (error.response.status == 400) {
+            console.log()
+            console.log(error, '인증번호');
+            Alert.alert(error.response.data.message);
+            } else {
+              console.log(error);
+              Alert.alert('인증번호 전송에 실패하였습니다.');
+            };
+          };
+        };
+    } catch (error) {
+      if (error.response.status == 409) {
+      Alert.alert('이미 가입된 이메일입니다.');
+      console.log(error);
       };
     };
   };
-
   const checkAuthCode = () => {
     console.log(randomCode, authCode);
     if (randomCode == authCode) {

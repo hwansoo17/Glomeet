@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, TextInput, Text, TouchableOpacity, Alert} from 'react-native';
 import config from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
+import { api } from '../../api';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,29 +12,21 @@ const LoginScreen = ({navigation}) => {
   const login = async () => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
-      const response = await fetch(config.SERVER_URL+'/auth/signIn', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email, password: password, fcmToken: fcmToken})
-      });
+      const response = await api.post('/auth/signIn', {email, password, fcmToken})
       if (response.status == 200) {
-        const data = await response.json();
-        await AsyncStorage.setItem('email', email).then(() => {
-        });
-        await AsyncStorage.setItem('accessToken', data.accessToken)
-        await AsyncStorage.setItem('refreshToken', data.refreshToken)
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('accessToken', response.data.accessToken)
+        await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
         await webSocketClient.login();
         navigation.navigate('Root', {screen: 'Home'});
-      } else {
-        Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.');
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      if (error.response.status == 401) {
+        console.log(error);
+        Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.');;
+      }
     }
   };
-
 
   return (
     <View>

@@ -10,11 +10,10 @@ import MeetingStackScreen from "./Screens/StackScreens/MeetingStackScreen";
 import ChattingStackScreen from "./Screens/StackScreens/ChattingStackScreen";
 import messaging from "@react-native-firebase/messaging";
 import pushNoti from "./pushNoti";
-import config from "./config";
 import { WebSocketProvider } from "./WebSocketProvider";
+import { authApi } from "./api"
 
 export const AppContext = createContext();
-
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
   await pushNoti.displayNoti(remoteMessage.notification.title, remoteMessage.notification.body);
@@ -67,40 +66,15 @@ const App = () => {
 
   const checkLoginStatus = async () => {
     await requestUserPermission();
-    const email = await AsyncStorage.getItem("email");
     const accessToken = await AsyncStorage.getItem("accessToken");
-    const refreshToken = await AsyncStorage.getItem("refreshToken");
     //엑세스 토큰이 있으면 토큰 유효성 검사
     if (accessToken) {
-      const response = await fetch(config.SERVER_URL + "/token/checkToken", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + accessToken,
-        },
-      });
-      //토큰이 유효하면 이니셜 라우트를 홈으로 설정(자동 로그인)
-      if (response.status == 200) {
+      try {
+        const response = await authApi.post("/token/checkToken");
+        // 토큰이 유효하면 이니셜 라우트를 홈으로 설정(자동 로그인)
         setInitialRoute("Root");
-      } else {
-        //토큰이 유효하지 않으면 토큰 재발급 시도
-        const response = await fetch(config.SERVER_URL + "/token/re-issue", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: email, refreshToken: refreshToken }),
-        });
-        //토큰 재발급 성공하면 토큰 저장하고 함수 재실행
-        if (response.status == 200) {
-          const data = await response.json();
-          await AsyncStorage.setItem("accessToken", data.accessToken);
-          await AsyncStorage.setItem("refreshToken", data.refreshToken);
-          setInitialRoute("Root");
-        } else {
-          //토큰 재발급 실패하면 로그인 화면으로 이동
-          setInitialRoute("Auth");
-        }
+      } catch (error) {
+        setInitialRoute("Auth");
       }
     } else {
       //엑세스 토큰이 없으면 로그인 화면으로 이동

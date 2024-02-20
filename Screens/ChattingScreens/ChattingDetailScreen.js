@@ -2,9 +2,8 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
-import config from "../../config";
 import { useWebSocket } from "../../WebSocketProvider";
-
+import {authApi} from "../../api";
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const ChattingDetailScreen = ({ route, navigation }) => {
@@ -28,17 +27,17 @@ const ChattingDetailScreen = ({ route, navigation }) => {
     };
 
     const getMessageList = async () => {
-      const accessToken = await AsyncStorage.getItem("accessToken");
-      const response = await fetch(config.SERVER_URL + "/chat/message-list", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + accessToken,
-        },
-        body: JSON.stringify({ "chatRoomId": chat.id }),
-      });
-      const data = await response.json();
-      setMessages(data);
+      try {
+        const response = await authApi.post("/chat/message-list", { "chatRoomId": chat.id });
+        if (response.status == 200) {
+          setMessages(response.data);
+          console.log(response.data, '메시지 받아오기 성공');
+        }
+      } catch (error) {
+        if (error.response.status == 401) {
+        console.log(error);
+        };
+      };
     };
     initialize().then(getMessageList)
       .then(() => EventEmitter.on("newMessage", messageListener));

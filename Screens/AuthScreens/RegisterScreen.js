@@ -1,27 +1,26 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
-import config from '../../config';
+import { api } from '../../api';
+
 const RegisterScreen = ({route, navigation}) => {
   const {email} = route.params;
   const [nickName, setNickName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isButtonactive, setButtonactive] = useState(false);
-  console.log(email)
+  
   const doubleCheckName = async () => {
-    const response = await fetch(config.SERVER_URL+'/auth/nickNameCheck', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({nickName : nickName})
-    });
-    console.log(response.status);
-
-    if (response.status == 200) {
-      Alert.alert('사용 가능한 닉네임입니다.');
-    } else {
-      Alert.alert('이미 사용중인 닉네임입니다.');
+    try {
+      const response = await api.post('/auth/nickNameCheck', {nickName : nickName});
+      console.log(response.status);
+      if (response.status == 200) {
+        Alert.alert('사용 가능한 닉네임입니다.');
+      } 
+    } catch (error) {
+      if (error.response.status == 409) {
+        Alert.alert('이미 사용중인 닉네임입니다.');
+      console.log(error);
+      };
     };
   };
   const changeButtonStatus = () => {
@@ -35,20 +34,18 @@ const RegisterScreen = ({route, navigation}) => {
     changeButtonStatus();
   }, [password, passwordCheck]);
 
-  const checkPasswordSame = async () => {
+  const signUp = async () => {
     if (password === passwordCheck) {
-      const response = await fetch(config.SERVER_URL+'/auth/signUp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email, nickName: nickName, password: password})
-      });
-      if (response.status == 200) {
-        Alert.alert('회원가입이 완료되었습니다.');
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('회원가입에 실패하였습니다.');
+      try {
+        const response = await api.post('/auth/signUp', {email, nickName, password});
+        if (response.status == 200) {
+          Alert.alert('회원가입이 완료되었습니다.');
+          navigation.navigate('Login');
+        }
+      } catch (error) {
+        if (error.response.status == 409) {
+          Alert.alert('회원가입에 실패하였습니다.');
+        } 
       }
     } else {
       Alert.alert('비밀번호가 일치하지 않습니다.');    
@@ -75,7 +72,7 @@ const RegisterScreen = ({route, navigation}) => {
         value={passwordCheck}
         onChangeText={setPasswordCheck}/>
       <TouchableOpacity 
-        onPress={checkPasswordSame}
+        onPress={signUp}
         disabled={!isButtonactive}>
         <Text>회원가입</Text>
       </TouchableOpacity>

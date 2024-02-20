@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as StompJs from "@stomp/stompjs";
 import config from "./config";
 import EventEmitter from "react-native-eventemitter";
-
+import {authApi} from "./api";
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
 let webSocketClient = null;
@@ -30,43 +30,18 @@ export const WebSocketProvider = ({ children }) => {
 
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
-    const accessToken = await AsyncStorage.getItem("accessToken");
-    const refreshToken = await AsyncStorage.getItem("refreshToken");
-    const response = await fetch(config.SERVER_URL + "/chat/list", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + accessToken,
-      },
-      body: JSON.stringify({ email: email }),
-    });
-    if (response.status == 200) {
-      const chatData = await response.json();
-      return chatData;
-    } else {
-      return reIssueToken(email, refreshToken);
-    }
+    try {
+      const response = await authApi.post("/chat/list", { email: email });
+      if (response.status == 200) {
+        return response.data;
+      };
+    } catch (error) {
+      if (error.response.status == 401) {
+        console.log(error)
+      };
+    };
   };
-
-  const reIssueToken = async (email, refreshToken) => {
-    const tokenResponse = await fetch(config.SERVER_URL + "/token/re-issue", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, refreshToken: refreshToken }),
-    });
-
-    if (tokenResponse.status == 200) {
-      const data = await tokenResponse.json();
-      await AsyncStorage.setItem("accessToken", data.accessToken);
-      await AsyncStorage.setItem("refreshToken", data.refreshToken);
-      return getChatList();
-    } else {
-      console.log("토큰 재발급 실패");
-      return [];
-    }
-  };
+    
 
   const connectWebSocket = async (chatData) => {
     // 소켓 연결
