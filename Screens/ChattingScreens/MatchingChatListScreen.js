@@ -7,16 +7,17 @@ import EventEmitter from "react-native-eventemitter";
 
 
 const MatchingChatListScreen = ({ navigation }) => {
-  const [chatData, setChatdata] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [chatData, setChatData] = useState([]);
   let [client, changeClient] = useState(null);
   const webSocketClient = useWebSocket();
 
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
     try {
-      const response = await authApi.post("/chat/list");
+      const response = await authApi.post("/chat/list", { email: email });
       if (response.status == 200) {
-        setChatdata(response.data);
+        setChatData(response.data);
         console.log(response.data);
         return chatData;
       };
@@ -26,33 +27,35 @@ const MatchingChatListScreen = ({ navigation }) => {
       };
     };
   };
-
+  const messageListener = async (message) => {
+    // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
+    console.log(message.body, '어떤형식으로옴?');
+    const newMessage = JSON.parse(message.body);
+    setChatData(currentChatData => {
+      const updatedChatData = currentChatData.map(chatRoom => {
+        if (chatRoom.id === newMessage.chatRoomId) { 
+          return {
+            ...chatRoom, 
+            message: newMessage.message, 
+            sendAt: new Date().toISOString()
+          };
+        } else {
+          return chatRoom;
+        }
+      });
+      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
+    });
+  };
+  
+  useEffect(() => {
+    console.log(chatData, '챗리스트데이터 바뀔때마다 업데이트확인')
+  },[chatData])
   useEffect(() => {
     getChatList();
-    const chatUpdateListener = (newMessage) => {
-      // 새 메시지가 도착했을 때 로직
-      // 예를 들어, newMessage에는 새 메시지의 정보와 해당 채팅방 ID가 포함될 것입니다.
-      setChatdata(currentChatData => {
-        const updatedChatData = [...currentChatData];
-        const chatIndex = updatedChatData.findIndex(chat => chat.id === newMessage.chatId);
-        if (chatIndex > -1) {
-          // 채팅방을 업데이트하고, 배열의 맨 앞으로 이동
-          const updatedChat = {
-            ...updatedChatData[chatIndex],
-            message: newMessage.message, // 예시로 마지막 메시지를 업데이트
-            unread: (updatedChatData[chatIndex].unread || 0) + 1 // 읽지 않은 메시지 수 업데이트
-          };
-          updatedChatData.splice(chatIndex, 1); // 기존 위치에서 제거
-          updatedChatData.unshift(updatedChat); // 배열 맨 앞에 추가
-        }
-        return updatedChatData;
-      });
-    };
-
-    EventEmitter.on("newChatMessage", chatUpdateListener);
-
+    console.log(chatData, '챗목록 데이터')
+    EventEmitter.on("newMessage", messageListener);
     return () => {
-      EventEmitter.removeListener("newChatMessage", chatUpdateListener);
+      EventEmitter.removeListener("newMessage", messageListener);
     };
   }, []);
 

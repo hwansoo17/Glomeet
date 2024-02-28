@@ -81,8 +81,8 @@ export const WebSocketProvider = ({ children }) => {
   const publish = async (destination, header, email, id, message) => {
     if (webSocketClient) {
       webSocketClient.publish({
-          destination: "/pub/chat/" + id,
-          Headers: "application/json",
+          destination: destination,
+          Headers: header,
           body: JSON.stringify({
             senderEmail: email,
             chatRoomId: id,
