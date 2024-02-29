@@ -11,7 +11,7 @@ const OnBoarding1 = ({navigation}) => {
   return (
     <View>
       <Text>반가워요!</Text>
-      <Text>프로필 선택 후 이름을 입력해주세요</Text>
+      <Text>프로필 선택 후 이름 입력해주세요</Text>
       <TextInput
         placeholder="닉네임"
         value={nickName}
