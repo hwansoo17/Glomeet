@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View, TextInput, Text, TouchableOpacity, Alert} from 'react-native';
-import config from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
@@ -50,6 +49,14 @@ const LoginScreen = ({navigation}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('Root')}>
         <Text>홈스크린</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('PasswordReset')}>
+        <Text>비밀번호 재설정</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('OnBoard')}>
+        <Text>온보딩</Text>
       </TouchableOpacity>
     </View>
   )

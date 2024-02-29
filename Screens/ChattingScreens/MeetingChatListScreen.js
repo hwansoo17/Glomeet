@@ -4,11 +4,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MeetingChatListScreen = ({navigation}) => {
     
-    return (
-        <View>
-            <Text>MeetingChatListScreen</Text>
-        </View>
-    )
-    };
+  return (
+    <View>
+      <Text>MeetingChatListScreen</Text>
+    </View>
+  )
+};
 
 export default MeetingChatListScreen;

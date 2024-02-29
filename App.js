@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AuthStackScreen from "./Screens/StackScreens/AuthStackScreen";
+import OnBoardingStackScreen from "./Screens/StackScreens/OnBoardingStackScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeStackScreen from "./Screens/StackScreens/HomeStackScreen";
 import MatchingStackScreen from "./Screens/StackScreens/MatchingStackScreen";
@@ -12,6 +13,7 @@ import messaging from "@react-native-firebase/messaging";
 import pushNoti from "./pushNoti";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { authApi } from "./api"
+
 
 export const AppContext = createContext();
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -111,6 +113,10 @@ const App = () => {
           <Stack.Screen
             name="Auth"
             component={AuthStackScreen}
+            options={{ headerShown: false }} />
+            <Stack.Screen
+            name="OnBoard"
+            component={OnBoardingStackScreen}
             options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
