@@ -32,62 +32,64 @@ const LoginScreen = ({navigation}) => {
   return (
       <View style={styles.container}>
         <ScrollView style={{flex:1}}>
-        <View style={{flexDirection: 'row'}}>
-        <View style={{flex:1}}/>
-        <View style={{flex:8}}>
-          <View style={{height: 10}}/>  
-          <View style={styles.imageContainer}>
-            <Image 
-              source={require('../../assets/ajou_logo.png')}
-              style={styles.imageStyle}
-              accessibilityRole="image"
-              accessibilityLabel="아주대학교 로고"
-              resizeMode="contain"
-            />
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex:1}}/>
+            <View style={{flex:8}}>
+              <View style={{height: 10}}/>  
+              <View style={styles.imageContainer}>
+                <Image 
+                  source={require('../../assets/ajou_logo.png')}
+                  style={styles.imageStyle}
+                  accessibilityRole="image"
+                  accessibilityLabel="아주대학교 로고"
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={{height: 10}}/> 
+              <TextInput
+                style={styles.input}
+                placeholder="이메일을 입력하세요"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <View style={{height: 10}}/> 
+              <TextInput
+                style={styles.input}
+                placeholder="비밀번호를 입력하세요"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+              <View style={{height: 10}}/> 
+              <TouchableOpacity 
+                style={{alignSelf: 'flex-end'}}
+                onPress={() => navigation.navigate('PasswordReset')}>
+                <Text>비밀번호 재설정</Text>
+              </TouchableOpacity>
+              <View style={{height: 10}}/> 
+              <TouchableOpacity 
+                style={styles.button}
+                onPress={login}>
+                <Text style={styles.buttonText}>로그인</Text>
+              </TouchableOpacity>
+              <View style={{height: 10}}/> 
+              <TouchableOpacity
+                style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
+                onPress={() => navigation.navigate('EmailAuth')}>
+                <Text style={styles.linkText}>회원가입</Text>
+              </TouchableOpacity>
+              <View style={{height: 10}}/> 
+              <TouchableOpacity 
+                onPress={() => navigation.navigate('Root')}>
+                <Text>홈스크린</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('OnBoard')}>
+                <Text>온보딩</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1}}/>
           </View>
-          <View style={{height: 10}}/> 
-          <TextInput
-            style={styles.input}
-            placeholder="이메일을 입력하세요"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <View style={{height: 10}}/> 
-          <TextInput
-            style={styles.input}
-            placeholder="비밀번호를 입력하세요"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-          <View style={{height: 10}}/> 
-          <TouchableOpacity style={{alignSelf: 'flex-end'}}
-            onPress={() => navigation.navigate('PasswordReset')}>
-            <Text>비밀번호 재설정</Text>
-          </TouchableOpacity>
-          <View style={{height: 10}}/> 
-          <TouchableOpacity 
-          style={styles.button}
-          onPress={login}>
-            <Text style={styles.buttonText}>로그인</Text>
-          </TouchableOpacity>
-          <View style={{height: 10}}/> 
-          <TouchableOpacity
-          style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
-          onPress={() => navigation.navigate('EmailAuth')}>
-            <Text style={styles.linkText}>회원가입</Text>
-          </TouchableOpacity>
-          <View style={{height: 10}}/> 
-          <TouchableOpacity onPress={() => navigation.navigate('Root')}>
-            <Text>홈스크린</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('OnBoard')}>
-            <Text>온보딩</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{flex:1}}/>
-        </View>
         </ScrollView>
     </View>
   )
