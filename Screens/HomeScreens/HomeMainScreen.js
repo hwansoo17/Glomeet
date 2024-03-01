@@ -27,15 +27,19 @@ const HomeMainScreen = ({navigation}) => {
     }
   }
   return (
-    <View>
+    <><View>
       <Text>MainScreen</Text>
       <TouchableOpacity onPress={async () => {
         await loggedOut();
         await webSocketClient.logout();
-      }}>
+      } }>
         <Text>로그아웃</Text>
       </TouchableOpacity>
-    </View>
+    </View><View>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text>로그인 화면으로(임시)</Text>
+        </TouchableOpacity>
+      </View></>
   );
 };
 
