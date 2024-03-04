@@ -60,7 +60,7 @@ const MatchingChatListScreen = ({ navigation }) => {
   }, []);
 
   const goChatroom = (chat) => {
-    navigation.navigate("ChattingDetail", { chat, client });
+    navigation.navigate("MatchingChatRoom", { chat, client });
   };
 
   const renderItem = ({ item }) => (
