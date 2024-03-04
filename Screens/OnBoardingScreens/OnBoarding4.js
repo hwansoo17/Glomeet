@@ -17,7 +17,7 @@ const OnBoarding4 = ({navigation}) => {
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
-        onPress={setUserPersonalType(item)}>
+        onPress={() => setUserPersonalType(item)}>
         <Text>{item}</Text>
       </TouchableOpacity>
     </View>

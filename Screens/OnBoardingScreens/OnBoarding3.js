@@ -12,7 +12,7 @@ const OnBoarding3 = ({navigation}) => {
     const renderItem = ({ item }) => (
       <View>
         <TouchableOpacity
-          onPress={setUserHobby(item)}>
+          onPress={() => setUserHobby(item)}>
           <Text>{item}</Text>
         </TouchableOpacity>
       </View>
