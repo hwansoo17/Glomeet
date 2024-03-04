@@ -2,27 +2,12 @@ import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet   } from "react-native";
 import { api } from '../../api';
 
-const RegisterScreen = ({route, navigation}) => {
+const PasswordReset2 = ({route, navigation}) => {
   const {email} = route.params;
-  const [nickName, setNickName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isButtonActive, setButtonactive] = useState(false);
   
-  const doubleCheckName = async () => {
-    try {
-      const response = await api.post('/auth/nickNameCheck', {nickName : nickName});
-      console.log(response.status);
-      if (response.status == 200) {
-        Alert.alert('사용 가능한 닉네임입니다.');
-      } 
-    } catch (error) {
-      if (error.response.status == 409) {
-        Alert.alert('이미 사용중인 닉네임입니다.');
-      console.log(error);
-      };
-    };
-  };
   const changeButtonStatus = () => {
     if (password != '' && passwordCheck != '') {
       setButtonactive(true);
@@ -34,17 +19,17 @@ const RegisterScreen = ({route, navigation}) => {
     changeButtonStatus();
   }, [password, passwordCheck]);
 
-  const signUp = async () => {
+  const resetPassword = async () => {
     if (password === passwordCheck) {
       try {
-        const response = await api.post('/auth/signUp', {email, nickName, password});
+        const response = await api.post('/auth/resetPassword', {email, password});
         if (response.status == 200) {
-          Alert.alert('회원가입이 완료되었습니다.');
+          Alert.alert('비밀번호 변경이 완료되었습니다.');
           navigation.navigate('Login');
         }
       } catch (error) {
         if (error.response.status == 409) {
-          Alert.alert('회원가입에 실패하였습니다.');
+          Alert.alert('비밀번호 변경에 실패하였습니다.');
         } 
       }
     } else {
@@ -55,15 +40,9 @@ const RegisterScreen = ({route, navigation}) => {
   return (
     <View>
       <View style={styles.inputContainer}>
-        <View style={styles.borderContainer}>
-          <TextInput placeholder="닉네임" value={nickName} onChangeText={setNickName} style={styles.nickNameText} />
-          <TouchableOpacity onPress={doubleCheckName} style={styles.checkButton}>
-           <Text style={styles.checkButtonText}>중복확인</Text>
-          </TouchableOpacity>
-        </View>
       </View>
           <TextInput
-            placeholder="비밀번호"
+            placeholder="새로운 비밀번호"
             secureTextEntry
             value={password}
             onChangeText={setPassword}
@@ -76,10 +55,10 @@ const RegisterScreen = ({route, navigation}) => {
             style={styles.passwordCheck} />
           <View style = {styles.Register}>
           <TouchableOpacity
-            onPress={signUp}
+            onPress={resetPassword}
             disabled={!isButtonActive}
             style={[styles.Registerbutton, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>회원가입</Text>
+            <Text style={styles.buttonText}>비밀번호 변경</Text>
           </TouchableOpacity>
           </View>
         </View>
@@ -168,4 +147,4 @@ const RegisterScreen = ({route, navigation}) => {
       }
     });
     
-    export default RegisterScreen;
+    export default PasswordReset2;

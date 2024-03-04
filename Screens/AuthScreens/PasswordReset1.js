@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { api } from '../../api';
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-//const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
-const EmailAuthScreen = ({navigation}) => {
+const PasswordReset1 = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [emailValid, setEmailValid] = useState(false);
-  const [randomCode, setRandomCode] = useState('');
   const [authCode, setAuthCode] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);  
-
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -33,17 +30,12 @@ const EmailAuthScreen = ({navigation}) => {
       return;
     } 
     try {
-      const response = await api.post('/auth/emailCheck', {email})
+      const response = await api.post('/auth/emailRegisteredCheck', {email: email})
       console.log(response.status);
         if (response.status == 200) {
-          const code = createRandomCode()
-          console.log(code);
           try {
-            const response = await api.post('/mail/auth', {email, randomCode: code});
+            const response = await api.post('/mail/auth', {email});
             if (response.status == 200) {
-              console.log(code);
-              console.log(response.status);
-              setRandomCode(code);
               Alert.alert('인증번호가 전송되었습니다.');
             };
           } catch (error) {
@@ -58,52 +50,46 @@ const EmailAuthScreen = ({navigation}) => {
           };
         };
     } catch (error) {
-      if (error.response.status == 409) {
-      Alert.alert('이미 가입된 이메일입니다.');
+      if (error.response.status == 401) {
+      Alert.alert('가입되지 않은 이메일입니다.');
       console.log(error);
       };
     };
   };
-  const checkAuthCode = () => {
-    console.log(randomCode, authCode);
-    if (randomCode == authCode) {
-      navigation.navigate('Register', {email: email});
-    } else {
-      Alert.alert('인증번호가 일치하지 않습니다.');
-    }
+  const checkAuthCode = async() => {
+    try {
+      const response = await api.post('/auth/verification-check', {email: email, randomCode: authCode})
+      console.log(response.status);
+      if (response.status == 200) {
+        navigation.navigate('PasswordReset2', {email: email});
+
+      };
+    } catch (error) {
+      if (error.response.status == 400) {
+        console.log(error.response.status);
+        Alert.alert('인증번호가 일치하지 않습니다.');
+      };
+    };
   };
-  return (
-    <><View style={styles.imageContainer}>
-      <Image
-        source={require('../../assets/ajou_logo.png')}
-        style={styles.imageStyle}
-        accessibilityRole="image"
-        accessibilityLabel="아주대학교 로고"
-        resizeMode="contain" />
-    </View>
+    return (
     <View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="아주이메일 주소 입력" value={email} onChangeText={setEmail} style={styles.input} />
-          <TouchableOpacity
-            onPress={AuthCodeSend}
-            disabled={!isButtonActive}
-            style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>인증번호 받기</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="인증번호 입력" value={authCode} onChangeText={setAuthCode} style={styles.input} />
-          <TouchableOpacity
-            onPress={checkAuthCode}
-            style={styles.button}>
-            <Text style={styles.buttonText}>인증번호 확인</Text>
-          </TouchableOpacity>
-        </View>
-      </View><View style={styles.linkText}>
-        <TouchableOpacity onPress={() => navigation.navigate('Register', { email: email })}>
-          <Text style={styles.linkText}>등록화면</Text>
+      <Text>PasswordResetScreen</Text>
+      <TextInput placeholder="이메일" value={email} onChangeText={setEmail} />
+      <TouchableOpacity
+        onPress={AuthCodeSend}
+        disabled={!isButtonActive}
+        style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}>
+        <Text style={styles.buttonText}>인증번호 받기</Text>
+      </TouchableOpacity>
+      <View style={styles.inputContainer}>
+        <TextInput placeholder="인증번호 입력" value={authCode} onChangeText={setAuthCode} style={styles.input} />
+        <TouchableOpacity
+          onPress={checkAuthCode}
+          style={styles.button}>
+          <Text style={styles.buttonText}>인증번호 확인</Text>
         </TouchableOpacity>
-      </View></>
+      </View>
+      </View>
   );
 };
 
@@ -178,4 +164,4 @@ const styles = StyleSheet.create({
     height: 200,
   },
 });
-export default EmailAuthScreen;
+export default PasswordReset1;

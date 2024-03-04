@@ -9,12 +9,12 @@ const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const webSocketClient = useWebSocket();
-
   const login = async () => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
       if (response.status == 200) {
+        console.log(response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
@@ -61,11 +61,13 @@ const LoginScreen = ({navigation}) => {
                 onChangeText={setPassword}
               />
               <View style={{height: 10}}/> 
-              <TouchableOpacity 
-                style={{alignSelf: 'flex-end'}}
-                onPress={() => navigation.navigate('PasswordReset')}>
-                <Text>비밀번호 재설정</Text>
-              </TouchableOpacity>
+              <View style={{flexDirection:'row'}}>
+                <View style={{flex:1}}/>
+                <TouchableOpacity 
+                  onPress={() => navigation.navigate('PasswordReset1')}>
+                  <Text>비밀번호 재설정</Text>
+                </TouchableOpacity>
+              </View>
               <View style={{height: 10}}/> 
               <TouchableOpacity 
                 style={styles.button}
@@ -75,12 +77,12 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/> 
               <TouchableOpacity
                 style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
-                onPress={() => navigation.navigate('EmailAuth')}>
+                onPress={() => navigation.navigate('Register1')}>
                 <Text style={styles.linkText}>회원가입</Text>
               </TouchableOpacity>
               <View style={{height: 10}}/> 
               <TouchableOpacity 
-                onPress={() => navigation.navigate('Root')}>
+                onPress={() => navigation.replace('Root')}>
                 <Text>홈스크린</Text>
               </TouchableOpacity>
               <TouchableOpacity
