@@ -15,8 +15,9 @@ const HomeMainScreen = ({navigation}) => {
       if (response.status == 200) {
         await AsyncStorage.removeItem('email')
         await AsyncStorage.removeItem('accessToken')
-        navigation.replace('Login');
-        navigation.navigate('Login');
+        await webSocketClient.logout();
+        navigation.replace('Auth');
+        navigation.navigate('Auth');
       };
     } catch (error) {
      console.error(error.response.status);
@@ -25,10 +26,9 @@ const HomeMainScreen = ({navigation}) => {
   return (
     <><View>
       <Text>MainScreen</Text>
-      <TouchableOpacity onPress={async () => {
-        await loggedOut();
-        await webSocketClient.logout();
-      } }>
+      <TouchableOpacity 
+      onPress={() => loggedOut()}
+      >
         <Text>로그아웃</Text>
       </TouchableOpacity>
     </View><View>
