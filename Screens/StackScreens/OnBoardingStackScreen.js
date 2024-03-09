@@ -12,11 +12,11 @@ const Stack = createNativeStackNavigator();
 const OnBoardingStackScreen = () => {
   return (
     <Stack.Navigator initialRouteName='OnBoarding1'>
-      <Stack.Screen name="OnBoarding1" component={OnBoarding1}/>
-      <Stack.Screen name="OnBoarding2" component={OnBoarding2}/>
-      <Stack.Screen name="OnBoarding3" component={OnBoarding3}/>
-      <Stack.Screen name="OnBoarding4" component={OnBoarding4}/>
-      <Stack.Screen name="OnBoarding5" component={OnBoarding5}/>
+      <Stack.Screen name="OnBoarding1" component={OnBoarding1} options={{ headerShown: false }}/>
+      <Stack.Screen name="OnBoarding2" component={OnBoarding2} options={{ headerShown: false }}/>
+      <Stack.Screen name="OnBoarding3" component={OnBoarding3} options={{ headerShown: false }}/>
+      <Stack.Screen name="OnBoarding4" component={OnBoarding4} options={{ headerShown: false }}/>
+      <Stack.Screen name="OnBoarding5" component={OnBoarding5} options={{ headerShown: false }}/>
     </Stack.Navigator>
   )
 };

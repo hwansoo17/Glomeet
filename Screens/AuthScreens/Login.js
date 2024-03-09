@@ -19,7 +19,20 @@ const LoginScreen = ({navigation}) => {
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
         await webSocketClient.login();
-        navigation.navigate('Root', {screen: 'Home'});
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Root' }]
+        });
+      }
+      if (response.status == 201) {
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('accessToken', response.data.accessToken)
+        await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
+        await webSocketClient.login();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'OnBoard' }]
+        });
       }
     } catch (error) {
       if (error.response.status == 401) {

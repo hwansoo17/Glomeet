@@ -8,7 +8,10 @@ const OnBoarding5 = ({navigation}) => {
   return (
   <View>
     <TouchableOpacity
-      onPress={() => navigation.navigate('Root', {screen: 'Home'})}>
+      onPress={() => navigation.reset({
+        index: 0,
+        routes: [{ name: 'Root' }]
+      })}>
       <Text>시작하기</Text>
     </TouchableOpacity>
     

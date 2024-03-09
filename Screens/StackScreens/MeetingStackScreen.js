@@ -1,8 +1,9 @@
 import React, {useLayoutEffect} from "react";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-import MeetingMainScreen from '../MeetingScreens/MeetingMainScreen';
-import MeetingDetailScreen from '../MeetingScreens/MeetingDetailScreen';
+import MeetingMain from '../MeetingScreens/MeetingMain';
+import MeetingDetail from '../MeetingScreens/MeetingDetail';
+import MeetingCreate from '../MeetingScreens/MeetingCreate';
 const Stack = createNativeStackNavigator();
 
 
@@ -19,10 +20,13 @@ const MeetingStackScreen = ({navigation, route}) => {
         <Stack.Navigator>
             <Stack.Screen 
             name="MeetingMain" 
-            component={MeetingMainScreen}/>
+            component={MeetingMain}/>
             <Stack.Screen 
             name="MeetingDetail" 
-            component={MeetingDetailScreen}/>
+            component={MeetingDetail}/>
+            <Stack.Screen 
+            name="MeetingCreate"
+            component={MeetingCreate}/>
         </Stack.Navigator>
     )
     };

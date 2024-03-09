@@ -28,19 +28,19 @@ function BottomTabNavigator() {
   return (
     <Tab.Navigator initialRouteName="Home">
       <Tab.Screen
-        name="홈"
+        name="Home"
         component={HomeStackScreen}
         options={{ headerShown: false }} />
       <Tab.Screen
-        name="매칭"
+        name="Matching"
         component={MatchingStackScreen}
         options={{ headerShown: false }} />
       <Tab.Screen
-        name="미팅"
+        name="Meeting"
         component={MeetingStackScreen}
         options={{ headerShown: false }} />
       <Tab.Screen
-        name="채팅"
+        name="Chatting"
         component={ChattingStackScreen}
         options={{ headerShown: false }} />
     </Tab.Navigator>

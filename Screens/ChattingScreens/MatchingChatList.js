@@ -18,8 +18,6 @@ const MatchingChatListScreen = ({ navigation }) => {
       const response = await authApi.post("/chat/list", { email: email });
       if (response.status == 200) {
         setChatData(response.data);
-        console.log(response.data);
-        return chatData;
       };
     } catch (error) {
       if (error.response.status == 401) {
@@ -48,11 +46,11 @@ const MatchingChatListScreen = ({ navigation }) => {
   };
   
   useEffect(() => {
-    console.log(chatData, '챗리스트데이터 바뀔때마다 업데이트확인')
+    //console.log(chatData, '챗리스트데이터 바뀔때마다 업데이트확인')
   },[chatData])
   useEffect(() => {
     getChatList();
-    console.log(chatData, '챗목록 데이터')
+    //console.log(chatData, '챗목록 데이터')
     EventEmitter.on("newMessage", messageListener);
     return () => {
       EventEmitter.removeListener("newMessage", messageListener);
