@@ -19,14 +19,16 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const connectWebSocketClient = async () => {
       const chatList = await getChatList();
+      const meetingList = await getMeetingList();
+      const client2 = await connectWebSocket(meetingList)
       const client = await connectWebSocket(chatList);
-      return client;
+      return client, client2; 
     };
 
     connectWebSocketClient().then(client => {
       webSocketClient = client;
     });
-  }, []);
+  }, []); //연결하는 부분
 
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
@@ -42,7 +44,20 @@ export const WebSocketProvider = ({ children }) => {
       };
     };
   };
-    
+  
+  const getMeetingList = async () => {
+    try {
+      const response = await authApi.post("/meeting/list")
+      if (response.status == 200) {
+        console.log(response.data);
+        return response.data;
+      };
+    } catch (error) {
+      if (error.response.status == 401) {
+        console.log(error)
+      }
+    }
+  }
 
   const connectWebSocket = async (chatData) => {
     // 소켓 연결
