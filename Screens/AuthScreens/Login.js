@@ -13,8 +13,16 @@ const LoginScreen = ({navigation}) => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
+      console.log(response.status)
       if (response.status == 200) {
         console.log(response.data)
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('accessToken', response.data.accessToken)
+        await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
+        await webSocketClient.login();
+        navigation.navigate('Root', {screen: 'Home'});
+      }
+      if (response.status == 201) {
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)

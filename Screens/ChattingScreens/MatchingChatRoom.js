@@ -1,11 +1,9 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
-import {authApi} from "../../api";
-// 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
-// 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
+import { authApi } from "../../api";
+
 const MatchingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
@@ -21,7 +19,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
     };
 
     const messageListener = (message) => {
-      // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
@@ -29,22 +26,19 @@ const MatchingChatRoom = ({ route, navigation }) => {
     const getMessageList = async () => {
       try {
         const response = await authApi.post("/chat/message-list", { "chatRoomId": chat.id });
-        if (response.status == 200) {
+        if (response.status === 200) {
           setMessages(response.data);
         }
       } catch (error) {
-        if (error.response.status == 401) {
         console.log(error);
-        };
-      };
+      }
     };
-    initialize().then(getMessageList)
-      .then(() => EventEmitter.on("newMessage", messageListener));
+
+    initialize().then(getMessageList).then(() => webSocketClient.on("newMessage", messageListener));
 
     return () => {
       setMessages([]);
-      // messageListener.removeListener("newMessage")
-      EventEmitter.removeListener("newMessage", messageListener);
+      webSocketClient.off("newMessage", messageListener);
     };
   }, []);
 
@@ -53,54 +47,91 @@ const MatchingChatRoom = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000");
+    webSocketClient.publish(`/pub/chat/${chat.id}`, "application/json", email, chat.id, message + "\u0000");
 
     setMessage("");
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: chat.id,
-      headerTitleAlign: "center",
-    });
-  }, [navigation]);
-
   const renderItem = ({ item }) => {
     const isMyMessage = item.senderEmail === email;
     return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ flex: 1 }} />
-        <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
-          <Text>{item.message}</Text>
-        </View>
-        <View style={{ flex: 1 }} />
+      <View style={[styles.messageContainer, isMyMessage ? styles.myMessageContainer : styles.otherMessageContainer]}>
+        <Text style={[styles.messageText, isMyMessage ? styles.myMessageText : styles.otherMessageText]}>{item.message}</Text>
       </View>
     );
   };
 
-
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={styles.container}>
       <FlatList
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        inverted />
-      <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ borderWidth: 1, borderRadius: 30, flex: 1 }}>
-          <TextInput
-            value={message}
-            onChangeText={setMessage}/>
-        </View>
-        <View style={{ flex: 1 }} />
-        <TouchableOpacity onPress={sendMessage}>
-          <Text>전송</Text>
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="메시지를 입력하세요"
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <Text style={styles.sendButtonText}>전송</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  messageContainer: {
+    backgroundColor: "#E5E5E5",
+    padding: 8,
+    borderRadius: 8,
+    marginVertical: 4,
+    maxWidth: "70%", // 최대 너비 설정
+  },
+  myMessageContainer: {
+    alignSelf: "flex-end",
+    backgroundColor: "#5782F1",
+  },
+  otherMessageContainer: {
+    alignSelf: "flex-start",
+  },
+  myMessageText: {
+    color: "#FFFFFF", 
+  },
+  otherMessageText: {
+    color: "#000000", 
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#CCCCCC",
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    flex: 1,
+    marginRight: 8,
+  },
+  sendButton: {
+    backgroundColor: "#5782F1",
+    borderRadius: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  sendButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
 
 export default MatchingChatRoom;
