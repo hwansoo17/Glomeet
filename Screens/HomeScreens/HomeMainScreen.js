@@ -18,7 +18,7 @@ const HomeMainScreen = ({navigation}) => {
   }
   const getMyMeetingData = async () => {
     try {
-      const response = await authApi.post('/meeting/chat')
+      const response = await authApi.post('/meeting/list')
       if (response.status == 200) {
         console.log(response.data);
       }

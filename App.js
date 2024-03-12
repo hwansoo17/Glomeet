@@ -73,8 +73,10 @@ const App = () => {
     if (accessToken) {
       try {
         const response = await authApi.post("/token/checkToken");
+        if (response.status == 200) {
         // 토큰이 유효하면 이니셜 라우트를 홈으로 설정(자동 로그인)
         setInitialRoute("Root");
+        }
       } catch (error) {
         setInitialRoute("Auth");
       }

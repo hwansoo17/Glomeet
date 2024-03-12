@@ -28,7 +28,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/chat/message-list", { "chatRoomId": chat.id });
+        const response = await authApi.post("/matching/message-list", { "roomId": chat.id });
         if (response.status == 200) {
           setMessages(response.data);
         }

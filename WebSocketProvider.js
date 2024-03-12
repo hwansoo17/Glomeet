@@ -31,13 +31,14 @@ export const WebSocketProvider = ({ children }) => {
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
     try {
-      const response = await authApi.post("/chat/list", { email: email });
+      const response = await authApi.post("/matching/list", { email: email });
       if (response.status == 200) {
+        console.log(response.data)
         return response.data;
       };
     } catch (error) {
       if (error.response.status == 401) {
-        console.log(error)
+        console.log(error, '너야?')
       };
     };
   };
@@ -74,7 +75,7 @@ export const WebSocketProvider = ({ children }) => {
       clientData.activate(); // 클라이언트 활성화
       return clientData;
     } catch (err) {
-      console.error(err);
+      console.error(err, '너니?');
     }
   };
 
@@ -85,7 +86,7 @@ export const WebSocketProvider = ({ children }) => {
           Headers: header,
           body: JSON.stringify({
             senderEmail: email,
-            chatRoomId: id,
+            roomId: id,
             message: message,
           }),
         },
