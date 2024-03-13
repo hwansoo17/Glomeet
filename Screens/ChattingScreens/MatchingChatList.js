@@ -12,12 +12,10 @@ const MatchingChatListScreen = ({ navigation }) => {
   const formatDate = (sendAt) => {
     const messageDate = new Date(sendAt);
     const today = new Date();
-    console.log(today)
     const isToday =
       messageDate.getDate() === today.getDate() &&
       messageDate.getMonth() === today.getMonth() &&
       messageDate.getFullYear() === today.getFullYear();
-    console.log(isToday)
     if (isToday) {
       // 12시간 기준으로 오전/오후 포맷으로 변경
       let hours = messageDate.getHours();
@@ -48,14 +46,14 @@ const MatchingChatListScreen = ({ navigation }) => {
   };
   const messageListener = async (message) => {
     // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-    console.log(message.body, '어떤형식으로옴?');
+    // console.log(message.body, '어떤형식으로옴?');
     const newMessage = JSON.parse(message.body);
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
-        if (chatRoom.id === newMessage.roomId) { 
+        if (chatRoom.id === newMessage.roomId) {
           return {
-            ...chatRoom, 
-            message: newMessage.message, 
+            ...chatRoom,
+            message: newMessage.message,
             sendAt: new Date().toISOString()
           };
         } else {
@@ -67,7 +65,7 @@ const MatchingChatListScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log(chatData, '챗리스트데이터 바뀔때마다 업데이트확인')
+
   },[chatData])
   useEffect(() => {
     getChatList();

@@ -22,12 +22,12 @@ authApi.interceptors.request.use(
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`; // 헤더에 토큰 추가
       }
-      console.log('@@@@')
+      // console.log('@@@@')
       return config;
     },
     (error) => {
       return Promise.reject(error);
-      
+
     }
   );
 
@@ -43,19 +43,18 @@ authApi.interceptors.response.use(
           originalRequest._retry = true; // 재시도 플래그 설정
           // 토큰 재발급 로직...
           const email = await AsyncStorage.getItem('email');
-          console.log(email, 'email')
+          // console.log(email, 'email')
           const refreshToken = await AsyncStorage.getItem('refreshToken');
-          console.log(refreshToken,'refreshToken')
+          // console.log(refreshToken,'refreshToken')
           const response = await axios.post(`${config.SERVER_URL}/token/re-issue`, {email: email, refreshToken: refreshToken});
           if (response.status === 200) {
-            console.log(response.status, '재발급 성공')
-            await AsyncStorage.setItem('refreshToken', response.data.refreshToken); 
+            // console.log(response.status, '재발급 성공')
+            await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
             await AsyncStorage.setItem('accessToken', response.data.accessToken); // 새 토큰 저장
             authApi.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`; // 인스턴스의 기본 헤더 업데이트
             return authApi(originalRequest); // 원래 요청 재시도
           }
         }
-        return Promise.reject(error); 
+        return Promise.reject(error);
       }
     );
-    

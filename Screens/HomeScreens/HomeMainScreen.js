@@ -10,7 +10,7 @@ const HomeMainScreen = ({navigation}) => {
     try {
       const response = await authApi.post('/meeting/my')
       if (response.status == 200) {
-        console.log(response.data);
+        // console.log(response.data);
       }
     } catch (error) {
       console.error(error.response.status)
@@ -20,7 +20,7 @@ const HomeMainScreen = ({navigation}) => {
     try {
       const response = await authApi.post('/meeting/list')
       if (response.status == 200) {
-        console.log(response.data);
+        // console.log(response.data);
       }
     } catch (error) {
       console.error(error.response.status)
@@ -42,12 +42,12 @@ const HomeMainScreen = ({navigation}) => {
       };
     } catch (error) {
      console.error(error.response.status);
-    }; 
+    };
   };
   return (
     <View>
       <Text>MainScreen</Text>
-      <TouchableOpacity 
+      <TouchableOpacity
       onPress={() => loggedOut()}
       >
         <Text>로그아웃</Text>
@@ -55,12 +55,12 @@ const HomeMainScreen = ({navigation}) => {
       <TouchableOpacity onPress={() => navigation.replace('Auth')}>
         <Text>로그인 화면으로(임시)</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={getMyMeeting}
       >
         <Text>미팅 아이디 가져오기</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={getMyMeetingData}
       >
         <Text>미팅 데이터 가져오기</Text>

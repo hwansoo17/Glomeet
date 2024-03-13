@@ -11,7 +11,7 @@ const MeetingMain = ({navigation}) => {
       const response = await authApi.get('/meeting/all')
     if (response.status == 200) {
         setMeetingData(response.data)
-        console.log(response.data);
+        // console.log(response.data);
       };
     } catch (error) {
       console.log(error);
@@ -20,7 +20,7 @@ const MeetingMain = ({navigation}) => {
   useEffect(() => {
     getMeetingData()
   }, [])
-  
+
 	const goMeetingRoom = (meeting) => {
     navigation.navigate("MeetingDetail", { meeting });
   };
