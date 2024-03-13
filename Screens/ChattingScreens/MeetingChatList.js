@@ -9,15 +9,14 @@ const MeetingChatList = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [chatData, setChatData] = useState([]);
 
+
   const formatDate = (sendAt) => {
     const messageDate = new Date(sendAt);
     const today = new Date();
-    console.log(today)
     const isToday =
       messageDate.getDate() === today.getDate() &&
       messageDate.getMonth() === today.getMonth() &&
       messageDate.getFullYear() === today.getFullYear();
-    console.log(isToday)
     if (isToday) {
       // 12시간 기준으로 오전/오후 포맷으로 변경
       let hours = messageDate.getHours();
@@ -32,7 +31,6 @@ const MeetingChatList = ({ navigation }) => {
       return `${messageDate.getFullYear()}-${messageDate.getMonth() + 1}-${messageDate.getDate()}`;
     }
   };
-
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
     try {
@@ -79,7 +77,7 @@ const MeetingChatList = ({ navigation }) => {
   }, []);
 
   const goChatroom = (chat) => {
-    navigation.navigate("MatchingChatRoom", { chat });
+    navigation.navigate("MeetingChatRoom", { chat });
   };
 
   const renderItem = ({ item }) => (

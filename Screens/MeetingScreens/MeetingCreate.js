@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import {View, Text, TouchableOpacity, TextInput, FlatList, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
+import { useWebSocket } from "../../WebSocketProvider";
 
 const MeetingCreate = ({navigation}) => {
+  const webSocketClient = useWebSocket();
   const [url, setUrl] = useState('')
   const [capacity, setCapacity] = useState('')
   const [title, setTitle] = useState('')
@@ -19,6 +21,7 @@ const MeetingCreate = ({navigation}) => {
       const email = await AsyncStorage.getItem('email')
       const response = await authApi.post('/meeting/create', { url: url, title: title, comment: description, capacity: capacity, location: location, meetingDate: date, category: category})
     if (response.status == 200)
+      console.log(response.data)
       Alert.alert('모임이 생성되었습니다')
       navigation.reset({
         index: 0,

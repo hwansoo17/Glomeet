@@ -12,12 +12,10 @@ const MatchingChatListScreen = ({ navigation }) => {
   const formatDate = (sendAt) => {
     const messageDate = new Date(sendAt);
     const today = new Date();
-    console.log(today)
     const isToday =
       messageDate.getDate() === today.getDate() &&
       messageDate.getMonth() === today.getMonth() &&
       messageDate.getFullYear() === today.getFullYear();
-    console.log(isToday)
     if (isToday) {
       // 12시간 기준으로 오전/오후 포맷으로 변경
       let hours = messageDate.getHours();

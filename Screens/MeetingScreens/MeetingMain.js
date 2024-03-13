@@ -37,7 +37,7 @@ const MeetingMain = ({navigation}) => {
     </View>
   );
 	return (
-		<View>
+		<View style={{flex:1}}>
 			<Text>MeetingMainScreen</Text>
 			<FlatList
         data={meetingData}

@@ -7,7 +7,7 @@ import {authApi} from "./api";
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
 let webSocketClient = null;
-
+// const client = useRef(null);
 const TextEncodingPolyfill = require("text-encoding");
 Object.assign("global", {
   TextEncoder: TextEncodingPolyfill.TextEncoder,
@@ -15,25 +15,21 @@ Object.assign("global", {
 });
 
 export const WebSocketProvider = ({ children }) => {
-
+  
   useEffect(() => {
     const connectWebSocketClient = async () => {
       const chatList = await getChatList();
-      const meetingList = await getMeetingList();
-      const client2 = await connectWebSocket(meetingList)
       const client = await connectWebSocket(chatList);
-      return client, client2; 
+      return client
     };
 
-    connectWebSocketClient().then(client => {
-      webSocketClient = client;
-    });
+    connectWebSocketClient()
   }, []); //연결하는 부분
 
   const getChatList = async () => {
     const email = await AsyncStorage.getItem("email");
     try {
-      const response = await authApi.post("/matching/list", { email: email });
+      const response = await authApi.post("/chat/my");
       if (response.status == 200) {
         console.log(response.data)
         return response.data;
@@ -45,20 +41,6 @@ export const WebSocketProvider = ({ children }) => {
     };
   };
   
-  const getMeetingList = async () => {
-    try {
-      const response = await authApi.post("/meeting/list")
-      if (response.status == 200) {
-        console.log(response.data);
-        return response.data;
-      };
-    } catch (error) {
-      if (error.response.status == 401) {
-        console.log(error)
-      }
-    }
-  }
-
   const connectWebSocket = async (chatData) => {
     // 소켓 연결
     try {
@@ -80,7 +62,7 @@ export const WebSocketProvider = ({ children }) => {
       // 구독 (내가 속해있는 채팅방 등록하는)
       clientData.onConnect = () => {
         chatData.forEach((chat) => {
-          clientData.subscribe("/sub/chat/" + chat.id, (message) => {
+          clientData.subscribe("/sub/chat/" + chat, (message) => {
             handleWebSocketMessage(message);
           });
         });
