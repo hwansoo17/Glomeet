@@ -31,11 +31,31 @@ const MeetingChatList = ({ navigation }) => {
       return `${messageDate.getFullYear()}-${messageDate.getMonth() + 1}-${messageDate.getDate()}`;
     }
   };
+
+  const getAllLastReadData = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys(); // 저장된 모든 키를 가져옵니다.
+    const lastReadKeys = keys.filter(key => key.startsWith('lastRead')); // 'lastRead'로 시작하는 키들을 필터링합니다.
+    const lastReadData = await AsyncStorage.multiGet(lastReadKeys); // 해당하는 키들의 데이터를 한 번에 가져옵니다.
+
+    // 가져온 데이터를 원하는 형태로 변환합니다.
+    const formattedData = lastReadData.map(([key, value]) => {
+      return { [key]: value };
+    });
+
+    return formattedData;
+  } catch (error) {
+    console.error(error);
+    return []; // 에러가 발생한 경우 빈 배열을 반환
+  }
+};
+
   const getChatList = async () => {
-    const email = await AsyncStorage.getItem("email");
+    const lastReadTime = await getAllLastReadData()
     try {
       const response = await authApi.post("/meeting/list");
       if (response.status == 200) {
+        console.log(lastReadTime)
         console.log(response.data, ': 미팅리스트');
         setChatData(response.data);
       };

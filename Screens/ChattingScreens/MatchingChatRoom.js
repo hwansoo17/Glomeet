@@ -23,7 +23,9 @@ const MatchingChatRoom = ({ route, navigation }) => {
     const messageListener = (message) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      if (chat.id === newMessage.roomId) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
     };
 
     const getMessageList = async () => {
@@ -45,6 +47,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       setMessages([]);
       // messageListener.removeListener("newMessage")
       EventEmitter.removeListener("newMessage", messageListener);
+      console.log('앱 끌때도 찍히나?')
     };
   }, []);
 

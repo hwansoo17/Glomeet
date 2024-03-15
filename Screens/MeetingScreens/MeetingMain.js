@@ -50,7 +50,7 @@ const MeetingMain = ({navigation}) => {
 			<FlatList
         data={meetingData}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.meeting.id}
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
       />
       <TouchableOpacity
