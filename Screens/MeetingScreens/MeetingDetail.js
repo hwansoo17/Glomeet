@@ -2,42 +2,72 @@ import React from "react";
 import {View, Text, TouchableOpacity} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
+import { useWebSocket } from '../../WebSocketProvider'
+import EventEmitter from "react-native-eventemitter";
+
 const MeetingDetail = ({route, navigation}) => {
-  const meeting = route.params.meeting;
+  const detail = route.params.meeting;
+  const {subscribe, publish} = useWebSocket();
+
   const meetingJoin = async() => {
-    console.log(meeting.id);
+    console.log(detail.meeting.id);
     const email = await AsyncStorage.getItem('email')
     try {
-      const response = await authApi.post('/meeting/join', { meetingId : meeting.id});
+      const response = await authApi.post('/meeting/join', { meetingId : detail.meeting.id});
       if (response.status == 200) {
-        console.log(response.data);
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MeetingMain' }]
-        });
+        subscribe("/sub/chat/"+detail.meeting.id, (message) => {
+          handleWebSocketMessage(message)
+        })
+        publish("/pub/chat/"+ detail.meeting.id, "application/json", email, detail.meeting.id, "입장메세지인데 서버에서 할거임", "JOIN")
+        goChatRoom(detail.meeting.id)
       };
     } catch (error) {
       if (error.response.status == 409) {
-        console.log(error.response.data.message);
+        console.log(error.response.data.message, '이미속해있음?');
       } else {
         console.log(error);
       }
     };
   };
 
+  const goChatRoom = (id) => {
+    navigation.reset({
+        index: 0, 
+        routes: [{
+            name: 'Chatting', 
+            state: {
+              routes: [
+                { name: 'ChattingMain',
+                  state: {routes: [{name: '모임'}]} }, 
+                {
+                  name: 'MeetingChatRoom',
+                  params: { id }, 
+                },
+              ],
+            },
+          },
+        ],
+      })
+  };
+
+  const handleWebSocketMessage = (message) => {
+    // 메시지 이벤트를 발생시키는 메서드
+    EventEmitter.emit("newMessage", message);
+  };
+
   return (
     <View>
-      <Text>{meeting.title}</Text>
-      <Text>{meeting.comment}</Text>
+      <Text>{detail.meeting.title}</Text>
+      <Text>{detail.meeting.comment}</Text>
       <View style={{flexDirection:'row'}}>
-        <Text>{meeting.meetingDate}</Text>
+        <Text>{detail.meeting.meetingDate}</Text>
         <View style={{flex:1}}/>
-        <Text>{meeting.capacity}</Text>      
+        <Text>{detail.meeting.capacity}</Text>
       </View>
       <View style={{flexDirection:'row'}}>
-        <Text>{meeting.category}</Text>
+        <Text>{detail.meeting.category}</Text>
         <View style={{flex:1}}/>
-        <Text>{meeting.location}</Text>      
+        <Text>{detail.meeting.location}</Text>
       </View>
       <TouchableOpacity
         onPress={meetingJoin}>

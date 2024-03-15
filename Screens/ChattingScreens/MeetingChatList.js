@@ -36,6 +36,7 @@ const MeetingChatList = ({ navigation }) => {
     try {
       const response = await authApi.post("/meeting/list");
       if (response.status == 200) {
+        console.log(response.data, ': 미팅리스트');
         setChatData(response.data);
       };
     } catch (error) {
@@ -46,14 +47,13 @@ const MeetingChatList = ({ navigation }) => {
   };
   const messageListener = async (message) => {
     // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-    console.log(message.body, '어떤형식으로옴?');
     const newMessage = JSON.parse(message.body);
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
-        if (chatRoom.id === newMessage.roomId) { 
+        if (chatRoom.id === newMessage.roomId) {
           return {
-            ...chatRoom, 
-            lastMessage: newMessage.message, 
+            ...chatRoom,
+            lastMessage: newMessage.message,
             sendAt: new Date().toISOString()
           };
         } else {
@@ -65,7 +65,6 @@ const MeetingChatList = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log(chatData, '챗리스트데이터 바뀔때마다 업데이트확인')
   },[chatData])
   useEffect(() => {
     getChatList();
@@ -76,15 +75,15 @@ const MeetingChatList = ({ navigation }) => {
     };
   }, []);
 
-  const goChatroom = (chat) => {
-    navigation.navigate("MeetingChatRoom", { chat });
+  const goChatroom = (id) => {
+    navigation.navigate("MeetingChatRoom", { id });
   };
 
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         style={{ flexDirection: "row" }}
-        onPress={() => goChatroom(item)}>
+        onPress={() => goChatroom(item.id)}>
         <View style={{ flex: 1 }}>
           <Text>{item.title}</Text>
           <Text>{item.lastMessage}</Text>

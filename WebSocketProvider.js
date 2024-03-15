@@ -21,6 +21,7 @@ export const WebSocketProvider = ({ children }) => {
       const chatList = await getChatList();
       const client = await connectWebSocket(chatList);
       return client
+      return client
     };
 
     connectWebSocketClient()
@@ -31,7 +32,7 @@ export const WebSocketProvider = ({ children }) => {
     try {
       const response = await authApi.post("/chat/my");
       if (response.status == 200) {
-        console.log(response.data)
+        // console.log(response.data)
         return response.data;
       };
     } catch (error) {
@@ -42,6 +43,7 @@ export const WebSocketProvider = ({ children }) => {
   };
   
   const connectWebSocket = async (chatData) => {
+    const email = await AsyncStorage.getItem("email");
     // 소켓 연결
     try {
       const accessToken = await AsyncStorage.getItem("accessToken");
@@ -55,14 +57,14 @@ export const WebSocketProvider = ({ children }) => {
         },
         reconnectDelay : 0,
         debug: function(str) {
-          // console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
+          console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
         },
       });
 
       // 구독 (내가 속해있는 채팅방 등록하는)
       clientData.onConnect = () => {
-        chatData.forEach((chat) => {
-          clientData.subscribe("/sub/chat/" + chat, (message) => {
+        chatData.forEach((id) => {
+          clientData.subscribe("/sub/chat/" + id, (message) => {
             handleWebSocketMessage(message);
           });
         });
@@ -76,20 +78,29 @@ export const WebSocketProvider = ({ children }) => {
     }
   };
 
-  const publish = async (destination, header, email, id, message) => {
+  const publish = async (destination, header, email, id, message, type) => {
     if (webSocketClient) {
       webSocketClient.publish({
           destination: destination,
           Headers: header,
           body: JSON.stringify({
-            senderEmail: email,
-            roomId: id,
             message: message,
+            senderEmail : email,
+            roomId : id,
+            type : type
           }),
         },
       );
     } else {
       console.error("WebSocket is not connected.");
+    }
+  };
+
+  const subscribe = (destination, callback) => {
+    if (webSocketClient) {
+      return webSocketClient.subscribe(destination, callback);
+    } else {
+      console.error("웹소켓에 연결되지 않음");
     }
   };
 
@@ -103,7 +114,7 @@ export const WebSocketProvider = ({ children }) => {
   }
 
   const contextValue = {
-    publish,login, logout
+    publish,login, logout, subscribe
   };
 
   const handleWebSocketMessage = (message) => {

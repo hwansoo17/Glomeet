@@ -12,7 +12,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [message, setMessage] = useState("");
   const webSocketClient = useWebSocket();
 
-  const chat = route.params.chat;
+  const id = route.params.id;
 
   useEffect(() => {
     const initialize = async () => {
@@ -28,7 +28,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/matching/message-list", { "roomId": chat.id });
+        const response = await authApi.post("/matching/message-list", { "roomId": id });
         if (response.status == 200) {
           setMessages(response.data);
         }
@@ -53,14 +53,14 @@ const MeetingChatRoom = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000");
+    webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, message+"\u0000");
 
     setMessage("");
   };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: chat.title,
+      title: id,
       headerTitleAlign: "center",
     });
   }, [navigation]);

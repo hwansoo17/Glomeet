@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
-
+import Logo from '../../assets/Heartbeat.svg';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +14,7 @@ const LoginScreen = ({navigation}) => {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
       if (response.status == 200) {
-        console.log(response.data, '이거니?')
+        console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
@@ -36,7 +36,7 @@ const LoginScreen = ({navigation}) => {
       }
     } catch (error) {
       if (error.response.status == 401) {
-        console.log(error);
+        console.log('로그인 실패: ', error);
         Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.');;
       }
     }
@@ -48,15 +48,9 @@ const LoginScreen = ({navigation}) => {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex:1}}/>
             <View style={{flex:8}}>
-              <View style={{height: 10}}/>  
-              <View style={styles.imageContainer}>
-                <Image 
-                  source={require('../../assets/ajou_logo.png')}
-                  style={styles.imageStyle}
-                  accessibilityRole="image"
-                  accessibilityLabel="아주대학교 로고"
-                  resizeMode="contain"
-                />
+              <View style={{height: 10}}/>
+              <View style={{alignItems: 'center'}}>
+                <Logo width={300} height={300}/>  
               </View>
               <View style={{height: 10}}/> 
               <TextInput

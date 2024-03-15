@@ -53,7 +53,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000");
+    webSocketClient.publish("/pub/chat/"+chat.id, "application/json",  email, chat.id, message+"\u0000","SEND");
 
     setMessage("");
   };
