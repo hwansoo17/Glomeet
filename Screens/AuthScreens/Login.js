@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
-
+import GlomeetLogo from "../../assets/logo.svg";
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,13 +45,7 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:8}}>
               <View style={{height: 10}}/>  
               <View style={styles.imageContainer}>
-                <Image 
-                  source={require('../../assets/ajou_logo.png')}
-                  style={styles.imageStyle}
-                  accessibilityRole="image"
-                  accessibilityLabel="아주대학교 로고"
-                  resizeMode="contain"
-                />
+                <GlomeetLogo width={200} height={200}/>
               </View>
               <View style={{height: 10}}/> 
               <TextInput
