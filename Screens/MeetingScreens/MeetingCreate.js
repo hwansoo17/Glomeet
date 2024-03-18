@@ -1,21 +1,36 @@
 import React, { useState } from "react";
-import {View, Text, TouchableOpacity, TextInput, FlatList, Alert} from "react-native";
+import {View, Text, TouchableOpacity, TextInput, FlatList, Alert, Image} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
 import EventEmitter from "react-native-eventemitter";
-import { CommonActions } from '@react-navigation/native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const MeetingCreate = ({navigation}) => {
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState('ㅋㅋㅋ')
+  const [imageUri, setImageUri] = useState(null); // 상태 추가
   const [capacity, setCapacity] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState('2024-11-11')
   const [location, setLocation] = useState('')
   const [category, setCategory] = useState('')
   const keyword = ['운동', '여행', '게임', '문화', '음식', '언어']
   const {subscribe, publish} = useWebSocket();
+
+  const selectImage = () => {
+    launchImageLibrary({mediaType: 'photo'}, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = { uri: response.assets[0].uri };
+        setImageUri(source.uri); // 선택된 이미지의 URI를 상태에 저장
+        setUrl(source.uri); // URL 상태도 업데이트(선택 사항)
+      }
+    });
+  };
 
   const createMeeting = async() => {
     // console.log(url, capacity, title, description, location, category)
@@ -78,11 +93,14 @@ const MeetingCreate = ({navigation}) => {
   );
   return (
     <View>
-      <Text>사진url</Text>
-      <TextInput
-        value={url}
-        onChangeText={setUrl}/>
+      <TouchableOpacity onPress={selectImage}>
+        <Text>사진url</Text>
+      </TouchableOpacity>
+      {imageUri && (
+        <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
+      )}
       <Text>모임 이름</Text>
+      
       <TextInput
         value={title}
         onChangeText={setTitle}/>

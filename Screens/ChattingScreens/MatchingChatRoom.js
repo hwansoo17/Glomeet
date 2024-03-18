@@ -16,23 +16,28 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
   useEffect(() => {
     const initialize = async () => {
+      const currentTime = new Date().toString();
+      await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
     };
 
-    const messageListener = (message) => {
+    const messageListener = async (message) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
       if (chat.id === newMessage.roomId) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
+        const currentTime = new Date(new Date(newMessage.sendAt).getTime() + 5000).toString();
+        await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       }
     };
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/matching/message-list", { "roomId": chat.id });
+        const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
         if (response.status == 200) {
           setMessages(response.data);
+          
         }
       } catch (error) {
         if (error.response.status == 401) {

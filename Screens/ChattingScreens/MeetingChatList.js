@@ -32,35 +32,41 @@ const MeetingChatList = ({ navigation }) => {
     }
   };
 
-  const getAllLastReadData = async () => {
-  try {
-    const keys = await AsyncStorage.getAllKeys(); // 저장된 모든 키를 가져옵니다.
-    const lastReadKeys = keys.filter(key => key.startsWith('lastRead')); // 'lastRead'로 시작하는 키들을 필터링합니다.
-    const lastReadData = await AsyncStorage.multiGet(lastReadKeys); // 해당하는 키들의 데이터를 한 번에 가져옵니다.
+  const getChatRoomsLastLeftAtMap = async () => {
+    try {
+      const allKeys = await AsyncStorage.getAllKeys();
+      const chatRoomKeys = allKeys.filter(key => key.startsWith('lastRead;'));
 
-    // 가져온 데이터를 원하는 형태로 변환합니다.
-    const formattedData = lastReadData.map(([key, value]) => {
-      return { [key]: value };
-    });
+      const chatRoomsLastLeftAtMap = {};
 
-    return formattedData;
-  } catch (error) {
-    console.error(error);
-    return []; // 에러가 발생한 경우 빈 배열을 반환
-  }
-};
+      await Promise.all(chatRoomKeys.map(async key => {
+        const roomId = key.substring('lastRead;'.length);
+        const leftTime = await AsyncStorage.getItem(key);
+        chatRoomsLastLeftAtMap[roomId] = leftTime;
+      }));
+      return chatRoomsLastLeftAtMap;
+    } catch (error) {
+      return {};
+    }
+  };
 
   const getChatList = async () => {
-    const lastReadTime = await getAllLastReadData()
+    
     try {
-      const response = await authApi.post("/meeting/list");
+      const lastReadTime = await getChatRoomsLastLeftAtMap()
+
+      const response = await authApi.post("/meeting/list" ,{lastLeftMap : lastReadTime});
       if (response.status == 200) {
-        console.log(lastReadTime)
-        console.log(response.data, ': 미팅리스트');
+        
+        console.log(lastReadTime, 'dddd')
+        // console.log(response.data, ': 미팅리스트');
         setChatData(response.data);
       };
     } catch (error) {
       if (error.response.status == 401) {
+        
+        console.log(lastReadTime)
+        console.log("@@")
         console.log(error)
       };
     };
@@ -84,8 +90,7 @@ const MeetingChatList = ({ navigation }) => {
     });
   };
 
-  useEffect(() => {
-  },[chatData])
+
   useEffect(() => {
     getChatList();
     //console.log(chatData, '챗목록 데이터')
@@ -95,15 +100,15 @@ const MeetingChatList = ({ navigation }) => {
     };
   }, []);
 
-  const goChatroom = (id) => {
-    navigation.navigate("MeetingChatRoom", { id });
+  const goChatroom = (chat) => {
+    navigation.navigate("MeetingChatRoom", {chat});
   };
 
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         style={{ flexDirection: "row" }}
-        onPress={() => goChatroom(item.id)}>
+        onPress={() => goChatroom(item)}>
         <View style={{ flex: 1 }}>
           <Text>{item.title}</Text>
           <Text>{item.lastMessage}</Text>
@@ -115,7 +120,7 @@ const MeetingChatList = ({ navigation }) => {
         </View>
         <View>
           <Text>{formatDate(item.sendAt)}</Text>
-          <Text>{item.unread}</Text>
+          <Text>{item.unRead}</Text>
         </View>
       </TouchableOpacity>
     </View>

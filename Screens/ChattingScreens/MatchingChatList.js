@@ -1,42 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback} from "react";
 import { View, Text, TouchableOpacity, FlatList, LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import EventEmitter from "react-native-eventemitter";
-
-
+import { formatDate, getChatRoomsLastLeftAtMap} from "../../chatUtils";
+import { useFocusEffect } from "@react-navigation/native";
 const MatchingChatListScreen = ({ navigation }) => {
-  const [messages, setMessages] = useState([]);
   const [chatData, setChatData] = useState([]);
 
-  const formatDate = (sendAt) => {
-    const messageDate = new Date(sendAt);
-    const today = new Date();
-    const isToday =
-      messageDate.getDate() === today.getDate() &&
-      messageDate.getMonth() === today.getMonth() &&
-      messageDate.getFullYear() === today.getFullYear();
-    if (isToday) {
-      // 12시간 기준으로 오전/오후 포맷으로 변경
-      let hours = messageDate.getHours();
-      const minutes = messageDate.getMinutes();
-      const ampm = hours >= 12 ? '오후' : '오전';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // 0시는 12로 표시
-      const strTime = `${ampm} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-      return strTime;
-    } else {
-      // 날짜만 표시
-      return `${messageDate.getFullYear()}-${messageDate.getMonth() + 1}-${messageDate.getDate()}`;
-    }
-  };
-
-  const getChatList = async () => {
-    const email = await AsyncStorage.getItem("email");
+  const getChatList = async () => {  
     try {
-      const response = await authApi.post("/matching/list", { email: email });
+      const lastReadTime = await getChatRoomsLastLeftAtMap()
+      const response = await authApi.post("/matching/list", {lastLeftMap : lastReadTime});
       if (response.status == 200) {
+        console.log(lastReadTime, 'dddd111')
         setChatData(response.data);
+        // console.log(response.data, ': 개인채팅방 리스트');
       };
     } catch (error) {
       if (error.response.status == 401) {
@@ -54,7 +33,8 @@ const MatchingChatListScreen = ({ navigation }) => {
           return {
             ...chatRoom,
             message: newMessage.message,
-            sendAt: new Date().toISOString()
+            sendAt: new Date().toISOString(),
+            unRead: (chatRoom.unRead || 0) + 1
           };
         } else {
           return chatRoom;
@@ -63,19 +43,24 @@ const MatchingChatListScreen = ({ navigation }) => {
       return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
     });
   };
-
-  useEffect(() => {
-
-  },[chatData])
-  useEffect(() => {
-    getChatList();
-    //console.log(chatData, '챗목록 데이터')
-    EventEmitter.on("newMessage", messageListener);
-    return () => {
-      EventEmitter.removeListener("newMessage", messageListener);
-    };
-  }, []);
-
+  // useEffect(() => {
+  //   getChatList();
+  //   //console.log(chatData, '챗목록 데이터')
+  //   EventEmitter.on("newMessage", messageListener);
+  //   return () => {
+  //     EventEmitter.removeListener("newMessage", messageListener);
+  //   };
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getChatList();
+      //console.log(chatData, '챗목록 데이터')
+      EventEmitter.on("newMessage", messageListener);
+      return () => {
+        EventEmitter.removeListener("newMessage", messageListener);
+      };
+    }, []),
+  )
   const goChatroom = (chat) => {
     navigation.navigate("MatchingChatRoom", { chat });
   };
@@ -86,8 +71,8 @@ const MatchingChatListScreen = ({ navigation }) => {
         style={{ flexDirection: "row" }}
         onPress={() => goChatroom(item)}>
         <View style={{ flex: 1 }}>
-          <Text>{item.partnerEmail}</Text>
-          <Text>{item.message}</Text>
+          <Text>{item.title}</Text>
+          <Text>{item.lastMessage}</Text>
           <View style={{ flexDirection: "row" }}>
             {/*item.tags.map((tag, index) => (
       <Text key={index}>{tag}</Text>
@@ -96,7 +81,7 @@ const MatchingChatListScreen = ({ navigation }) => {
         </View>
         <View>
           <Text>{formatDate(item.sendAt)}</Text>
-          <Text>{item.unread}</Text>
+          <Text>{item.unRead}</Text>
         </View>
       </TouchableOpacity>
     </View>

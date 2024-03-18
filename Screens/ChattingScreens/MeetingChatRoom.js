@@ -12,36 +12,45 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [message, setMessage] = useState("");
   const webSocketClient = useWebSocket();
 
-  const id = route.params.id;
-
+  const chat = route.params.chat;
+  const commitMessage = async() => {
+    try{
+      const response= await authApi.post("/chat/commit", {"id":chat.id})
+      if (response.status === 200) {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     const initialize = async () => {
-      const currentTime = new Date().toISOString();
-      await AsyncStorage.setItem( 'lastRead;'+id , currentTime);
+      const currentTime = new Date().toString();
+      await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
     };
 
     const messageListener = async (message) => {
-      console.log(message.body, '메시지리스너 인자')
+      // console.log(message.body, '메시지리스너 인자')
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
-      if (id === newMessage.roomId) {
+      if (chat.id === newMessage.roomId) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
-        const currentTime = new Date().toISOString();
-        await AsyncStorage.setItem( 'lastRead;'+id , currentTime);
+        const currentTime = new Date().toString();
+        await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       }
     };
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/matching/message-list", { "roomId": id });
+        const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
         if (response.status == 200) {
           setMessages(response.data);
         }
       } catch (error) {
         if (error.response.status == 401) {
-        console.log(error);
+        console.log(error, '메시지리스트');
         };
       };
     };
@@ -52,7 +61,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
       setMessages([]);
       // messageListener.removeListener("newMessage")
       EventEmitter.removeListener("newMessage", messageListener);
+      commitMessage()
       console.log('앱 끌때도 찍히나?')
+
     };
   }, []);
 
@@ -61,13 +72,13 @@ const MeetingChatRoom = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, message+"\u0000", 'SEND');
+    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000", 'SEND');
     setMessage("");
   };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: id,
+      title: chat.title,
       headerTitleAlign: "center",
     });
   }, [navigation]);
@@ -76,11 +87,11 @@ const MeetingChatRoom = ({ route, navigation }) => {
     const isMyMessage = item.senderEmail === email;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ flex: 1 }} />
+        <View style={{ flex: 1 }}/>
         <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
           <Text>{item.message}</Text>
         </View>
-        <View style={{ flex: 1 }} />
+        <View style={{ flex: 1 }}/>
       </View>
     );
   };
