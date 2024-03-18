@@ -15,12 +15,11 @@ Object.assign("global", {
 });
 
 export const WebSocketProvider = ({ children }) => {
-  
+
   useEffect(() => {
     const connectWebSocketClient = async () => {
       const chatList = await getChatList();
       const client = await connectWebSocket(chatList);
-      return client
       return client
     };
 
@@ -41,7 +40,7 @@ export const WebSocketProvider = ({ children }) => {
       };
     };
   };
-  
+
   const connectWebSocket = async (chatData) => {
     const email = await AsyncStorage.getItem("email");
     // 소켓 연결
@@ -57,7 +56,7 @@ export const WebSocketProvider = ({ children }) => {
         },
         reconnectDelay : 0,
         debug: function(str) {
-          console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
+          // console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
         },
       });
 

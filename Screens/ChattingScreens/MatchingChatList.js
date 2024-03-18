@@ -8,12 +8,11 @@ import { useFocusEffect } from "@react-navigation/native";
 const MatchingChatListScreen = ({ navigation }) => {
   const [chatData, setChatData] = useState([]);
 
-  const getChatList = async () => {  
+  const getChatList = async () => {
     try {
       const lastReadTime = await getChatRoomsLastLeftAtMap()
       const response = await authApi.post("/matching/list", {lastLeftMap : lastReadTime});
       if (response.status == 200) {
-        console.log(lastReadTime, 'dddd111')
         setChatData(response.data);
         // console.log(response.data, ': 개인채팅방 리스트');
       };

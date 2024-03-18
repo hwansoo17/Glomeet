@@ -16,8 +16,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
   useEffect(() => {
     const initialize = async () => {
-      const currentTime = new Date().toString();
-      await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
     };
@@ -27,8 +25,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       const newMessage = JSON.parse(message.body);
       if (chat.id === newMessage.roomId) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
-        const currentTime = new Date(new Date(newMessage.sendAt).getTime() + 5000).toString();
-        await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
+        await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
       }
     };
 
@@ -37,7 +34,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
         const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
         if (response.status == 200) {
           setMessages(response.data);
-          
+
+          const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
+          if(lastMessage != null){
+            await AsyncStorage.setItem('lastRead;' + chat.id, lastMessage.sendAt.toString())
+          }
         }
       } catch (error) {
         if (error.response.status == 401) {
@@ -52,7 +53,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
       setMessages([]);
       // messageListener.removeListener("newMessage")
       EventEmitter.removeListener("newMessage", messageListener);
-      console.log('앱 끌때도 찍히나?')
     };
   }, []);
 
