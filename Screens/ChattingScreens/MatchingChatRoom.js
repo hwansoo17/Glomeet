@@ -36,7 +36,8 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
+        const lastReadAt = await AsyncStorage.getItem( 'lastRead;'+chat.id);
+        const response = await authApi.post("/chat/message-list", { "roomId": chat.id, "lastReadAt" : lastReadAt});
         if (response.status == 200) {
           setMessages(response.data);
           const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
@@ -84,6 +85,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
     const isMyMessage = item.senderEmail === email;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View>
+          <Text>
+            {item.readCount}
+          </Text>
+        </View>
         <View style={{ flex: 1 }} />
         <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
           <Text>{item.message}</Text>
