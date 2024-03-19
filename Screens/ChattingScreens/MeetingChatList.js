@@ -51,22 +51,18 @@ const MeetingChatList = ({ navigation }) => {
   };
 
   const getChatList = async () => {
-    
+
     try {
       const lastReadTime = await getChatRoomsLastLeftAtMap()
 
       const response = await authApi.post("/meeting/list" ,{lastLeftMap : lastReadTime});
       if (response.status == 200) {
-        
-        console.log(lastReadTime, 'dddd')
+
         // console.log(response.data, ': 미팅리스트');
         setChatData(response.data);
       };
     } catch (error) {
       if (error.response.status == 401) {
-        
-        console.log(lastReadTime)
-        console.log("@@")
         console.log(error)
       };
     };

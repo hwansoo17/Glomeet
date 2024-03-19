@@ -10,6 +10,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
   const chat = route.params.chat;
@@ -25,8 +26,6 @@ const MeetingChatRoom = ({ route, navigation }) => {
   }
   useEffect(() => {
     const initialize = async () => {
-      const currentTime = new Date().toString();
-      await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
     };
@@ -36,9 +35,12 @@ const MeetingChatRoom = ({ route, navigation }) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
       if (chat.id === newMessage.roomId) {
+        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+          setActiveUserCount(newMessage.readCount);
+          return;
+        }
         setMessages((prevMessages) => [...prevMessages, newMessage]);
-        const currentTime = new Date().toString();
-        await AsyncStorage.setItem( 'lastRead;'+chat.id , currentTime);
+        await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
       }
     };
 
@@ -54,14 +56,18 @@ const MeetingChatRoom = ({ route, navigation }) => {
         };
       };
     };
+
     initialize().then(getMessageList)
-      .then(() => EventEmitter.on("newMessage", messageListener));
+      .then(() => {
+        EventEmitter.on("newMessage", messageListener)
+        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
+      });
 
     return () => {
       setMessages([]);
       // messageListener.removeListener("newMessage")
       EventEmitter.removeListener("newMessage", messageListener);
-      commitMessage()
+      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
       console.log('앱 끌때도 찍히나?')
 
     };

@@ -26,6 +26,9 @@ const MatchingChatListScreen = ({ navigation }) => {
     // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
     // console.log(message.body, '어떤형식으로옴?');
     const newMessage = JSON.parse(message.body);
+    if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+      return;
+    }
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
         if (chatRoom.id === newMessage.roomId) {

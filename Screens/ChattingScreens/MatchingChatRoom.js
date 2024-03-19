@@ -10,6 +10,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
   const chat = route.params.chat;
@@ -24,6 +25,10 @@ const MatchingChatRoom = ({ route, navigation }) => {
       // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
       const newMessage = JSON.parse(message.body);
       if (chat.id === newMessage.roomId) {
+        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+          setActiveUserCount(newMessage.readCount);
+          return;
+        }
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
       }
@@ -34,7 +39,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
         const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
         if (response.status == 200) {
           setMessages(response.data);
-
           const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
           if(lastMessage != null){
             await AsyncStorage.setItem('lastRead;' + chat.id, lastMessage.sendAt.toString())
@@ -46,12 +50,16 @@ const MatchingChatRoom = ({ route, navigation }) => {
         };
       };
     };
+
     initialize().then(getMessageList)
-      .then(() => EventEmitter.on("newMessage", messageListener));
+      .then(() => {
+        EventEmitter.on("newMessage", messageListener);
+        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
+      });
 
     return () => {
       setMessages([]);
-      // messageListener.removeListener("newMessage")
+      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
       EventEmitter.removeListener("newMessage", messageListener);
     };
   }, []);
@@ -62,7 +70,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
     }
 
     webSocketClient.publish("/pub/chat/"+chat.id, "application/json",  email, chat.id, message+"\u0000","SEND");
-
     setMessage("");
   };
 
