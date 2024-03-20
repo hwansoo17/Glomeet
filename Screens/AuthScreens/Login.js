@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
 import GlomeetLogo from "../../assets/logo.svg";
+import { GlomeetText } from '../../CustomComponent';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,6 +47,7 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/>  
               <View style={styles.imageContainer}>
                 <GlomeetLogo width={200} height={200}/>
+                <GlomeetText/>
               </View>
               <View style={{height: 10}}/> 
               <TextInput
@@ -90,6 +92,10 @@ const LoginScreen = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('OnBoard')}>
                 <Text>온보딩</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('RegiserTest')}>
+                <Text>등록 테스트</Text>
               </TouchableOpacity>
             </View>
             <View style={{flex:1}}/>

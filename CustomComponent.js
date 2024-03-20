@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity,TextInput, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export const BlueButton = ({ title, onPress }) => {
@@ -38,7 +38,7 @@ export const WhiteAuthButton = ({title, onPress, isButtonActive}) => {
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
 }
-export const GlomeetText = (
+export const GlomeetText = () => (
     <Text>
       간편하게{' '}
       <Text style={{ fontFamily: 'Pretendard', fontWeight: 'bold' }}>외국인 친구</Text>
@@ -49,7 +49,16 @@ export const GlomeetText = (
       </Text>
     </Text>
 );
-  
+export const InputBox = ({ value, onChangeText, placeholder }) => {
+  return (
+    <TextInput
+      placeholder={placeholder}
+      value={value}
+      onChangeText={onChangeText}
+      style={styles.input}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   blueButton: {
@@ -116,6 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 10,
   },
+  
   button: {
     height: 50,
     backgroundColor: '#5782F1',
