@@ -14,26 +14,35 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const webSocketClient = useWebSocket();
 
   const id = route.params.id;
- 
+  let subscription = null;
+
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
+      subscription = webSocketClient.subscribe("/sub/chat/"+id, async (message) => {
+        const newMessage = JSON.parse(message.body);
+        if(newMessage.type === "SEND") {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          await AsyncStorage.setItem('lastRead;' + id, newMessage.sendAt.toString());
+        }
+      })
       setEmail(email);
     };
 
-    const messageListener = async (message) => {
-      // console.log(message.body, '메시지리스너 인자')
-      // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-      const newMessage = JSON.parse(message.body);
-      if (id === newMessage.roomId) {
-        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-          setActiveUserCount(newMessage.readCount);
-          return;
-        }
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        await AsyncStorage.setItem( 'lastRead;'+id , newMessage.sendAt.toString());
-      }
-    };
+    // 필요없는 것 같은데 혹시 모르니 주석처리해놈
+    // const messageListener = async (message) => {
+    //   // console.log(message.body, '메시지리스너 인자')
+    //   // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
+    //   const newMessage = JSON.parse(message.body);
+    //   if (id === newMessage.roomId) {
+    //     if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+    //       setActiveUserCount(newMessage.readCount);
+    //       return;
+    //     }
+    //     setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     await AsyncStorage.setItem( 'lastRead;'+id , newMessage.sendAt.toString());
+    //   }
+    // };
 
     const getMessageList = async () => {
       try {
@@ -49,18 +58,17 @@ const MeetingChatRoom = ({ route, navigation }) => {
     };
 
     initialize().then(getMessageList)
-      .then(() => {
-        EventEmitter.on("newMessage", messageListener)
+      .then(async () => {
+        const email = await AsyncStorage.getItem("email");
         webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "ENTER")
       });
 
-    return () => {
+    return async () => {
       setMessages([]);
-      // messageListener.removeListener("newMessage")
-      EventEmitter.removeListener("newMessage", messageListener);
+      const email = await AsyncStorage.getItem("email");
+      // 채팅방 구독 해제
       webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "EXIT")
-      console.log('앱 끌때도 찍히나?')
-
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -84,6 +92,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
     const isMyMessage = item.senderEmail === email;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text>
+          {item.readCount}
+        </Text>
         <View style={{ flex: 1 }}/>
         <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
           <Text>{item.message}</Text>

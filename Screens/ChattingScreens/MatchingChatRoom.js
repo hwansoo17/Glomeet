@@ -14,29 +14,26 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const webSocketClient = useWebSocket();
 
   const chat = route.params.chat;
+  let subscription = null;
 
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
+      subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, async (message) => {
+        const newMessage = JSON.parse(message.body);
+        if(newMessage.type === "SEND") {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          await AsyncStorage.setItem('lastRead;' + chat.id, newMessage.sendAt.toString());
+        }
+      })
       setEmail(email);
     };
 
-    const messageListener = async (message) => {
-      // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-      const newMessage = JSON.parse(message.body);
-      if (chat.id === newMessage.roomId) {
-        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-          setActiveUserCount(newMessage.readCount);
-          return;
-        }
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
-      }
-    };
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
+        const lastReadAt = await AsyncStorage.getItem( 'lastRead;'+chat.id);
+        const response = await authApi.post("/chat/message-list", { "roomId": chat.id, "lastReadAt" : lastReadAt});
         if (response.status == 200) {
           setMessages(response.data);
           const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
@@ -52,15 +49,16 @@ const MatchingChatRoom = ({ route, navigation }) => {
     };
 
     initialize().then(getMessageList)
-      .then(() => {
-        EventEmitter.on("newMessage", messageListener);
+      .then(async () => {
+        const email = await AsyncStorage.getItem("email");
         webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
       });
 
-    return () => {
+    return async () => {
       setMessages([]);
+      const email = await AsyncStorage.getItem("email");
       webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
-      EventEmitter.removeListener("newMessage", messageListener);
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -84,6 +82,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
     const isMyMessage = item.senderEmail === email;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View>
+          <Text>
+            {item.readCount}
+          </Text>
+        </View>
         <View style={{ flex: 1 }} />
         <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
           <Text>{item.message}</Text>

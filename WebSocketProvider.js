@@ -4,10 +4,12 @@ import * as StompJs from "@stomp/stompjs";
 import config from "./config";
 import EventEmitter from "react-native-eventemitter";
 import {authApi} from "./api";
+import pushNoti from "./pushNoti";
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
 let webSocketClient = null;
 // const client = useRef(null);
+let subscriptions = {}; // 토픽과 subscription 매핑을 위한 객체
 const TextEncodingPolyfill = require("text-encoding");
 Object.assign("global", {
   TextEncoder: TextEncodingPolyfill.TextEncoder,
@@ -18,30 +20,14 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const connectWebSocketClient = async () => {
-      const chatList = await getChatList();
-      const client = await connectWebSocket(chatList);
+      const client = await connectWebSocket();
       return client
     };
 
     connectWebSocketClient()
   }, []); //연결하는 부분
 
-  const getChatList = async () => {
-    const email = await AsyncStorage.getItem("email");
-    try {
-      const response = await authApi.post("/chat/my");
-      if (response.status == 200) {
-        // console.log(response.data)
-        return response.data;
-      };
-    } catch (error) {
-      if (error.response.status == 401) {
-        console.log(error, '너야?')
-      };
-    };
-  };
-
-  const connectWebSocket = async (chatData) => {
+  const connectWebSocket = async () => {
     const email = await AsyncStorage.getItem("email");
     // 소켓 연결
     try {
@@ -56,17 +42,16 @@ export const WebSocketProvider = ({ children }) => {
         },
         reconnectDelay : 0,
         debug: function(str) {
-          // console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
+          console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
         },
       });
 
-      // 구독 (내가 속해있는 채팅방 등록하는)
+      // 구독 채팅방에 들어가 있지 않을 때 채팅 메시지 받아보는 채널
       clientData.onConnect = () => {
-        chatData.forEach((id) => {
-          clientData.subscribe("/sub/chat/" + id, (message) => {
-            handleWebSocketMessage(message);
-          });
+        clientData.subscribe("/sub/new-message/" + email, (message) => {
+          handleWebSocketMessage(message);
         });
+
         webSocketClient = clientData;
       };
 
@@ -104,8 +89,7 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   const login = async () => {
-    const data = await getChatList();
-    await connectWebSocket(data);
+    await connectWebSocket();
   }
 
   const logout = async () => {
@@ -116,8 +100,10 @@ export const WebSocketProvider = ({ children }) => {
     publish,login, logout, subscribe
   };
 
-  const handleWebSocketMessage = (message) => {
+  const handleWebSocketMessage = async (message) => {
     // 메시지 이벤트를 발생시키는 메서드
+    const newMessage = JSON.parse(message.body);
+    await pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
     EventEmitter.emit("newMessage", message);
   };
 
