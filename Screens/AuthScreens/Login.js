@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
 import GlomeetLogo from "../../assets/logo.svg";
-import { GlomeetText } from '../../CustomComponent';
+import { GlomeetText,Button } from '../../CustomComponent';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,17 +73,19 @@ const LoginScreen = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={{height: 10}}/> 
-              <TouchableOpacity 
-                style={styles.button}
-                onPress={login}>
-                <Text style={styles.buttonText}>로그인</Text>
-              </TouchableOpacity>
+                <Button
+                  title = '로그인'
+                  onPress = {login}
+                  buttonStyle={{backgroundColor: '#5782F1',borderRadius: 10 }}
+                  textStyle={{fontWeight: 'bold'}}                
+                />
               <View style={{height: 10}}/> 
-              <TouchableOpacity
-                style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
-                onPress={() => navigation.navigate('Register1')}>
-                <Text style={styles.linkText}>회원가입</Text>
-              </TouchableOpacity>
+                <Button
+                    title = '회원가입'
+                    onPress = {() => navigation.navigate('Register1')}
+                    buttonStyle={{backgroundColor: 'white',borderRadius: 10, borderColor:'#5782F1',borderWidth: 1 }}
+                    textStyle={{color:'#5782F1',fontWeight: 'bold'}}                  
+                 />
               <View style={{height: 10}}/> 
               <TouchableOpacity 
                 onPress={() => navigation.replace('Root')}>

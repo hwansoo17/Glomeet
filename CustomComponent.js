@@ -2,10 +2,12 @@ import React from 'react';
 import { TouchableOpacity,TextInput, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export const BlueButton = ({ title, onPress }) => {
+export const Button = ({ title, onPress, buttonStyle, textStyle }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.blueButton}>
-      <Text style={styles.blueButtonText}>{title}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.button, buttonStyle]}>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -59,6 +61,7 @@ export const InputBox = ({ value, onChangeText, placeholder }) => {
     />
   );
 };
+
 
 const styles = StyleSheet.create({
   blueButton: {
@@ -132,7 +135,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    paddingHorizontal: 20,
   },
   activeButton: {
     backgroundColor: '#5782F1',
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#5782F1',
   },
-  buttonText: {
+  text: {
     color: '#fff',
     fontSize: 16,
   },

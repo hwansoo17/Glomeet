@@ -84,7 +84,9 @@ const Register1 = ({navigation}) => {
         <View style={{ flex: 8 }}>
           <View style={styles.imageContainer}>
             <GlomeetLogo/>
+            <GlomeetText/>
           </View>
+          <View style={{height: 10}}/>
           <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 6 }}>
               <InputBox 
