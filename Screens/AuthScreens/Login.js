@@ -4,7 +4,8 @@ import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
-import Logo from '../../assets/Heartbeat.svg';
+import GlomeetLogo from "../../assets/logo.svg";
+import { GlomeetText,Button } from '../../CustomComponent';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,26 +14,21 @@ const LoginScreen = ({navigation}) => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
+      console.log(response.status)
       if (response.status == 200) {
-        console.log('로그인 성공: ', response.data)
+        console.log(response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
         await webSocketClient.login();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Root' }]
-        });
+        navigation.navigate('Root', {screen: 'Home'});
       }
       if (response.status == 201) {
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('accessToken', response.data.accessToken)
         await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
         await webSocketClient.login();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'OnBoard' }]
-        });
+        navigation.navigate('Root', {screen: 'Home'});
       }
     } catch (error) {
       if (error.response.status == 401) {
@@ -48,9 +44,10 @@ const LoginScreen = ({navigation}) => {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex:1}}/>
             <View style={{flex:8}}>
-              <View style={{height: 10}}/>
-              <View style={{alignItems: 'center'}}>
-                <Logo width={300} height={300}/>  
+              <View style={{height: 10}}/>  
+              <View style={styles.imageContainer}>
+                <GlomeetLogo width={200} height={200}/>
+                <GlomeetText/>
               </View>
               <View style={{height: 10}}/> 
               <TextInput
@@ -76,17 +73,19 @@ const LoginScreen = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={{height: 10}}/> 
-              <TouchableOpacity 
-                style={styles.button}
-                onPress={login}>
-                <Text style={styles.buttonText}>로그인</Text>
-              </TouchableOpacity>
+                <Button
+                  title = '로그인'
+                  onPress = {login}
+                  buttonStyle={{backgroundColor: '#5782F1',borderRadius: 10 }}
+                  textStyle={{fontWeight: 'bold'}}                
+                />
               <View style={{height: 10}}/> 
-              <TouchableOpacity
-                style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
-                onPress={() => navigation.navigate('Register1')}>
-                <Text style={styles.linkText}>회원가입</Text>
-              </TouchableOpacity>
+                <Button
+                    title = '회원가입'
+                    onPress = {() => navigation.navigate('Register1')}
+                    buttonStyle={{backgroundColor: 'white',borderRadius: 10, borderColor:'#5782F1',borderWidth: 1 }}
+                    textStyle={{color:'#5782F1',fontWeight: 'bold'}}                  
+                 />
               <View style={{height: 10}}/> 
               <TouchableOpacity 
                 onPress={() => navigation.replace('Root')}>
@@ -95,6 +94,10 @@ const LoginScreen = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('OnBoard')}>
                 <Text>온보딩</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('RegiserTest')}>
+                <Text>등록 테스트</Text>
               </TouchableOpacity>
             </View>
             <View style={{flex:1}}/>

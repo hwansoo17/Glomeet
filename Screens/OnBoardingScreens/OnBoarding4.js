@@ -42,8 +42,11 @@ const OnBoarding4 = ({navigation}) => {
       onPress={savePersonalType}>
       <Text>다음으로 넘어가기</Text>
     </TouchableOpacity>
+    <TouchableOpacity
+    onPress={() => navigation.navigate('Login')}>
+    <Text>로그인 화면으로</Text>
+    </TouchableOpacity>
   </View>
-
   )
 };
 export default OnBoarding4;

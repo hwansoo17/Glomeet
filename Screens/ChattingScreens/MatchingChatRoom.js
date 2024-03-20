@@ -1,11 +1,9 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
-import {authApi} from "../../api";
-// 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
-// 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
+import { authApi } from "../../api";
+
 const MatchingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
@@ -46,10 +44,8 @@ const MatchingChatRoom = ({ route, navigation }) => {
           }
         }
       } catch (error) {
-        if (error.response.status == 401) {
         console.log(error);
-        };
-      };
+      }
     };
 
     initialize().then(getMessageList)
@@ -74,13 +70,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
     setMessage("");
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: chat.id,
-      headerTitleAlign: "center",
-    });
-  }, [navigation]);
-
   const renderItem = ({ item }) => {
     const isMyMessage = item.senderEmail === email;
     return (
@@ -99,29 +88,77 @@ const MatchingChatRoom = ({ route, navigation }) => {
     );
   };
 
-
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={styles.container}>
       <FlatList
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        inverted />
-      <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ borderWidth: 1, borderRadius: 30, flex: 1 }}>
-          <TextInput
-            value={message}
-            onChangeText={setMessage}/>
-        </View>
-        <View style={{ flex: 1 }} />
-        <TouchableOpacity onPress={sendMessage}>
-          <Text>전송</Text>
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="메시지를 입력하세요"
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+          <Text style={styles.sendButtonText}>전송</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  messageContainer: {
+    backgroundColor: "#E5E5E5",
+    padding: 8,
+    borderRadius: 8,
+    marginVertical: 4,
+    maxWidth: "70%", // 최대 너비 설정
+  },
+  myMessageContainer: {
+    alignSelf: "flex-end",
+    backgroundColor: "#5782F1",
+  },
+  otherMessageContainer: {
+    alignSelf: "flex-start",
+  },
+  myMessageText: {
+    color: "#FFFFFF", 
+  },
+  otherMessageText: {
+    color: "#000000", 
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#CCCCCC",
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    flex: 1,
+    marginRight: 8,
+  },
+  sendButton: {
+    backgroundColor: "#5782F1",
+    borderRadius: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  sendButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
 
 export default MatchingChatRoom;

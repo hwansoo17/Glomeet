@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image } from "react-native";
 import { api } from '../../api';
+import GlomeetLogo from "../../assets/logo.svg";
+import { GlomeetText,InputBox  } from '../../CustomComponent';
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 //const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
 const Register1 = ({navigation}) => {
@@ -76,38 +78,62 @@ const Register1 = ({navigation}) => {
     };
   };
   return (
-    <><View style={styles.imageContainer}>
-      <Image
-        source={require('../../assets/ajou_logo.png')}
-        style={styles.imageStyle}
-        accessibilityRole="image"
-        accessibilityLabel="아주대학교 로고"
-        resizeMode="contain" />
+    <View style={styles.container}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
+        <View style={{ flex: 1 }} />
+        <View style={{ flex: 8 }}>
+          <View style={styles.imageContainer}>
+            <GlomeetLogo/>
+            <GlomeetText/>
+          </View>
+          <View style={{height: 10}}/>
+          <View style={{ flexDirection: 'row'}}>
+            <View style={{ flex: 6 }}>
+              <InputBox 
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+                placeholder="아주이메일 주소 입력"
+              />
+            </View>
+            <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={AuthCodeSend}
+                disabled={!isButtonActive}
+                style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}
+              >
+                <Text style={styles.buttonText}>인증번호 받기</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{height: 10}}/> 
+
+          <View style={{ flexDirection: 'row'}}>
+            <View style={{ flex: 6 }}>
+              <InputBox 
+                value={authCode}
+                onChangeText={setAuthCode}
+                style={styles.input}
+                placeholder="인증번호 입력"
+              />
+            </View>
+            <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={checkAuthCode}
+                disabled={!authCode || !isButtonActive}
+                style={[styles.button, (!authCode || !isButtonActive) ? styles.disabledButton : styles.activeButton]}
+              >
+                <Text style={styles.buttonText}>인증번호 확인</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+        </View>
+        <View style={{ flex: 1 }} />
+      </View>
     </View>
-    <View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="아주이메일 주소 입력" value={email} onChangeText={setEmail} style={styles.input} />
-          <TouchableOpacity
-            onPress={AuthCodeSend}
-            disabled={!isButtonActive}
-            style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>인증번호 받기</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="인증번호 입력" value={authCode} onChangeText={setAuthCode} style={styles.input} />
-          <TouchableOpacity
-            onPress={checkAuthCode}
-            style={styles.button}>
-            <Text style={styles.buttonText}>인증번호 확인</Text>
-          </TouchableOpacity>
-        </View>
-      </View><View style={styles.linkText}>
-        <TouchableOpacity onPress={() => navigation.navigate('Register2', { email: email })}>
-          <Text style={styles.linkText}>등록화면</Text>
-        </TouchableOpacity>
-      </View></>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -115,7 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
   title: {
@@ -125,7 +150,6 @@ const styles = StyleSheet.create({
   },
   emailText: {
     fontSize: 30,
-    marginBottom: 10,
     color: "#887E7E",
     paddingHorizontal: 10,
     fontWeight: 'bold',
@@ -133,18 +157,17 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
     paddingHorizontal: 10,
     
   },
   input: {
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 50,
     borderWidth: 1,
     borderColor: '#887E7E',
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginRight: 10,
   },
   button: {
     height: 50,
@@ -161,20 +184,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
   },
   buttonText: {
+    justifyContent: 'center',
+    alignItems: 'center',
     color: '#fff',
-    fontSize: 16,
-  },
-  linkContainer: {
-    marginTop: 20,
+    fontSize: 13,
   },
   linkText: {
     color: '#5782F1',
     fontSize: 16,
   },
   imageContainer: {
+    
     alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 20,
   },
   imageStyle: {
     width: 200,
