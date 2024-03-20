@@ -13,40 +13,40 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
-  const chat = route.params.chat;
-  const commitMessage = async() => {
-    try{
-      const response= await authApi.post("/chat/commit", {"id":chat.id})
-      if (response.status === 200) {
-        console.log(response.status);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const id = route.params.id;
+  let subscription = null;
+
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
+      subscription = webSocketClient.subscribe("/sub/chat/"+id, async (message) => {
+        const newMessage = JSON.parse(message.body);
+        if(newMessage.type === "SEND") {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          await AsyncStorage.setItem('lastRead;' + id, newMessage.sendAt.toString());
+        }
+      })
       setEmail(email);
     };
 
-    const messageListener = async (message) => {
-      // console.log(message.body, '메시지리스너 인자')
-      // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-      const newMessage = JSON.parse(message.body);
-      if (chat.id === newMessage.roomId) {
-        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-          setActiveUserCount(newMessage.readCount);
-          return;
-        }
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
-      }
-    };
+    // 필요없는 것 같은데 혹시 모르니 주석처리해놈
+    // const messageListener = async (message) => {
+    //   // console.log(message.body, '메시지리스너 인자')
+    //   // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
+    //   const newMessage = JSON.parse(message.body);
+    //   if (id === newMessage.roomId) {
+    //     if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+    //       setActiveUserCount(newMessage.readCount);
+    //       return;
+    //     }
+    //     setMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     await AsyncStorage.setItem( 'lastRead;'+id , newMessage.sendAt.toString());
+    //   }
+    // };
 
     const getMessageList = async () => {
       try {
-        const response = await authApi.post("/chat/message-list", { "roomId": chat.id });
+        const response = await authApi.post("/chat/message-list", { "roomId": id });
         if (response.status == 200) {
           setMessages(response.data);
         }
@@ -58,18 +58,17 @@ const MeetingChatRoom = ({ route, navigation }) => {
     };
 
     initialize().then(getMessageList)
-      .then(() => {
-        EventEmitter.on("newMessage", messageListener)
-        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
+      .then(async () => {
+        const email = await AsyncStorage.getItem("email");
+        webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "ENTER")
       });
 
-    return () => {
+    return async () => {
       setMessages([]);
-      // messageListener.removeListener("newMessage")
-      EventEmitter.removeListener("newMessage", messageListener);
-      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
-      console.log('앱 끌때도 찍히나?')
-
+      const email = await AsyncStorage.getItem("email");
+      // 채팅방 구독 해제
+      webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "EXIT")
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -78,13 +77,12 @@ const MeetingChatRoom = ({ route, navigation }) => {
       return;
     }
 
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, message+"\u0000", 'SEND');
+    webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, message+"\u0000", 'SEND');
     setMessage("");
   };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: chat.title,
       headerTitleAlign: "center",
     });
   }, [navigation]);
@@ -93,6 +91,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
     const isMyMessage = item.senderEmail === email;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text>
+          {item.readCount}
+        </Text>
         <View style={{ flex: 1 }}/>
         <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
           <Text>{item.message}</Text>

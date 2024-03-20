@@ -96,15 +96,15 @@ const MeetingChatList = ({ navigation }) => {
     };
   }, []);
 
-  const goChatroom = (chat) => {
-    navigation.navigate("MeetingChatRoom", {chat});
+  const goChatroom = (id) => {
+    navigation.navigate("MeetingChatRoom", {id});
   };
 
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         style={{ flexDirection: "row" }}
-        onPress={() => goChatroom(item)}>
+        onPress={() => goChatroom(item.id)}>
         <View style={{ flex: 1 }}>
           <Text>{item.title}</Text>
           <Text>{item.lastMessage}</Text>

@@ -14,25 +14,21 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const webSocketClient = useWebSocket();
 
   const chat = route.params.chat;
+  let subscription = null;
 
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
+      subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, async (message) => {
+        const newMessage = JSON.parse(message.body);
+        if(newMessage.type === "SEND") {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          await AsyncStorage.setItem('lastRead;' + chat.id, newMessage.sendAt.toString());
+        }
+      })
       setEmail(email);
     };
 
-    const messageListener = async (message) => {
-      // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-      const newMessage = JSON.parse(message.body);
-      if (chat.id === newMessage.roomId) {
-        if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-          setActiveUserCount(newMessage.readCount);
-          return;
-        }
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        await AsyncStorage.setItem( 'lastRead;'+chat.id , newMessage.sendAt.toString());
-      }
-    };
 
     const getMessageList = async () => {
       try {
@@ -53,15 +49,16 @@ const MatchingChatRoom = ({ route, navigation }) => {
     };
 
     initialize().then(getMessageList)
-      .then(() => {
-        EventEmitter.on("newMessage", messageListener);
+      .then(async () => {
+        const email = await AsyncStorage.getItem("email");
         webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
       });
 
-    return () => {
+    return async () => {
       setMessages([]);
+      const email = await AsyncStorage.getItem("email");
       webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
-      EventEmitter.removeListener("newMessage", messageListener);
+      subscription.unsubscribe();
     };
   }, []);
 
