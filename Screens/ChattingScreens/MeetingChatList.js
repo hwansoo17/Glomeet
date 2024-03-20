@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, FlatList, LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import EventEmitter from "react-native-eventemitter";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 
 const MeetingChatList = ({ navigation }) => {
@@ -58,7 +60,7 @@ const MeetingChatList = ({ navigation }) => {
       const response = await authApi.post("/meeting/list" ,{lastLeftMap : lastReadTime});
       if (response.status == 200) {
 
-        // console.log(response.data, ': 미팅리스트');
+        console.log(response.data, ': 미팅리스트');
         setChatData(response.data);
       };
     } catch (error) {
@@ -87,24 +89,33 @@ const MeetingChatList = ({ navigation }) => {
   };
 
 
-  useEffect(() => {
-    getChatList();
-    //console.log(chatData, '챗목록 데이터')
-    EventEmitter.on("newMessage", messageListener);
-    return () => {
-      EventEmitter.removeListener("newMessage", messageListener);
-    };
-  }, []);
-
-  const goChatroom = (chat) => {
-    navigation.navigate("MeetingChatRoom", {chat});
+  // useEffect(() => {
+  //   getChatList();
+  //   //console.log(chatData, '챗목록 데이터')
+  //   EventEmitter.on("newMessage", messageListener);
+  //   return () => {
+  //     EventEmitter.removeListener("newMessage", messageListener);
+  //   };
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getChatList();
+      //console.log(chatData, '챗목록 데이터')
+      EventEmitter.on("newMessage", messageListener);
+      return () => {
+        EventEmitter.removeListener("newMessage", messageListener);
+      };
+    }, []),
+  )
+  const goChatroom = (id) => {
+    navigation.navigate("MeetingChatRoom", {id});
   };
 
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         style={{ flexDirection: "row" }}
-        onPress={() => goChatroom(item)}>
+        onPress={() => goChatroom(item.id)}>
         <View style={{ flex: 1 }}>
           <Text>{item.title}</Text>
           <Text>{item.lastMessage}</Text>
