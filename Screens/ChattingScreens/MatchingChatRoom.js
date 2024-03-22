@@ -22,7 +22,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, async (message) => {
         const newMessage = JSON.parse(message.body);
         if(newMessage.type === "SEND") {
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          setMessages((prevMessages) => [newMessage, ...prevMessages]);
           await AsyncStorage.setItem('lastRead;' + chat.id, newMessage.sendAt.toString());
         }
       })
@@ -51,23 +51,25 @@ const MatchingChatRoom = ({ route, navigation }) => {
     initialize().then(getMessageList)
       .then(async () => {
         const email = await AsyncStorage.getItem("email");
-        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "ENTER")
+        const nickName = await AsyncStorage.getItem("nickName");
+        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
       });
 
     return async () => {
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
-      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, chat.id, "\u0000", "EXIT")
+      const nickName = await AsyncStorage.getItem("nickName");
+      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "EXIT")
       subscription.unsubscribe();
     };
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (message === "") {
       return;
     }
-
-    webSocketClient.publish("/pub/chat/"+chat.id, "application/json",  email, chat.id, message+"\u0000","SEND");
+    const nickName = await AsyncStorage.getItem("nickName");
+    webSocketClient.publish("/pub/chat/"+chat.id, "application/json",  email, nickName, chat.id, message+"\u0000","SEND");
     setMessage("");
   };
 

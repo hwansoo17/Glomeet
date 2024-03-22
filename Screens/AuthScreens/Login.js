@@ -16,8 +16,9 @@ const LoginScreen = ({navigation}) => {
       if (response.status == 200) {
         console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
-        await AsyncStorage.setItem('accessToken', response.data.accessToken)
-        await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
+        await AsyncStorage.setItem('nickName', response.data.nickName)
+        await AsyncStorage.setItem('accessToken', response.data.tokens.accessToken)
+        await AsyncStorage.setItem('refreshToken', response.data.tokens.refreshToken)
         await webSocketClient.login();
         navigation.reset({
           index: 0,
@@ -26,8 +27,9 @@ const LoginScreen = ({navigation}) => {
       }
       if (response.status == 201) {
         await AsyncStorage.setItem('email', email)
-        await AsyncStorage.setItem('accessToken', response.data.accessToken)
-        await AsyncStorage.setItem('refreshToken', response.data.refreshToken)
+        await AsyncStorage.setItem('nickName', response.data.nickName)
+        await AsyncStorage.setItem('accessToken', response.data.tokens.accessToken)
+        await AsyncStorage.setItem('refreshToken', response.data.tokens.refreshToken)
         await webSocketClient.login();
         navigation.reset({
           index: 0,
@@ -35,6 +37,7 @@ const LoginScreen = ({navigation}) => {
         });
       }
     } catch (error) {
+      console.log(error.response)
       if (error.response.status == 401) {
         console.log('로그인 실패: ', error);
         Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.');;
@@ -50,16 +53,16 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:8}}>
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
-                <Logo width={300} height={300}/>  
+                <Logo width={300} height={300}/>
               </View>
-              <View style={{height: 10}}/> 
+              <View style={{height: 10}}/>
               <TextInput
                 style={styles.input}
                 placeholder="이메일을 입력하세요"
                 value={email}
                 onChangeText={setEmail}
               />
-              <View style={{height: 10}}/> 
+              <View style={{height: 10}}/>
               <TextInput
                 style={styles.input}
                 placeholder="비밀번호를 입력하세요"
@@ -67,28 +70,28 @@ const LoginScreen = ({navigation}) => {
                 value={password}
                 onChangeText={setPassword}
               />
-              <View style={{height: 10}}/> 
+              <View style={{height: 10}}/>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:1}}/>
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() => navigation.navigate('PasswordReset1')}>
                   <Text>비밀번호 재설정</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{height: 10}}/> 
-              <TouchableOpacity 
+              <View style={{height: 10}}/>
+              <TouchableOpacity
                 style={styles.button}
                 onPress={login}>
                 <Text style={styles.buttonText}>로그인</Text>
               </TouchableOpacity>
-              <View style={{height: 10}}/> 
+              <View style={{height: 10}}/>
               <TouchableOpacity
                 style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
                 onPress={() => navigation.navigate('Register1')}>
                 <Text style={styles.linkText}>회원가입</Text>
               </TouchableOpacity>
-              <View style={{height: 10}}/> 
-              <TouchableOpacity 
+              <View style={{height: 10}}/>
+              <TouchableOpacity
                 onPress={() => navigation.replace('Root')}>
                 <Text>홈스크린</Text>
               </TouchableOpacity>
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor: 'white',
   },
-  input: { 
+  input: {
     height: 50,
     borderBottomWidth: 1,
     borderColor: '#887E7E',
