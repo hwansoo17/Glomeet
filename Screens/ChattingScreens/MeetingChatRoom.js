@@ -60,24 +60,26 @@ const MeetingChatRoom = ({ route, navigation }) => {
     initialize().then(getMessageList)
       .then(async () => {
         const email = await AsyncStorage.getItem("email");
-        webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "ENTER")
+        const nickName = await AsyncStorage.getItem("nickName");
+        webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, message+"\u0000","ENTER");
       });
 
     return async () => {
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
       // 채팅방 구독 해제
-      webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, "\u0000", "EXIT")
+      const nickName = await AsyncStorage.getItem("nickName");
+      webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, message+"\u0000","EXIT");
       subscription.unsubscribe();
     };
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (message === "") {
       return;
     }
-
-    webSocketClient.publish("/pub/chat/"+id, "application/json", email, id, message+"\u0000", 'SEND');
+    const nickName = await AsyncStorage.getItem("nickName");
+    webSocketClient.publish("/pub/chat/"+id, "application/json", email, nickName, id, message+"\u0000", 'SEND');
     setMessage("");
   };
 

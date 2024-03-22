@@ -62,7 +62,7 @@ export const WebSocketProvider = ({ children }) => {
     }
   };
 
-  const publish = async (destination, header, email, id, message, type) => {
+  const publish = async (destination, header, email, nickName, id, message, type) => {
     if (webSocketClient) {
       webSocketClient.publish({
           destination: destination,
@@ -70,6 +70,7 @@ export const WebSocketProvider = ({ children }) => {
           body: JSON.stringify({
             message: message,
             senderEmail : email,
+            senderNickName : nickName,
             roomId : id,
             type : type
           }),
@@ -79,6 +80,13 @@ export const WebSocketProvider = ({ children }) => {
       console.error("WebSocket is not connected.");
     }
   };
+  // 1. 채팅방에 들어와있는 유저 -> /sub/chat/chat.id
+  // 2. 채팅방은 안들어와있는데 어플은 킨 유저 /sub/new-message/email -> notifee
+  // 3. 어플이 백그라운드이거나 꺼진 유저 -> 푸시알림
+  //
+  // 둘다 끊는다면 다시 어플을 켰을 때 연결. 채팅방으로 들어왔으면 둘다 연결
+  //
+  // 서버에서 채팅방에 들어가있는지/어플을 켰는지 이걸 저장해놓고 있음.
 
   const subscribe = (destination, callback) => {
     if (webSocketClient) {
@@ -103,7 +111,7 @@ export const WebSocketProvider = ({ children }) => {
   const handleWebSocketMessage = async (message) => {
     // 메시지 이벤트를 발생시키는 메서드
     const newMessage = JSON.parse(message.body);
-    await pushNoti.displayNoti(newMessage.senderEmail, newMessage.message);
+    await pushNoti.displayNoti(newMessage.senderNickName, newMessage.message);
     EventEmitter.emit("newMessage", message);
   };
 

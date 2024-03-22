@@ -10,8 +10,8 @@ const MatchingChatListScreen = ({ navigation }) => {
 
   const getChatList = async () => {
     try {
-      const lastReadTime = await getChatRoomsLastLeftAtMap()
-      const response = await authApi.post("/matching/list", {lastLeftMap : lastReadTime});
+      console.log("chatlist");
+      const response = await authApi.post("/matching/list");
       if (response.status == 200) {
         setChatData(response.data);
         // console.log(response.data, ': 개인채팅방 리스트');
@@ -54,8 +54,10 @@ const MatchingChatListScreen = ({ navigation }) => {
   //   };
   // }, []);
   useFocusEffect(
-    useCallback(() => {
+    useCallback( () => {
+
       getChatList();
+
       //console.log(chatData, '챗목록 데이터')
       EventEmitter.on("newMessage", messageListener);
       return () => {

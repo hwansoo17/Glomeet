@@ -34,30 +34,11 @@ const MeetingChatList = ({ navigation }) => {
     }
   };
 
-  const getChatRoomsLastLeftAtMap = async () => {
-    try {
-      const allKeys = await AsyncStorage.getAllKeys();
-      const chatRoomKeys = allKeys.filter(key => key.startsWith('lastRead;'));
-
-      const chatRoomsLastLeftAtMap = {};
-
-      await Promise.all(chatRoomKeys.map(async key => {
-        const roomId = key.substring('lastRead;'.length);
-        const leftTime = await AsyncStorage.getItem(key);
-        chatRoomsLastLeftAtMap[roomId] = leftTime;
-      }));
-      return chatRoomsLastLeftAtMap;
-    } catch (error) {
-      return {};
-    }
-  };
-
   const getChatList = async () => {
 
     try {
-      const lastReadTime = await getChatRoomsLastLeftAtMap()
 
-      const response = await authApi.post("/meeting/list" ,{lastLeftMap : lastReadTime});
+      const response = await authApi.post("/meeting/list");
       if (response.status == 200) {
 
         console.log(response.data, ': 미팅리스트');
