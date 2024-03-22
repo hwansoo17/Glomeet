@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
-import Logo from '../../assets/Heartbeat.svg';
+import Logo from '../../assets/Glomeet_logo.svg';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,7 +50,7 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:8}}>
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
-                <Logo width={300} height={300}/>  
+                <Logo width={150} height={150}/>  
               </View>
               <View style={{height: 10}}/> 
               <TextInput
