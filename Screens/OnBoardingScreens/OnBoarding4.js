@@ -1,12 +1,13 @@
 import React ,{useState} from "react";
-import {View, Text, TouchableOpacity, FlatList, StyleSheet} from "react-native";
+import {View, Text, TouchableOpacity, FlatList, StyleSheet, Modal} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../../api"
 import { Button } from '../../CustomComponent';
-
+import CustomModal from '../../Alert';
 const OnBoarding4 = ({navigation}) => {
   const [userPersonalType, setUserPersonalType] = useState('')
   const [isButtonActive, setButtonActive] = useState(null);
+  const [modalVisible,setModalVisible] = useState(false); 
   const personalTypeData = ['외향적', '내향적']
   const savePersonalType = async() => {
     const email = await AsyncStorage.getItem('email')
@@ -17,14 +18,27 @@ const OnBoarding4 = ({navigation}) => {
       if (response.status == 200) {
         console.log(email, userContinent, userHobby, userPersonalType)
         navigation.navigate('OnBoarding5')
+        setModalVisible(true)
       }; 
     } catch (error) {
       if (error.response.status == 409) {
         console.log(error.response.status);
       };
     }
-  }  
-  
+  } 
+  const handlePress = () => {
+    setModalVisible(false);
+  };
+
+  const handleConfirm = () => {
+    console.log('확인 버튼을 눌렀습니다.');
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    console.log('취소 버튼을 눌렀습니다.');
+    setModalVisible(false);
+  };    
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={[
@@ -41,6 +55,7 @@ const OnBoarding4 = ({navigation}) => {
   const TEXTS = {
     TITLE: ['당신은', '성향은 무엇인가요?'],
     SUBTITLE: ['Choose one option for now.', 'You can explore others later.'],
+    Alert: ["글로밋에서 보내는 정보 및", "알림(push)를 받아보시겠습니까?","수신 동의 시 챌린지 및 매칭 완료 등 정보에 대한" ,"알림을 받아보실 수 있습니다."],
   };
 return (
   <View style={styles.container}>
@@ -60,19 +75,29 @@ return (
             renderItem={renderItem}
             keyExtractor={item => item.id}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-
-
           />
-          <TouchableOpacity
-          onPress={() => navigation.navigate('Login')}>
-          <Text>로그인 화면으로</Text>
-          </TouchableOpacity>
-          
           <Button title='다음으로 넘어가기' onPress={savePersonalType} textStyle={{fontWeight: 'bold'}}/>
+          <CustomModal
+           visible={modalVisible}
+           text={[TEXTS.Alert[0],TEXTS.Alert[1],TEXTS.Alert[2],TEXTS.Alert[3]]}
+           textStyle={[
+            { fontWeight: 'bold',fontSize: 16 }, 
+            {fontWeight: 'bold',fontSize: 16 },
+            { color: 'black',fontSize: 13 },
+          ]}
+           onCancel={handleCancel}
+           onConfirm={handleConfirm}
+          />
         </View>
         <View style={{ flex: 1 }}/>
       </View>
       <View style={{ flex: 1 }} />
+    </View>
+    <View>
+    <TouchableOpacity
+    onPress={() => navigation.navigate('OnBoarding3')}>
+    <Text>온보딩3 화면으로</Text>
+  </TouchableOpacity>
     </View>
   </View>
 );

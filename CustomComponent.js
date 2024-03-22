@@ -51,13 +51,13 @@ export const GlomeetText = () => (
       </Text>
     </Text>
 );
-export const InputBox = ({ value, onChangeText, placeholder }) => {
+export const InputBox = ({ value, onChangeText, placeholder, customStyle }) => {
   return (
     <TextInput
-      placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
-      style={styles.input}
+      style={[styles.input, customStyle]} // 기본 스타일과 customStyle을 합침
+      placeholder={placeholder}
     />
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from '../../CustomComponent';
@@ -6,30 +6,33 @@ import { Button } from '../../CustomComponent';
 const OnBoarding3 = ({ navigation }) => {
   const [userHobby, setUserHobby] = useState('');
   const hobbyData = ['운동', '여행', '게임', '문화', '음식', '언어'];
+  useEffect(() => {
+    console.log(userHobby);
+  }, [userHobby]);
 
   const saveHobby = async () => {
     await AsyncStorage.setItem('userHobby', userHobby);
     navigation.navigate('OnBoarding4');
   };
-const [isButtonActive, setButtonActive] = useState(null);
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={[
-        styles.item,
-        isButtonActive === item && styles.isButtonActive // 선택된 아이템인 경우 스타일을 적용
-      ]}
-      onPress={() => {
-        setUserHobby(item);
-        setButtonActive(item); // 아이템 선택 시 상태 업데이트
-      }}>
-      <Text style = {[styles.textstyle, isButtonActive === item && styles.activeTextStyle]}>{item}</Text>
-    </TouchableOpacity>
-  );
-const TEXTS = {
-  TITLE: ['당신은', '관심사는 무엇인가요?'],
-  SUBTITLE: ['Choose one option for now.', 'You can explore others later.'],
-  BUTTON_TEXT: '다음으로 넘어가기',
-};
+  const [isButtonActive, setButtonActive] = useState(null);
+    const renderItem = ({ item }) => (
+      <TouchableOpacity
+        style={[
+          styles.item,
+          isButtonActive === item && styles.isButtonActive // 선택된 아이템인 경우 스타일을 적용
+        ]}
+        onPress={() => {
+          setUserHobby(item);
+          setButtonActive(item); // 아이템 선택 시 상태 업데이트
+        }}>
+        <Text style = {[styles.textstyle, isButtonActive === item && styles.activeTextStyle]}>{item}</Text>
+      </TouchableOpacity>
+    );
+  const TEXTS = {
+    TITLE: ['당신은', '관심사는 무엇인가요?'],
+    SUBTITLE: ['Choose one option for now.', 'You can explore others later.'],
+    BUTTON_TEXT: '다음으로 넘어가기',
+  };
 
  return (
   <View style={styles.container}>
