@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   activeButton: {
     backgroundColor: '#5782F1',
@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: '#fff',
     fontSize: 13,
+
   },
   linkText: {
     color: '#5782F1',

@@ -59,7 +59,7 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/> 
               <TextInput
                 style={styles.input}
-                placeholder="비밀번호를 입력하세요"
+                placeholder="비밀번호를 입력s하세요"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
@@ -96,7 +96,7 @@ const LoginScreen = ({navigation}) => {
                 <Text>온보딩</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('RegiserTest')}>
+                onPress={() => navigation.navigate('Regiser2')}>
                 <Text>등록 테스트</Text>
               </TouchableOpacity>
             </View>

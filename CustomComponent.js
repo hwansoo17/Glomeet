@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5782F1',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 25,
   },
   activeButton: {
     backgroundColor: '#5782F1',

@@ -44,7 +44,7 @@ const MeetingCreate = ({navigation}) => {
         handleWebSocketMessage(message)
       })
       
-      goChatRoom(response.data.id)
+      goChatRoom(response.data)
       Alert.alert('모임이 생성되었습니다')
       await publish("/pub/chat/"+ response.data.id, "application/json", email, response.data.id,"생성메세지인데 서버에서 할거임", "CREATE")
     }
@@ -58,7 +58,7 @@ const MeetingCreate = ({navigation}) => {
       }
     };
   };
-  const goChatRoom = (id) => {
+  const goChatRoom = (chat) => {
     navigation.reset({
         index: 0, 
         routes: [{
@@ -69,7 +69,7 @@ const MeetingCreate = ({navigation}) => {
                   state: {routes: [{name: '모임'}]} }, 
                 {
                   name: 'MeetingChatRoom',
-                  params: { id }, 
+                  params: {chat}, 
                 },
               ],
             },

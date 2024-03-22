@@ -19,7 +19,7 @@ const MeetingDetail = ({route, navigation}) => {
           handleWebSocketMessage(message)
         })
         publish("/pub/chat/"+ detail.meeting.id, "application/json", email, detail.meeting.id, "입장메세지인데 서버에서 할거임", "JOIN")
-        goChatRoom(detail.meeting.id)
+        goChatRoom(detail.meeting)
       };
     } catch (error) {
       if (error.response.status == 409) {
@@ -30,7 +30,7 @@ const MeetingDetail = ({route, navigation}) => {
     };
   };
 
-  const goChatRoom = (id) => {
+  const goChatRoom = (chat) => {
     navigation.reset({
         index: 0, 
         routes: [{
@@ -41,7 +41,7 @@ const MeetingDetail = ({route, navigation}) => {
                   state: {routes: [{name: '모임'}]} }, 
                 {
                   name: 'MeetingChatRoom',
-                  params: { id }, 
+                  params: {chat }, 
                 },
               ],
             },
