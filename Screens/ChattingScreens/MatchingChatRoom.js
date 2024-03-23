@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView } from "react-native";
+import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView, AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
@@ -13,9 +13,10 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
+  const appState = useRef(AppState.currentState);
   const chat = route.params.chat;
   let subscription = null;
-
+  
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
@@ -29,11 +30,36 @@ const MatchingChatRoom = ({ route, navigation }) => {
       setEmail(email);
     };
 
-
+    const fn_handleAppStateChange = async(nextAppState) => {
+      const email = await AsyncStorage.getItem("email")
+      console.log("appState.current ::: ", appState.current, nextAppState);
+      
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('⚽️⚽️App has come to the foreground!');
+        console.log(appState.current, nextAppState, '백에서 프론트');
+        initialize().then(getMessageList).then(async () => {
+          const nickName = await AsyncStorage.getItem("nickName");
+          webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
+        })
+      }
+      if (
+        appState.current.match(/inactive|active/) &&
+        nextAppState === 'background'
+      ) {
+        console.log('⚽️⚽️App has come to the background!');
+        const email = await AsyncStorage.getItem("email");
+        const nickName = await AsyncStorage.getItem("nickName");
+        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "EXIT")
+        subscription.unsubscribe();
+      }
+      appState.current = nextAppState;
+  };
     const getMessageList = async () => {
       try {
-        const lastReadAt = await AsyncStorage.getItem( 'lastRead;'+chat.id);
-        const response = await authApi.post("/chat/message-list", { "roomId": chat.id, "lastReadAt" : lastReadAt});
+        const response = await authApi.post("/chat/message-list", { "roomId": chat.id});
         if (response.status == 200) {
           setMessages(response.data);
           const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
@@ -54,6 +80,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         const nickName = await AsyncStorage.getItem("nickName");
         webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
       });
+    AppState.addEventListener('change', fn_handleAppStateChange);
 
     return async () => {
       setMessages([]);

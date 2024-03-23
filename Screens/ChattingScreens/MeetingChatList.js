@@ -53,13 +53,17 @@ const MeetingChatList = ({ navigation }) => {
   const messageListener = async (message) => {
     // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
     const newMessage = JSON.parse(message.body);
+    if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+      return;
+    }
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
         if (chatRoom.id === newMessage.roomId) {
           return {
             ...chatRoom,
             lastMessage: newMessage.message,
-            sendAt: new Date().toISOString()
+            sendAt: new Date().toISOString(),
+            unRead: (chatRoom.unRead || 0) + 1
           };
         } else {
           return chatRoom;

@@ -1,15 +1,18 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as StompJs from "@stomp/stompjs";
 import config from "./config";
 import EventEmitter from "react-native-eventemitter";
 import {authApi} from "./api";
 import pushNoti from "./pushNoti";
+
+
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
-let webSocketClient = null;
+let webSocketClient = null
 // const client = useRef(null);
-let subscriptions = {}; // 토픽과 subscription 매핑을 위한 객체
+let subscription = null; // 토픽과 subscription 매핑을 위한 객체
 const TextEncodingPolyfill = require("text-encoding");
 Object.assign("global", {
   TextEncoder: TextEncodingPolyfill.TextEncoder,
@@ -18,21 +21,49 @@ Object.assign("global", {
 
 export const WebSocketProvider = ({ children }) => {
 
-  useEffect(() => {
-    const connectWebSocketClient = async () => {
-      const client = await connectWebSocket();
-      return client
-    };
+  const appState = useRef(AppState.currentState);
 
-    connectWebSocketClient()
+  useEffect(() => {
+    connectWebSocket()
+
+    AppState.addEventListener('change', fn_handleAppStateChange);
+    return () => {
+      // 사용자가 앱의 상태가 변경 되었을 경우 실행이 된다.
+      AppState.removeEventListener('change', fn_handleAppStateChange);
+  };
+
   }, []); //연결하는 부분
+
+  const fn_handleAppStateChange = async(nextAppState) => {
+    const email = await AsyncStorage.getItem("email")
+    console.log("appState.current ::: ", appState.current, nextAppState);
+
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      console.log('⚽️⚽️App has come to the foreground!');
+      console.log(appState.current, nextAppState, '백에서 프론트');
+      subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
+        handleWebSocketMessage(message);
+      });
+    }
+    if (
+      appState.current.match(/inactive|active/) &&
+      nextAppState === 'background'
+    ) {
+      console.log('⚽️⚽️App has come to the background!');
+      subscription.unsubscribe();
+    }
+    appState.current = nextAppState;
+};
 
   const connectWebSocket = async () => {
     const email = await AsyncStorage.getItem("email");
     // 소켓 연결
     try {
       const accessToken = await AsyncStorage.getItem("accessToken");
-      const clientData = new StompJs.Client({
+      webSocketClient = new StompJs.Client({
         brokerURL: config.WebSocket_URL,
         forceBinaryWSFrames: true,
         appendMissingNULLonIncoming: true,
@@ -42,21 +73,18 @@ export const WebSocketProvider = ({ children }) => {
         },
         reconnectDelay : 0,
         debug: function(str) {
-          console.log(str); // 웹소켓 연결 로그보려면 이거 주석 해제
+          console.log(str, '웹소켓 연결 로그'); // 웹소켓 연결 로그보려면 이거 주석 해제
         },
       });
 
       // 구독 채팅방에 들어가 있지 않을 때 채팅 메시지 받아보는 채널
-      clientData.onConnect = () => {
-        clientData.subscribe("/sub/new-message/" + email, (message) => {
+      webSocketClient.onConnect = () => {
+        subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
           handleWebSocketMessage(message);
         });
-
-        webSocketClient = clientData;
       };
 
-      clientData.activate(); // 클라이언트 활성화
-      return clientData;
+      webSocketClient.activate(); // 클라이언트 활성화
     } catch (err) {
       console.error(err, '너니?');
     }

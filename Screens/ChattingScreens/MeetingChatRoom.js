@@ -22,7 +22,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
       subscription = webSocketClient.subscribe("/sub/chat/"+id, async (message) => {
         const newMessage = JSON.parse(message.body);
         if(newMessage.type === "SEND") {
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          setMessages((prevMessages) => [newMessage,...prevMessages]);
           await AsyncStorage.setItem('lastRead;' + id, newMessage.sendAt.toString());
         }
       })
@@ -49,6 +49,11 @@ const MeetingChatRoom = ({ route, navigation }) => {
         const response = await authApi.post("/chat/message-list", { "roomId": id });
         if (response.status == 200) {
           setMessages(response.data);
+          console.log(response.data.length, '이게 뭔데');
+          const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
+          if(lastMessage != null){
+            await AsyncStorage.setItem('lastRead;' + id, lastMessage.sendAt.toString())
+          }
         }
       } catch (error) {
         if (error.response.status == 401) {

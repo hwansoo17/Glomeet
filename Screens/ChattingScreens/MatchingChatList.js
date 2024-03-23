@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback} from "react";
-import { View, Text, TouchableOpacity, FlatList, LogBox } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, LogBox} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import EventEmitter from "react-native-eventemitter";
 import { formatDate, getChatRoomsLastLeftAtMap} from "../../chatUtils";
 import { useFocusEffect } from "@react-navigation/native";
+
 const MatchingChatListScreen = ({ navigation }) => {
   const [chatData, setChatData] = useState([]);
 
@@ -27,17 +28,20 @@ const MatchingChatListScreen = ({ navigation }) => {
     // console.log(message.body, '어떤형식으로옴?');
     const newMessage = JSON.parse(message.body);
     if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
+      console.log(newMessage)
       return;
     }
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
         if (chatRoom.id === newMessage.roomId) {
+          console.log(newMessage)
           return {
             ...chatRoom,
-            message: newMessage.message,
+            lastMessage: newMessage.message,
             sendAt: new Date().toISOString(),
             unRead: (chatRoom.unRead || 0) + 1
           };
+          // 타입이 exit 일때 unread값 영어로 바꿔준다.
         } else {
           return chatRoom;
         }
@@ -45,26 +49,26 @@ const MatchingChatListScreen = ({ navigation }) => {
       return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
     });
   };
-  // useEffect(() => {
-  //   getChatList();
-  //   //console.log(chatData, '챗목록 데이터')
-  //   EventEmitter.on("newMessage", messageListener);
-  //   return () => {
-  //     EventEmitter.removeListener("newMessage", messageListener);
-  //   };
-  // }, []);
-  useFocusEffect(
-    useCallback( () => {
+  useEffect(() => {
+    getChatList();
+    //console.log(chatData, '챗목록 데이터')
+    EventEmitter.on("newMessage", messageListener);
+    return () => {
+      EventEmitter.removeListener("newMessage", messageListener);
+    };
+  }, []);
+  // useFocusEffect(
+  //   useCallback( () => {
 
-      getChatList();
+  //     getChatList();
 
-      //console.log(chatData, '챗목록 데이터')
-      EventEmitter.on("newMessage", messageListener);
-      return () => {
-        EventEmitter.removeListener("newMessage", messageListener);
-      };
-    }, []),
-  )
+  //     console.log('@@@@')
+  //     EventEmitter.on("newMessage", messageListener);
+  //     return () => {
+  //       EventEmitter.removeListener("newMessage", messageListener);
+  //     };
+  //   }, []),
+  // )
   const goChatroom = (chat) => {
     navigation.navigate("MatchingChatRoom", { chat });
   };
