@@ -26,10 +26,10 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     connectWebSocket()
 
-    AppState.addEventListener('change', fn_handleAppStateChange);
+    const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
     return () => {
       // 사용자가 앱의 상태가 변경 되었을 경우 실행이 된다.
-      AppState.removeEventListener('change', fn_handleAppStateChange);
+      appState1.remove()
   };
 
   }, []); //연결하는 부분

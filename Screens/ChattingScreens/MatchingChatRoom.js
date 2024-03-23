@@ -18,6 +18,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   let subscription = null;
   
   useEffect(() => {
+    console.log(subscription, '채팅방 구독 내역')
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
       subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, async (message) => {
@@ -80,9 +81,10 @@ const MatchingChatRoom = ({ route, navigation }) => {
         const nickName = await AsyncStorage.getItem("nickName");
         webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
       });
-    AppState.addEventListener('change', fn_handleAppStateChange);
+      const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
 
     return async () => {
+      appState1.remove()
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
       const nickName = await AsyncStorage.getItem("nickName");
