@@ -16,35 +16,31 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const appState = useRef(AppState.currentState);
   const chat = route.params.chat;
   let subscription = null;
-  
+
   useEffect(() => {
     console.log(subscription, '채팅방 구독 내역')
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
-      subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, async (message) => {
+      subscription = webSocketClient.subscribe("/sub/chat/"+chat.id, (message) => {
         const newMessage = JSON.parse(message.body);
         if(newMessage.type === "SEND") {
           setMessages((prevMessages) => [newMessage, ...prevMessages]);
-          await AsyncStorage.setItem('lastRead;' + chat.id, newMessage.sendAt.toString());
         }
-      })
+      }, {'email' : email});
       setEmail(email);
     };
 
     const fn_handleAppStateChange = async(nextAppState) => {
       const email = await AsyncStorage.getItem("email")
       console.log("appState.current ::: ", appState.current, nextAppState);
-      
+
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
         console.log('⚽️⚽️App has come to the foreground!');
         console.log(appState.current, nextAppState, '백에서 프론트');
-        initialize().then(getMessageList).then(async () => {
-          const nickName = await AsyncStorage.getItem("nickName");
-          webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
-        })
+        initialize().then(getMessageList);
       }
       if (
         appState.current.match(/inactive|active/) &&
@@ -52,9 +48,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       ) {
         console.log('⚽️⚽️App has come to the background!');
         const email = await AsyncStorage.getItem("email");
-        const nickName = await AsyncStorage.getItem("nickName");
-        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "EXIT")
-        subscription.unsubscribe();
+        subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+chat.id});
       }
       appState.current = nextAppState;
   };
@@ -75,21 +69,14 @@ const MatchingChatRoom = ({ route, navigation }) => {
       };
     };
 
-    initialize().then(getMessageList)
-      .then(async () => {
-        const email = await AsyncStorage.getItem("email");
-        const nickName = await AsyncStorage.getItem("nickName");
-        webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "ENTER")
-      });
-      const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
+    initialize().then(getMessageList);
+    const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
 
     return async () => {
       appState1.remove()
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
-      const nickName = await AsyncStorage.getItem("nickName");
-      webSocketClient.publish("/pub/chat/"+chat.id, "application/json", email, nickName, chat.id, "\u0000", "EXIT")
-      subscription.unsubscribe();
+      subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+chat.id});
     };
   }, []);
 

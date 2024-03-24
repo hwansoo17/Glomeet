@@ -18,7 +18,7 @@ import { authApi } from "./api"
 export const AppContext = createContext();
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
-  await pushNoti.displayNoti(remoteMessage.notification.title, remoteMessage.notification.body);
+  await pushNoti.displayNoti(remoteMessage.data.title, remoteMessage.data.body);
 });
 
 const Stack = createNativeStackNavigator();

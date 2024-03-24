@@ -63,18 +63,10 @@ const MeetingChatRoom = ({ route, navigation }) => {
     };
 
     initialize().then(getMessageList)
-      .then(async () => {
-        const email = await AsyncStorage.getItem("email");
-        const nickName = await AsyncStorage.getItem("nickName");
-        webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, message+"\u0000","ENTER");
-      });
+      .then();
 
     return async () => {
       setMessages([]);
-      const email = await AsyncStorage.getItem("email");
-      // 채팅방 구독 해제
-      const nickName = await AsyncStorage.getItem("nickName");
-      webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, message+"\u0000","EXIT");
       subscription.unsubscribe();
     };
   }, []);

@@ -46,14 +46,15 @@ export const WebSocketProvider = ({ children }) => {
       console.log(appState.current, nextAppState, '백에서 프론트');
       subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
         handleWebSocketMessage(message);
-      });
+      },{ 'email': email });
     }
     if (
       appState.current.match(/inactive|active/) &&
       nextAppState === 'background'
     ) {
       console.log('⚽️⚽️App has come to the background!');
-      subscription.unsubscribe();
+      // subscription.unsubscribe();
+      subscription.unsubscribe({"email" : email, "destination" : "/sub/new-message/"+email});
     }
     appState.current = nextAppState;
 };
@@ -81,7 +82,7 @@ export const WebSocketProvider = ({ children }) => {
       webSocketClient.onConnect = () => {
         subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
           handleWebSocketMessage(message);
-        });
+        },{ 'email': email });
       };
 
       webSocketClient.activate(); // 클라이언트 활성화
@@ -116,9 +117,9 @@ export const WebSocketProvider = ({ children }) => {
   //
   // 서버에서 채팅방에 들어가있는지/어플을 켰는지 이걸 저장해놓고 있음.
 
-  const subscribe = (destination, callback) => {
+  const subscribe = (destination, callback, headers) => {
     if (webSocketClient) {
-      return webSocketClient.subscribe(destination, callback);
+      return webSocketClient.subscribe(destination, callback, headers);
     } else {
       console.error("웹소켓에 연결되지 않음");
     }
