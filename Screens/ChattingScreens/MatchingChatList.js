@@ -41,7 +41,7 @@ const MatchingChatListScreen = ({ navigation }) => {
             sendAt: new Date().toISOString(),
             unRead: (chatRoom.unRead || 0) + 1
           };
-          // 타입이 exit 일때 unread값 영어로 바꿔준다.
+          // 타입이 exit 일때 unread값 0으로 바꿔준다.
         } else {
           return chatRoom;
         }
@@ -49,9 +49,28 @@ const MatchingChatListScreen = ({ navigation }) => {
       return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
     });
   };
+  const chatRoomListener = (id) => {
+    console.log(id.chatRoomId, '채탱방 아이디');
+    setChatData(currentChatData => {
+      const updatedChatData = currentChatData.map(chatRoom => {
+        if (chatRoom.id === id.chatRoomId) {
+          return {
+            ...chatRoom,
+            unRead: 0
+          };
+          // 타입이 exit 일때 unread값 0으로 바꿔준다.
+        } else {
+          return chatRoom;
+        }
+      })
+      return updatedChatData
+    });
+    
+  }
   useEffect(() => {
     getChatList();
     //console.log(chatData, '챗목록 데이터')
+    EventEmitter.on('leaveChatRoom', chatRoomListener)
     EventEmitter.on("newMessage", messageListener);
     return () => {
       EventEmitter.removeListener("newMessage", messageListener);

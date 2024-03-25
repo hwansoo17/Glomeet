@@ -17,6 +17,20 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const chat = route.params.chat;
   let subscription = null;
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            EventEmitter.emit('leaveChatRoom', { chatRoomId: chat.id });
+            navigation.goBack();
+          }}
+        >
+          <Text>뒤로</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, chat.id]);
   useEffect(() => {
     console.log(subscription, '채팅방 구독 내역')
     const initialize = async () => {
