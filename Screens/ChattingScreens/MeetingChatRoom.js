@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView } from "react-native";
+import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView, AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
@@ -10,12 +10,26 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
-  const id = route.params.id;
+  const appState = useRef(AppState.currentState);
+  const id = route.params.chat;
   let subscription = null;
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
+            navigation.goBack();
+          }}
+        >
+          <Text>뒤로</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, id]);
   useEffect(() => {
     const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
@@ -23,37 +37,37 @@ const MeetingChatRoom = ({ route, navigation }) => {
         const newMessage = JSON.parse(message.body);
         if(newMessage.type === "SEND") {
           setMessages((prevMessages) => [newMessage,...prevMessages]);
-          await AsyncStorage.setItem('lastRead;' + id, newMessage.sendAt.toString());
         }
-      })
+      }, {'email' : email})
       setEmail(email);
     };
 
-    // 필요없는 것 같은데 혹시 모르니 주석처리해놈
-    // const messageListener = async (message) => {
-    //   // console.log(message.body, '메시지리스너 인자')
-    //   // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-    //   const newMessage = JSON.parse(message.body);
-    //   if (id === newMessage.roomId) {
-    //     if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-    //       setActiveUserCount(newMessage.readCount);
-    //       return;
-    //     }
-    //     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    //     await AsyncStorage.setItem( 'lastRead;'+id , newMessage.sendAt.toString());
-    //   }
-    // };
+    const fn_handleAppStateChange = async(nextAppState) => {
+      const email = await AsyncStorage.getItem("email")
+      console.log("appState.current ::: ", appState.current, nextAppState);
 
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log(appState.current, nextAppState, '백에서 포어');
+        initialize().then(getMessageList);
+      }
+      if (
+        appState.current.match(/inactive|active/) &&
+        nextAppState === 'background'
+      ) {
+        console.log(appState.current, nextAppState, '포어에서 백');
+        const email = await AsyncStorage.getItem("email");
+        subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+id});
+      }
+      appState.current = nextAppState;
+  };
     const getMessageList = async () => {
       try {
         const response = await authApi.post("/chat/message-list", { "roomId": id });
         if (response.status == 200) {
           setMessages(response.data);
-          console.log(response.data.length, '이게 뭔데');
-          const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
-          if(lastMessage != null){
-            await AsyncStorage.setItem('lastRead;' + id, lastMessage.sendAt.toString())
-          }
         }
       } catch (error) {
         if (error.response.status == 401) {
@@ -62,12 +76,14 @@ const MeetingChatRoom = ({ route, navigation }) => {
       };
     };
 
-    initialize().then(getMessageList)
-      .then();
+    initialize().then(getMessageList);
+    const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
 
     return async () => {
+      appState1.remove()
       setMessages([]);
-      subscription.unsubscribe();
+      const email = await AsyncStorage.getItem("email");
+      subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+id});
     };
   }, []);
 

@@ -10,7 +10,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [activeUserCount, setActiveUserCount] = useState(0);
   const webSocketClient = useWebSocket();
 
   const appState = useRef(AppState.currentState);
@@ -71,10 +70,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
         const response = await authApi.post("/chat/message-list", { "roomId": chat.id});
         if (response.status == 200) {
           setMessages(response.data);
-          const lastMessage = response.data.length > 0 ? response.data[response.data.length-1] : null;
-          if(lastMessage != null){
-            await AsyncStorage.setItem('lastRead;' + chat.id, lastMessage.sendAt.toString())
-          }
         }
       } catch (error) {
         if (error.response.status == 401) {

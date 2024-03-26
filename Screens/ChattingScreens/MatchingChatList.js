@@ -1,102 +1,21 @@
-import React, { useEffect, useState, useCallback} from "react";
-import { View, Text, TouchableOpacity, FlatList, LogBox} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { authApi } from "../../api";
-import EventEmitter from "react-native-eventemitter";
-import { formatDate, getChatRoomsLastLeftAtMap} from "../../chatUtils";
-import { useFocusEffect } from "@react-navigation/native";
+import React from "react";
+import { View, Text, TouchableOpacity, FlatList} from "react-native";
+import useChatList from '../../useChatList';
+import { formatDate } from "../../formatDate";
 
 const MatchingChatListScreen = ({ navigation }) => {
-  const [chatData, setChatData] = useState([]);
+  const chatData = useChatList("/matching/list")
+  //챗리스트 가져오는 커스텀훅
 
-  const getChatList = async () => {
-    try {
-      console.log("chatlist");
-      const response = await authApi.post("/matching/list");
-      if (response.status == 200) {
-        setChatData(response.data);
-        // console.log(response.data, ': 개인채팅방 리스트');
-      };
-    } catch (error) {
-      if (error.response.status == 401) {
-        console.log(error)
-      };
-    };
+  const goChatRoom = (chat) => {
+    navigation.navigate('MatchingChatRoom', { chat });
   };
-  const messageListener = async (message) => {
-    // 새로운 메시지가 도착하면 메시지 리스트를 업데이트
-    // console.log(message.body, '어떤형식으로옴?');
-    const newMessage = JSON.parse(message.body);
-    if(newMessage.type == "ENTER" || newMessage.type == "EXIT"){
-      console.log(newMessage)
-      return;
-    }
-    setChatData(currentChatData => {
-      const updatedChatData = currentChatData.map(chatRoom => {
-        if (chatRoom.id === newMessage.roomId) {
-          console.log(newMessage)
-          return {
-            ...chatRoom,
-            lastMessage: newMessage.message,
-            sendAt: new Date().toISOString(),
-            unRead: (chatRoom.unRead || 0) + 1
-          };
-          // 타입이 exit 일때 unread값 0으로 바꿔준다.
-        } else {
-          return chatRoom;
-        }
-      });
-      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
-    });
-  };
-  const chatRoomListener = (id) => {
-    console.log(id.chatRoomId, '채탱방 아이디');
-    setChatData(currentChatData => {
-      const updatedChatData = currentChatData.map(chatRoom => {
-        if (chatRoom.id === id.chatRoomId) {
-          return {
-            ...chatRoom,
-            unRead: 0
-          };
-          // 타입이 exit 일때 unread값 0으로 바꿔준다.
-        } else {
-          return chatRoom;
-        }
-      })
-      return updatedChatData
-    });
-    
-  }
-  useEffect(() => {
-    getChatList();
-    //console.log(chatData, '챗목록 데이터')
-    EventEmitter.on('leaveChatRoom', chatRoomListener)
-    EventEmitter.on("newMessage", messageListener);
-    return () => {
-      EventEmitter.removeListener("newMessage", messageListener);
-    };
-  }, []);
-  // useFocusEffect(
-  //   useCallback( () => {
-
-  //     getChatList();
-
-  //     console.log('@@@@')
-  //     EventEmitter.on("newMessage", messageListener);
-  //     return () => {
-  //       EventEmitter.removeListener("newMessage", messageListener);
-  //     };
-  //   }, []),
-  // )
-  const goChatroom = (chat) => {
-    navigation.navigate("MatchingChatRoom", { chat });
-  };
-
+  
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
         style={{ flexDirection: "row" }}
-        onPress={() => goChatroom(item)}>
+        onPress={() => goChatRoom(item)}>
         <View style={{ flex: 1 }}>
           <Text>{item.title}</Text>
           <Text>{item.lastMessage}</Text>

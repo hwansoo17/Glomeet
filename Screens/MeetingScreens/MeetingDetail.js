@@ -30,7 +30,7 @@ const MeetingDetail = ({route, navigation}) => {
     };
   };
 
-  const goChatRoom = (id) => {
+  const goChatRoom = (chat) => {
     navigation.reset({
         index: 0, 
         routes: [{
@@ -41,7 +41,7 @@ const MeetingDetail = ({route, navigation}) => {
                   state: {routes: [{name: '모임'}]} }, 
                 {
                   name: 'MeetingChatRoom',
-                  params: { id }, 
+                  params: { chat }, 
                 },
               ],
             },
