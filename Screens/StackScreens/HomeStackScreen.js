@@ -6,10 +6,27 @@ const Stack = createNativeStackNavigator();
 
 const HomeStackScreen = () => {
     return (
-        <Stack.Navigator initialRouteName='HomeMain'>
+        <Stack.Navigator initialRouteName='HomeMain'
+            screenOptions={{
+                headerShown: true,
+                headerShadowVisible: false, // 구분선 제거
+            }}
+        >
         <Stack.Screen 
         name="HomeMain" 
-        component={HomeMainScreen}/>
+        component={HomeMainScreen}
+        options={{
+            title: 'Home',
+            headerStyle: {
+              backgroundColor: '#5782F1',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+
+          }}
+        />
         </Stack.Navigator>
     )
     };

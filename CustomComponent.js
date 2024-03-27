@@ -1,7 +1,9 @@
 import React from 'react';
-import { TouchableOpacity,TextInput, Text, StyleSheet } from 'react-native';
+import { View,TouchableOpacity,TextInput, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import LinearGradient from 'react-native-linear-gradient';
+import Homemain from "./assets/homemain.svg";
+import Bell from "./assets/bell.svg";
 export const Button = ({ title, onPress, buttonStyle, textStyle }) => {
   return (
     <TouchableOpacity
@@ -11,6 +13,38 @@ export const Button = ({ title, onPress, buttonStyle, textStyle }) => {
     </TouchableOpacity>
   );
 };
+export const GradRectangle = ({hasSVG}) => {
+  return (
+    <View style={[{ flex: 1, borderRadius: 20 }]}>
+      <LinearGradient
+        colors={['#BFD0FA', 'rgba(213, 223, 249, 1)']}
+        style={{ flex: 1, borderRadius: 20 }}
+      >
+        {hasSVG && (
+          <View style={{ flex: 1, flexDirection: 'row',justifyContent: 'center', marginTop:20,marginLeft:60 }}>
+            <Homemain/>
+          <View style= {{width: 20}}/>
+          <Bell/>
+          </View> 
+        )}
+        <View style={styles.textContainer}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.textTitle}>귀여운다은</Text>
+          <View style={{justifyContent: 'left', alignItems: 'left'}}>
+            <Text style={styles.text}>관심분야</Text>
+            <Text style={styles.text}>성향</Text>
+            <Text style={styles.text}>키워드 태그</Text>
+          </View>
+          </View>
+          {/* 원하는 만큼 텍스트를 추가할 수 있습니다 */}
+        </View>
+      
+      </LinearGradient>
+
+    </View>
+  );
+};
+
 export const WhiteButton = ({ title, onPress }) => {
     return (
       <TouchableOpacity onPress={onPress} style={[styles.whiteButton, styles.whiteButtonBorder]}>
@@ -62,6 +96,15 @@ export const InputBox = ({ value, onChangeText, placeholder, customStyle }) => {
   );
 };
 
+export const InputBoxNovalue = ({ placeholder, customStyle }) => {
+  return (
+    <TextInput
+      style={[styles.input, customStyle]} // 기본 스타일과 customStyle을 합침
+      placeholder={placeholder}
+    />
+  );
+};
+
 
 const styles = StyleSheet.create({
   blueButton: {
@@ -105,6 +148,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  textTitle: {
+    flex: 1,
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: "#001F6F"
+  },
   emailText: {
     fontSize: 30,
     marginBottom: 10,
@@ -118,6 +167,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 10,
     
+  },
+  textContainer:{
+    flex: 1,
+    alignItems: 'center',
+    color: '#25282B',
+    fontSize: 16,
   },
   input: {
     flex: 1,
@@ -144,7 +199,13 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  textStyle: {
+    color: '#25282B',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   linkContainer: {
     marginTop: 20,

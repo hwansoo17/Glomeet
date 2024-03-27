@@ -4,10 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api, authApi } from '../../api'
-import { Button} from '../../CustomComponent';
-import CustomModal from '../../modal.js';
+import { Button } from '../../CustomComponent';
 import Homemain from "../../assets/homemain.svg";
-import  GradRectangle  from '../../gradRectangle';
 import Bell from "../../assets/bell.svg";
 const HomeMainScreen = ({navigation}) => {
   const webSocketClient = useWebSocket();
@@ -50,69 +48,33 @@ const HomeMainScreen = ({navigation}) => {
     };
   };
   const TEXTS = {
-    TITLE: ['안녕하세요! 귀여운 다은님'," "],
+    TITLE: ['귀여운 다은님'," "],
     SUBTITLE: ['안녕하세요!','오늘도 친구 만나러 가볼까요?'],
     BUTTON_TEXT: '다음으로 넘어가기',
   };
-
-  // const OtherScreen = () => {
-  //   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  //   const openModal = () => {
-  //     setIsModalVisible(true);
-  //   };
-
-  //   const closeModal = () => {
-  //     setIsModalVisible(false);
-  //   };  
   return (
-<View style={styles.container}>
-  {/* 전체 화면을 가로로 나누기 */}
-  <View style={{ flexDirection: 'row', flex: 1 }}>
-    {/* 왼쪽 공간 */}
-    <View style={{ flex: 1 }}>
-      {/* 왼쪽 공간 내용 */}
-      <Text>왼쪽임</Text>
-    </View>
-    {/* 중간 영역 */}
-    <View style={{ flex: 8 }}>
-      {/* 중간 영역을 세로로 나누기 */}
-      <View style={{ flex: 1, flexDirection: 'column' }}>
-        {/* 상단 영역 */}
-        <View style={{ flex: 2 }}>
-          {/* 상단 영역을 가로로 나누기 */}
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            {/* 왼쪽 텍스트 영역 */}
-            <View style={{ flex: 8, alignItems: 'center', paddingLeft: 30  }}>
-              {/* 왼쪽 텍스트 영역 내용 */}
+    <View style={styles.container}>
+    <View style={{ flexDirection: 'row', flex: 1 }}>
+      <View style={{ flex: 1 }}/>
+      <View style={{ flex: 8 }}>
+        <View style={{ flex: 1,flexDirection: 'row'}}>
+          <View style ={{ flex: 8, alignItems: 'center' ,justifyContent: 'center' ,flexDirection: 'row'}}>
+              <Text style={styles.noBoldTitle}>{TEXTS.SUBTITLE[0]}</Text>
+              <Text style={styles.title}>{TEXTS.TITLE[1]}</Text>
               <Text style={styles.title}>{TEXTS.TITLE[0]}</Text>
-              <Text style={styles.subtitle}>{TEXTS.SUBTITLE[1]}</Text>
-            </View>
-            {/* 오른쪽 벨 아이콘 영역 */}
-            <View style={{ flex: 2, alignItems: 'center' }}>
-              {/* 오른쪽 벨 아이콘 영역 내용 */}
-              <Bell/>
-            </View>
-          </View>
-        </View>
-        {/* 가운데 영역 */}
-        <View style={{ flex: 10 }}>
-          {/* 가운데 영역 내용 */}
-            <GradRectangle
-            hasSVG={true}
-            />
-        </View>
+          </View> 
+          <View style ={{flex: 1, alignItems: 'center',flexDirection: 'row'}}>
+            <Bell/>
+          </View>  
+        </View>  
+        <Text style={styles.subtitle}>{TEXTS.SUBTITLE[1]}</Text>  
+        <View style={{ flex: 8 ,alignItems: 'center' }}> 
+          <Homemain 
+          style={{ flex: 1, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}
+          />
 
-        {/* 하단 영역 */}
-        <View style={{ flex: 2 }}>
-          {/* 하단 영역 내용 */}
           <View>
-            {/* <TouchableOpacity style={styles.button} onPress={openModal}>
-              <Text>Show Modal</Text>
-            </TouchableOpacity>
-
-            <CustomModal isVisible={isModalVisible} onClose={closeModal} /> */}
-             <TouchableOpacity
+            <TouchableOpacity
             onPress={() => loggedOut()}
             >
               <Text>로그아웃</Text>
@@ -132,15 +94,13 @@ const HomeMainScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={{ flex: 1 }}/>
       </View>
-    </View>
-    {/* 오른쪽 공간 */}
-    <View style={{ flex: 1 }}>
-      {/* 오른쪽 공간 내용 */}
-      <Text>오른쪽</Text>
+      <View style={{ flex: 1 }} />
     </View>
   </View>
-</View>
+    
+    
 
   );
 };
