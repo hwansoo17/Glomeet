@@ -12,13 +12,11 @@ const MeetingDetail = ({route, navigation}) => {
   const meetingJoin = async() => {
     console.log(detail.meeting.id);
     const email = await AsyncStorage.getItem('email')
+    const nickName = await AsyncStorage.getItem('nickName');
     try {
       const response = await authApi.post('/meeting/join', { meetingId : detail.meeting.id});
       if (response.status == 200) {
-        subscribe("/sub/chat/"+detail.meeting.id, (message) => {
-          handleWebSocketMessage(message)
-        })
-        publish("/pub/chat/"+ detail.meeting.id, "application/json", email, detail.meeting.id, "입장메세지인데 서버에서 할거임", "JOIN")
+        publish("/pub/chat/"+ detail.meeting.id, "application/json", email, nickName, detail.meeting.id, "입장메세지인데 서버에서 할거임", "JOIN")
         goChatRoom(detail.meeting.id)
       };
     } catch (error) {
@@ -32,16 +30,16 @@ const MeetingDetail = ({route, navigation}) => {
 
   const goChatRoom = (chat) => {
     navigation.reset({
-        index: 0, 
+        index: 0,
         routes: [{
-            name: 'Chatting', 
+            name: 'Chatting',
             state: {
               routes: [
                 { name: 'ChattingMain',
-                  state: {routes: [{name: '모임'}]} }, 
+                  state: {routes: [{name: '모임'}]} },
                 {
                   name: 'MeetingChatRoom',
-                  params: { chat }, 
+                  params: { chat },
                 },
               ],
             },

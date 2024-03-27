@@ -31,7 +31,7 @@ const useChatList = (apiEndpoint) => {
           return {
             ...chatRoom,
             lastMessage: newMessage.message,
-            sendAt: new Date().toISOString(),
+            sendAt: newMessage.sendAt,
             unRead: (chatRoom.unRead || 0) + 1
           };
           // 타입이 exit 일때 unread값 0으로 바꿔준다.
@@ -59,16 +59,36 @@ const useChatList = (apiEndpoint) => {
       })
       return updatedChatData
     });
-    
   }
+  const chatRoomMessageListener = (message) => {
+    const lastMessage = JSON.parse(message.body);
+    setChatData(currentChatData => {
+      const updatedChatData = currentChatData.map(chatRoom => {
+        if (chatRoom.id === lastMessage.roomId) {
+          return {
+            ...chatRoom,
+            lastMessage: lastMessage.message,
+            sendAt: lastMessage.sendAt,
+          };
+          // 타입이 exit 일때 unread값 0으로 바꿔준다.
+        } else {
+          return chatRoom;
+        }
+      })
+      return updatedChatData
+    });
+  }
+
   useEffect(() => {
     getChatList();
     //console.log(chatData, '챗목록 데이터')
-    EventEmitter.on('leaveChatRoom', chatRoomExitListener)
+    EventEmitter.on('leaveChatRoom', chatRoomExitListener);
     EventEmitter.on("newMessage", messageListener);
+    EventEmitter.on("chatRoomMessage", chatRoomMessageListener);
     return () => {
-      EventEmitter.removeListener('leaveChatRoom', chatRoomExitListener)
+      EventEmitter.removeListener('leaveChatRoom', chatRoomExitListener);
       EventEmitter.removeListener("newMessage", messageListener);
+      EventEmitter.removeListener("chatRoomMessage", chatRoomMessageListener);
     };
   }, []);
   

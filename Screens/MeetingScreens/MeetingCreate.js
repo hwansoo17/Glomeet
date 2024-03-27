@@ -40,9 +40,6 @@ const MeetingCreate = ({navigation}) => {
     if (response.status == 200) {
       console.log(response.data)
       console.log('@@@@')
-      subscribe("/sub/chat/"+response.data.id, (message) => {
-        handleWebSocketMessage(message)
-      })
       
       goChatRoom(response.data.id)
       Alert.alert('모임이 생성되었습니다')

@@ -19,7 +19,7 @@ const MeetingMain = ({navigation}) => {
       const response = await authApi.get('/meeting/all')
     if (response.status == 200) {
         setMeetingData(response.data)
-         // console.log(response.data, ': 미팅all');
+        console.log(response.data, ': 미팅all');
       };
     } catch (error) {
       console.log(error);
@@ -37,7 +37,7 @@ const MeetingMain = ({navigation}) => {
       <TouchableOpacity
         style={{}}
         onPress={() => goMeetingRoom(item)}>
-				<Text>{item.meeting.title}</Text>
+				<Text style={{fontSize:20}}>{item.meeting.title}</Text>
 				<Text>{item.meeting.meetingDate}</Text>
 				<Text>{item.meeting.location}</Text>
 				<Text>{item.participants}/{item.meeting.capacity}</Text>

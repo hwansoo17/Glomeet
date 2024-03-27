@@ -1,23 +1,24 @@
-import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, LogBox, SafeAreaView, AppState } from "react-native";
+import React, { useState, useLayoutEffect, useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
-import {authApi} from "../../api";
+import useChatRoom from "../../useChatRoom";
+
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
-  const [messages, setMessages] = useState([]);
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const webSocketClient = useWebSocket();
+  const id =  route.params.chat.id;
 
-  const appState = useRef(AppState.currentState);
-  const id = route.params.chat;
-  let subscription = null;
+  const messages = useChatRoom(id);
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const webSocketClient = useWebSocket();
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: id,
+      headerTitleAlign: "center",
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => {
@@ -30,78 +31,24 @@ const MeetingChatRoom = ({ route, navigation }) => {
       ),
     });
   }, [navigation, id]);
+
   useEffect(() => {
-    const initialize = async () => {
+    const getEmail = async() => {
       const email = await AsyncStorage.getItem("email");
-      subscription = webSocketClient.subscribe("/sub/chat/"+id, async (message) => {
-        const newMessage = JSON.parse(message.body);
-        if(newMessage.type === "SEND") {
-          setMessages((prevMessages) => [newMessage,...prevMessages]);
-        }
-      }, {'email' : email})
       setEmail(email);
-    };
-
-    const fn_handleAppStateChange = async(nextAppState) => {
-      const email = await AsyncStorage.getItem("email")
-      console.log("appState.current ::: ", appState.current, nextAppState);
-
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        console.log(appState.current, nextAppState, '백에서 포어');
-        initialize().then(getMessageList);
-      }
-      if (
-        appState.current.match(/inactive|active/) &&
-        nextAppState === 'background'
-      ) {
-        console.log(appState.current, nextAppState, '포어에서 백');
-        const email = await AsyncStorage.getItem("email");
-        subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+id});
-      }
-      appState.current = nextAppState;
-  };
-    const getMessageList = async () => {
-      try {
-        const response = await authApi.post("/chat/message-list", { "roomId": id });
-        if (response.status == 200) {
-          setMessages(response.data);
-        }
-      } catch (error) {
-        if (error.response.status == 401) {
-        console.log(error, '메시지리스트');
-        };
-      };
-    };
-
-    initialize().then(getMessageList);
-    const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
-
-    return async () => {
-      appState1.remove()
-      setMessages([]);
-      const email = await AsyncStorage.getItem("email");
-      subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+id});
-    };
+    }
+    getEmail()
   }, []);
 
   const sendMessage = async () => {
     if (message === "") {
       return;
     }
+    const email = await AsyncStorage.getItem("email")
     const nickName = await AsyncStorage.getItem("nickName");
     webSocketClient.publish("/pub/chat/"+id, "application/json", email, nickName, id, message+"\u0000", 'SEND');
     setMessage("");
   };
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: id,
-      headerTitleAlign: "center",
-    });
-  }, [navigation]);
 
   const renderItem = ({ item }) => {
     const isMyMessage = item.senderEmail === email;
@@ -118,7 +65,6 @@ const MeetingChatRoom = ({ route, navigation }) => {
       </View>
     );
   };
-
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
