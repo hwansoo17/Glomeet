@@ -8,7 +8,7 @@ import useChatRoom from "../../useChatRoom";
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
-  const id =  route.params.chat.id;
+  const id =  route.params.chat;
 
   const messages = useChatRoom(id);
   const [message, setMessage] = useState("");
