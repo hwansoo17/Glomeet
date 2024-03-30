@@ -5,10 +5,9 @@ import { formatDate } from "./formatDate";
 const ChatListItem = ({ item, goChatRoom }) => {
   return(
     <TouchableOpacity 
-      style= {{backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E4E5E6'}}
+      style= {{backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E4E5E6', height: 80, alignItems:'center', flexDirection: "row", padding: 10}}
       onPress={() => goChatRoom(item)}>
-      <View style={{flexDirection: "row", padding: 10}}>
-        <View style={{alignSelf:'flex-start', backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
+        <View style={{ backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
         </View>
         <View style={{flex:1}}>
           <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 18}}>{item.title}</Text>
@@ -24,9 +23,7 @@ const ChatListItem = ({ item, goChatRoom }) => {
             </View>
           )}
           <View style={{flex:1}}/>
-        </View>
-      </View>
-      
+        </View>  
     </TouchableOpacity>
 
   );

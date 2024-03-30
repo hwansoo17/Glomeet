@@ -9,7 +9,12 @@ const MessageListItem = ({ item, userEmail }) => {
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && <View style={styles.avatar} />}
-      {isMyMessage &&<Text style={{alignSelf: 'flex-end'}}>{formatDate(item.sendAt)}</Text>}
+      {isMyMessage &&
+        <View style={{alignSelf: 'flex-end'}}>
+          <Text style={{alignSelf: 'flex-end'}}>{item.readCount}</Text>
+          <Text>{formatDate(item.sendAt)}</Text>
+        </View>
+        }
       <View style={styles.messageContent}>
         <Text style={styles.senderNickName}>{!isMyMessage && item.senderNickName}</Text>
         <View style={[
@@ -21,7 +26,12 @@ const MessageListItem = ({ item, userEmail }) => {
           </Text>
         </View>
       </View>
-      {!isMyMessage &&<Text style={{alignSelf: 'flex-end'}}>{formatDate(item.sendAt)}</Text>}
+      {!isMyMessage &&
+      <View style={{alignSelf: 'flex-end'}}>
+        <Text>{item.readCount}</Text>
+        <Text>{formatDate(item.sendAt)}</Text>
+      </View>}
+      
     </View>
   );
 };
@@ -46,7 +56,7 @@ const styles = StyleSheet.create({
     // 기타 스타일
   },
   otherMessageContent: {
-    // 스타일 정의
+    flexDirection: "row",
   },
   otherMessageBubble: {
     paddingVertical: 8,

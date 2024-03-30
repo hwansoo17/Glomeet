@@ -35,6 +35,7 @@ const MeetingCreate = ({navigation}) => {
   const createMeeting = async() => {
     // console.log(url, capacity, title, description, location, category)
     try{
+      const nickName = await AsyncStorage.getItem('nickName')
       const email = await AsyncStorage.getItem('email')
       const response = await authApi.post('/meeting/create', { url: url, title: title, comment: description, capacity: capacity, location: location, meetingDate: date, category: category})
     if (response.status == 200) {
@@ -43,7 +44,7 @@ const MeetingCreate = ({navigation}) => {
       
       goChatRoom(response.data)
       Alert.alert('모임이 생성되었습니다')
-      publish("/pub/chat/"+ response.data.id, "application/json", email, response.data.id,"생성메세지인데 서버에서 할거임", "CREATE")
+      publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id,"생성메세지인데 서버에서 할거임", "CREATE")
     }
     } catch (error) {
       console.log(error)
