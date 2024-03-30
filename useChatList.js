@@ -4,6 +4,15 @@ import EventEmitter from "react-native-eventemitter";
 
 const useChatList = (apiEndpoint) => {
   const [chatData, setChatData] = useState([]);
+  const sortChatData = (a, b) => {
+    if ((a.unRead > 0) && (b.unRead === 0)) {
+      return -1;
+    } else if ((a.unRead === 0) && (b.unRead > 0)) {
+      return 1;
+    } else {
+      return new Date(b.sendAt) - new Date(a.sendAt);
+    }
+  };
 
   const getChatList = async () => {
     try {
@@ -11,7 +20,7 @@ const useChatList = (apiEndpoint) => {
       const response = await authApi.post(apiEndpoint);
       if (response.status == 200) {
         console.log(apiEndpoint);
-        setChatData(response.data);
+        setChatData(response.data.sort(sortChatData));
         // console.log(response.data, ': 개인채팅방 리스트');
       };
     } catch (error) {
@@ -40,7 +49,7 @@ const useChatList = (apiEndpoint) => {
           return chatRoom;
         }
       });
-      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
+      return updatedChatData.sort(sortChatData);
     });
   };
 
@@ -58,7 +67,7 @@ const useChatList = (apiEndpoint) => {
           return chatRoom;
         }
       })
-      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
+      return updatedChatData.sort(sortChatData);
     });
   }
   const chatRoomMessageListener = (message) => {
@@ -75,7 +84,7 @@ const useChatList = (apiEndpoint) => {
           return chatRoom;
         }
       })
-      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
+      return updatedChatData.sort(sortChatData);
     });
   }
 
