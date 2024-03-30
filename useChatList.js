@@ -58,7 +58,7 @@ const useChatList = (apiEndpoint) => {
           return chatRoom;
         }
       })
-      return updatedChatData
+      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
     });
   }
   const chatRoomMessageListener = (message) => {
@@ -71,12 +71,11 @@ const useChatList = (apiEndpoint) => {
             lastMessage: lastMessage.message,
             sendAt: lastMessage.sendAt,
           };
-          // 타입이 exit 일때 unread값 0으로 바꿔준다.
         } else {
           return chatRoom;
         }
       })
-      return updatedChatData
+      return updatedChatData.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt));
     });
   }
 

@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { formatDate } from './formatDate';
 
-const screenWidth = Dimensions.get('window').width;
-
 const MessageListItem = ({ item, userEmail }) => {
+  const screenWidth = Dimensions.get('window').width;
   const isMyMessage = item.senderEmail === userEmail;
 
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && <View style={styles.avatar} />}
+      {isMyMessage &&<Text style={{alignSelf: 'flex-end'}}>{formatDate(item.sendAt)}</Text>}
       <View style={styles.messageContent}>
         <Text style={styles.senderNickName}>{!isMyMessage && item.senderNickName}</Text>
         <View style={[
@@ -21,7 +21,7 @@ const MessageListItem = ({ item, userEmail }) => {
           </Text>
         </View>
       </View>
-      <Text style={{alignSelf: 'flex-end'}}>{formatDate(item.sendAt)}</Text>
+      {!isMyMessage &&<Text style={{alignSelf: 'flex-end'}}>{formatDate(item.sendAt)}</Text>}
     </View>
   );
 };
