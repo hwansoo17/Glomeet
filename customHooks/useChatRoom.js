@@ -1,9 +1,9 @@
 import { useState, useLayoutEffect, useRef, useEffect } from "react";
-import { authApi } from "./api";
+import { authApi } from "../api";
 import EventEmitter from "react-native-eventemitter";
 import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useWebSocket } from "./WebSocketProvider";
+import { useWebSocket } from "../WebSocketProvider";
 
 const useChatRoom = (id) => {
   const [messages, setMessages] = useState([]);

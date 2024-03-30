@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { api, authApi } from "./api";
+import { authApi } from "../api";
 import EventEmitter from "react-native-eventemitter";
 
 const useChatList = (apiEndpoint) => {

@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet } from "r
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
-import useChatRoom from "../../useChatRoom";
-import MessageListItem from "../../MessageListItem";
+import useChatRoom from "../../customHooks/useChatRoom";
+import MessageListItem from "./MessageListItem";
 
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기

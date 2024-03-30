@@ -1,7 +1,7 @@
 import React from "react";
 import { View, FlatList } from "react-native";
-import useChatList from '../../useChatList';
-import ChatListItem from "../../ChatListItem";
+import useChatList from '../../customHooks/useChatList';
+import ChatListItem from "./ChatListItem";
 
 const MatchingChatList = ({ navigation }) => {
   const chatData = useChatList("/matching/list")
