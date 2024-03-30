@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { authApi } from "./api";
+import { api, authApi } from "./api";
 import EventEmitter from "react-native-eventemitter";
 
 const useChatList = (apiEndpoint) => {
@@ -10,6 +10,7 @@ const useChatList = (apiEndpoint) => {
       console.log("chatlist");
       const response = await authApi.post(apiEndpoint);
       if (response.status == 200) {
+        console.log(apiEndpoint);
         setChatData(response.data);
         // console.log(response.data, ': 개인채팅방 리스트');
       };

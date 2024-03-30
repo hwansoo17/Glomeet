@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
 import useChatRoom from "../../useChatRoom";
+import MessageListItem from "../../MessageListItem";
 
 const MatchingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
@@ -16,7 +17,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: chat.title,
+      title: id,
       headerTitleAlign: "center",
       headerLeft: () => (
         <TouchableOpacity
@@ -32,6 +33,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   }, [navigation, id]);
 
   useEffect(() => {
+    console.log(id, '아이디 확인')
     const getEmail = async() => {
       const email = await AsyncStorage.getItem("email");
       setEmail(email);
@@ -49,29 +51,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
     setMessage("");
   };
 
-  const renderItem = ({ item }) => {
-    const isMyMessage = item.senderEmail === email;
-    return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View>
-          <Text>
-            {item.readCount}
-          </Text>
-        </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ flex: 1, backgroundColor: isMyMessage ? "green" : "gray" }}>
-          <Text>{item.message}</Text>
-        </View>
-        <View style={{ flex: 1 }} />
-      </View>
-    );
-  };
-
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <FlatList
         data={messages}
-        renderItem={renderItem}
+        renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
         keyExtractor={(item, index) => index.toString()}
         inverted />
       <View style={{ flex: 1 }} />

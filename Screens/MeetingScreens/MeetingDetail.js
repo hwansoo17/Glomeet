@@ -17,7 +17,7 @@ const MeetingDetail = ({route, navigation}) => {
       const response = await authApi.post('/meeting/join', { meetingId : detail.meeting.id});
       if (response.status == 200) {
         publish("/pub/chat/"+ detail.meeting.id, "application/json", email, nickName, detail.meeting.id, "입장메세지인데 서버에서 할거임", "JOIN")
-        goChatRoom(detail.meeting.id)
+        goChatRoom(detail.meeting)
       };
     } catch (error) {
       if (error.response.status == 409) {
