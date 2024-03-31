@@ -10,9 +10,9 @@ const MessageListItem = ({ item, userEmail }) => {
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && <View style={styles.avatar} />}
       {isMyMessage &&
-        <View style={{alignSelf: 'flex-end'}}>
+        <View style={{alignSelf: 'flex-end', marginRight:5}}>
           <Text style={{alignSelf: 'flex-end'}}>{item.readCount}</Text>
-          <Text>{formatDate(item.sendAt)}</Text>
+          <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
         </View>
         }
       <View style={styles.messageContent}>
@@ -27,9 +27,9 @@ const MessageListItem = ({ item, userEmail }) => {
         </View>
       </View>
       {!isMyMessage &&
-      <View style={{alignSelf: 'flex-end'}}>
-        <Text>{item.readCount}</Text>
-        <Text>{formatDate(item.sendAt)}</Text>
+      <View style={{alignSelf: 'flex-end', marginLeft:5}}>
+        <Text style={{fontFamily:"Pretendard-Light"}}>{item.readCount}</Text>
+        <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
       </View>}
       
     </View>
