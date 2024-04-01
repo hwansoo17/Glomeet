@@ -23,9 +23,9 @@ const OnBoarding3 = ({navigation}) => {
     const userContinent = await AsyncStorage.getItem('userContinent')
     const userHobby = await AsyncStorage.getItem('userHobby')
     try {
-      const response = await api.post('/auth/inputAdditionalInfo', {email: email, country: userContinent, interest: userHobby, type: data}) 
+      const response = await api.post('/auth/inputAdditionalInfo', {email: email, country: userContinent, interest: userHobby, type: selectedItem}) 
       if (response.status == 200) {
-        console.log(email, userContinent, userHobby, data)
+        console.log(email, userContinent, userHobby, selectedItem)
         navigation.navigate('OnBoarding4')
       }; 
     } catch (error) {
