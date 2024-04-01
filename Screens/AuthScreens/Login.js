@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
+import MainButton from '../../customComponents/MainButton';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -53,9 +54,9 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:8}}>
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
-                <Logo width={150} height={150}/>  
+                <Logo width={120} height={120}/>  
               </View>
-              <View style={{height: 10}}/>
+              <View style={{height: 20}}/>
               <TextInput
                 style={styles.input}
                 placeholder="이메일을 입력하세요"
@@ -70,27 +71,20 @@ const LoginScreen = ({navigation}) => {
                 value={password}
                 onChangeText={setPassword}
               />
-              <View style={{height: 10}}/>
-              <View style={{flexDirection:'row'}}>
-                <View style={{flex:1}}/>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('PasswordReset1')}>
-                  <Text>비밀번호 재설정</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{height: 10}}/>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={login}>
-                <Text style={styles.buttonText}>로그인</Text>
-              </TouchableOpacity>
+              <View style={{height: 20}}/>
+              <MainButton onPress={login} title={'로그인'}/>
+              <View style={{height: 20}}/>
+              <MainButton
+                style={{backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1.2}}
+                textStyle={{color: '#5782F1'}}
+                title={'회원가입'}
+                onPress={() => navigation.navigate('Register1')}/>
               <View style={{height: 10}}/>
               <TouchableOpacity
-                style={[styles.button, {backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1}]}
-                onPress={() => navigation.navigate('Register1')}>
-                <Text style={styles.linkText}>회원가입</Text>
+                style={{padding:10}}
+                onPress={() => navigation.navigate('PasswordReset1')}>
+                <Text style={styles.linkText}>비밀번호를 잊으셨나요?</Text>
               </TouchableOpacity>
-              <View style={{height: 10}}/>
               <TouchableOpacity
                 onPress={() => navigation.replace('Root')}>
                 <Text>홈스크린</Text>
@@ -113,8 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   input: {
+    fontFamily: 'Pretendard-Regular',
     height: 50,
-    borderBottomWidth: 1,
+    borderBottomWidth: 1.2,
     borderColor: '#887E7E',
   },
   button: {
@@ -130,9 +125,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   linkText: {
-    color: '#5782F1',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#868686',
   },
   imageContainer: {
     alignItems: 'center',
