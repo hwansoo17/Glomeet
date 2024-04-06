@@ -13,7 +13,7 @@ const Register1 = ({navigation}) => {
   const [randomCode, setRandomCode] = useState('');
   const [authCode, setAuthCode] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);  
-
+  const [isCheckButtonActive, setCheckButtonActive] = useState(false);  
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -29,6 +29,17 @@ const Register1 = ({navigation}) => {
     changeButtonStatus();
     setEmailValid(emailRegEx.test(email));
   }, [email]);
+  const changeCheckButtonStatus = () => {
+    if (authCode != '') {
+      setCheckButtonActive(true);
+    } else {
+      setCheckButtonActive(false);
+    }
+  };
+  useEffect (() => {
+    changeCheckButtonStatus();
+    
+  },[authCode]) // 인증번호 확인할 때 활성화 되도록 수정
 
   const AuthCodeSend = async () => {
     console.log(email)
@@ -82,53 +93,57 @@ const Register1 = ({navigation}) => {
   return (  
     <View style={styles.container}>
     <View style={{ flexDirection: 'row', flex: 1 }}>
-      <View style={{ flex: 0.5 }} />
-      <View style={{ flex: 10 }}>
+      <View style={{ flex: 1 }} />
+      <View style={{ flex: 20 }}>
         <View style={{height: 10}}/>
         <View style={{ flexDirection: 'row'}}>
-          <View style={{ flex: 9 }}>
+          <View style={{ flex: 10 }}>
             <InputBox 
               value={email}
               onChangeText={setEmail}
+              style={styles.input}
               placeholder="아주이메일 주소 입력"
             />
           </View>
-          <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <MainButton 
-            title= "인증번호 받기"
-            style={styles.button}
-            textStyle={{fontSize: 15, textAlign: 'center', textAlign: 'justify'}}
-            onPress={AuthCodeSend}
-            disabled={!isButtonActive}
-          />
+          <View style={{ flex: 0.5}}/>
+          <View style={{ flex: 5 }}>
+            <MainButton 
+              title = '인증번호 받기'
+              onPress = {AuthCodeSend}
+              disabled ={!isButtonActive}
+              style = {{borderRadius:5}}
+              textStyle={{fontSize:15}}
+            />
           </View>
         </View>
         <View style={{height: 10}}/> 
 
         <View style={{ flexDirection: 'row'}}>
-          <View style={{ flex: 9 }}>
+          <View style={{ flex: 10 }}>
             <InputBox 
               value={authCode}
               onChangeText={setAuthCode}
+              style={styles.input}
               placeholder="인증번호 입력"
             />
           </View>
-          <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 0.5 }}/>
+          <View style={{ flex: 5}}>
           <MainButton 
-            title= "인증번호 확인"
-            textStyle={{fontSize: 15, textAlign: 'center', textAlign: 'justify'}}
-            onPress={AuthCodeSend}
-            style={[styles.button]}
-            disabled={false}
-          />
+              title = '인증번호 확인'
+              onPress = {checkAuthCode}
+              disabled ={!isCheckButtonActive}
+              style = {{borderRadius:5}}
+              textStyle={{fontSize:15}}
+            />
           </View>
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Register2', { email: email })}>
-            <Text>등록화면</Text>
-          </TouchableOpacity>
+        </View> 
       </View>
-      <View style={{ flex: 0.5 }} />
+      <View style={{ flex: 1}} /> 
     </View>
+    <TouchableOpacity onPress={() => navigation.navigate('Register2', { email: email })}>
+            <Text>등록화면</Text>
+    </TouchableOpacity>
   </View>
 
 
@@ -144,19 +159,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   input: {
-    flex: 1,
     height: 50,
     borderWidth: 1,
     borderColor: '#887E7E',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-  button: {
-    height: 50,
-    backgroundColor: '#5782F1',
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 5,
     paddingHorizontal: 10,
   },

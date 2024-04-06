@@ -10,7 +10,7 @@ const Register2 = ({route, navigation}) => {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isButtonActive, setButtonactive] = useState(false);
-  const [isDuplicateButtonActive, setDuplicateButtonActive] = useState(false);
+  const [isDuplicateButtonActive, setDuplicateButtonActive] = useState(false); // 중복확인 버튼 활성화
   const doubleCheckName = async () => {
     try {
       const response = await api.post('/auth/nickNameCheck', {nickName : nickName});
@@ -44,7 +44,7 @@ const Register2 = ({route, navigation}) => {
   };
   useEffect(() => {
     changeDupButtonStatus();
-  }, [nickName]);
+  }, [nickName]); // 중복확인 버튼을 닉네임 값이 바뀌었을 때 활성화
 
   const signUp = async () => {
     if (password === passwordCheck) {
@@ -80,6 +80,7 @@ return (
               style={styles.input}
             />
             </View>
+            <View style={{flex:0.5}}/>  
           <View style={{ flex: 3}}>
           <MainButton
             title={'중복확인'}
@@ -94,11 +95,13 @@ return (
           <LineInput 
               value={password}
               onChangeText={setPassword}
+              secureTextEntry={true}
               placeholder= '비밀번호를 입력하세요'
             />
           <LineInput 
               value={passwordCheck}
               onChangeText={setPasswordCheck}
+              secureTextEntry={true}
               placeholder= '비밀번호를 확인하세요'
             /> 
           <View style={{height: 20}}/>
@@ -126,7 +129,6 @@ input: {
   borderColor: '#887E7E',
   borderRadius: 5,
   paddingHorizontal: 10,
-  marginRight: 10,
 },
 button: {
   height: 50,
