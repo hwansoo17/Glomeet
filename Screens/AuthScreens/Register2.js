@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet   } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,SafeAreaView,ScrollView   } from "react-native";
 import { api } from '../../api';
-
+import LineInput from "../../customComponents/LineInput";
+import InputBox from "../../customComponents/InputBox";
+import MainButton from "../../customComponents/MainButton";
 const Register2 = ({route, navigation}) => {
   const {email} = route.params;
   const [nickName, setNickName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isButtonActive, setButtonactive] = useState(false);
-  
+  const [isDuplicateButtonActive, setDuplicateButtonActive] = useState(false);
   const doubleCheckName = async () => {
     try {
       const response = await api.post('/auth/nickNameCheck', {nickName : nickName});
@@ -33,6 +35,16 @@ const Register2 = ({route, navigation}) => {
   useEffect(() => {
     changeButtonStatus();
   }, [password, passwordCheck]);
+  const changeDupButtonStatus = () => {
+    if (nickName != '') {
+      setDuplicateButtonActive(true);
+    } else {
+      setDuplicateButtonActive(false);
+    }
+  };
+  useEffect(() => {
+    changeDupButtonStatus();
+  }, [nickName]);
 
   const signUp = async () => {
     if (password === passwordCheck) {
@@ -52,120 +64,78 @@ const Register2 = ({route, navigation}) => {
     };
   };
 
-  return (
-    <View>
-      <View style={styles.inputContainer}>
-        <View style={styles.borderContainer}>
-          <TextInput placeholder="닉네임" value={nickName} onChangeText={setNickName} style={styles.nickNameText} />
-          <TouchableOpacity onPress={doubleCheckName} style={styles.checkButton}>
-           <Text style={styles.checkButtonText}>중복확인</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-          <TextInput
-            placeholder="비밀번호"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            style={styles.password} />
-          <TextInput
-            placeholder="비밀번호 확인"
-            secureTextEntry
-            value={passwordCheck}
-            onChangeText={setPasswordCheck}
-            style={styles.passwordCheck} />
-          <View style = {styles.Register}>
-          <TouchableOpacity
+return (
+  <SafeAreaView style={styles.container}>
+    <ScrollView style={{flex:1}}>
+     <View style={{height: 10}}/> 
+      <View style={{flexDirection: 'row'}}>
+        <View style={{flex:1}}/>
+        <View style={{flex:10}}>
+        <View style={{ flexDirection: 'row'}}>
+          <View style={{ flex: 7 }}>  
+            <InputBox 
+              value={nickName}
+              onChangeText={setNickName}
+              placeholder="닉네임을 입력하세요"
+              style={styles.input}
+            />
+            </View>
+          <View style={{ flex: 3}}>
+          <MainButton
+            title={'중복확인'}
+            onPress={doubleCheckName}
+            style={{borderRadius: 5}}
+            textStyle={{fontSize: 16}}
+            disabled={!isDuplicateButtonActive}
+          />
+        </View> 
+        </View> 
+          <View style={{height: 10}}/>
+          <LineInput 
+              value={password}
+              onChangeText={setPassword}
+              placeholder= '비밀번호를 입력하세요'
+            />
+          <LineInput 
+              value={passwordCheck}
+              onChangeText={setPasswordCheck}
+              placeholder= '비밀번호를 확인하세요'
+            /> 
+          <View style={{height: 20}}/>
+          <MainButton
+            title={'회원가입'}
             onPress={signUp}
             disabled={!isButtonActive}
-            style={[styles.Registerbutton, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>회원가입</Text>
-          </TouchableOpacity>
-          </View>
-        </View>
-      );
-    }
+            />
+        </View> 
+        <View style={{flex:1}}/>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
+      )
+};
     
-    const styles = StyleSheet.create({
-      inputContainer: {
-        paddingHorizontal: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-      },
-      borderContainer: {
-        flex:1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#887E7E',
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginTop: 20,
-      },
-      nickNameText: {
-        flex: 1,
-        color: '#887E7E',
-        fontSize: 14, 
-        paddingVertical:-10,
-      },
-      checkButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-      },
-      checkButtonText: {
-        color: '#5782F1', 
-        fontSize: 14,
-        fontWeight: "bold", 
-      },
-      Register: {
-        flex:1,
-        paddingHorizontal: 10,
-        flexDirection: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-        paddingVertical:10,
-      },
-      Registerbutton: {
-        height: 50,
-        width: 400,
-        backgroundColor: '#ccc',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
-      },
-      activeButton: {
-        marginTop: 10,
-        backgroundColor: '#5782F1',
-        paddingHorizontal: 20,
-      },
-      disabledButton: {
-        marginTop: 10,
-        backgroundColor: '#ccc',
-        paddingHorizontal: 20,
-      },
-      buttonText: {
-        color: '#fff',
-        fontSize: 16,
-    
-      },
-      password: {
-        color: "#887E7E",
-        borderBottomWidth: 2,
-        borderBottomColor: '#000000',
-        marginBottom: 10,
-        justifyContent: 'center',
-        marginHorizontal: 10,
-      },
-      passwordCheck: {
-        color: "#887E7E",
-        borderBottomWidth: 2,
-        borderBottomColor: '#000000',
-        justifyContent: 'center',
-        marginHorizontal: 10,
-      }
-    });
-    
-    export default Register2;
+const styles = StyleSheet.create({
+container: {
+  flex:1,
+  backgroundColor: 'white',
+},
+input: {
+  height: 50,
+  borderWidth: 1,
+  borderColor: '#887E7E',
+  borderRadius: 5,
+  paddingHorizontal: 10,
+  marginRight: 10,
+},
+button: {
+  height: 50,
+  backgroundColor: '#5782F1',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 5,
+  paddingHorizontal: 10,
+},
+});
+
+export default Register2;

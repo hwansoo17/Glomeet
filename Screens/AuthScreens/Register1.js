@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image,SafeAreaView,ScrollView } from "react-native";
 import { api } from '../../api';
+import Logo from '../../assets/Glomeet_logo.svg';
+import InputBox from "../../customComponents/InputBox";
+import MainButton from "../../customComponents/MainButton";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
 //const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
 const Register1 = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -75,40 +79,61 @@ const Register1 = ({navigation}) => {
       };
     };
   };
-  return (
-    <><View style={styles.imageContainer}>
-      <Image
-        source={require('../../assets/ajou_logo.png')}
-        style={styles.imageStyle}
-        accessibilityRole="image"
-        accessibilityLabel="아주대학교 로고"
-        resizeMode="contain" />
-    </View>
-    <View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="아주이메일 주소 입력" value={email} onChangeText={setEmail} style={styles.input} />
-          <TouchableOpacity
+  return (  
+    <View style={styles.container}>
+    <View style={{ flexDirection: 'row', flex: 1 }}>
+      <View style={{ flex: 0.5 }} />
+      <View style={{ flex: 10 }}>
+        <View style={{height: 10}}/>
+        <View style={{ flexDirection: 'row'}}>
+          <View style={{ flex: 9 }}>
+            <InputBox 
+              value={email}
+              onChangeText={setEmail}
+              placeholder="아주이메일 주소 입력"
+            />
+          </View>
+          <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <MainButton 
+            title= "인증번호 받기"
+            style={styles.button}
+            textStyle={{fontSize: 15, textAlign: 'center', textAlign: 'justify'}}
             onPress={AuthCodeSend}
             disabled={!isButtonActive}
-            style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>인증번호 받기</Text>
-          </TouchableOpacity>
+          />
+          </View>
         </View>
-        <View style={styles.inputContainer}>
-          <TextInput placeholder="인증번호 입력" value={authCode} onChangeText={setAuthCode} style={styles.input} />
-          <TouchableOpacity
-            onPress={checkAuthCode}
-            style={styles.button}>
-            <Text style={styles.buttonText}>인증번호 확인</Text>
-          </TouchableOpacity>
+        <View style={{height: 10}}/> 
+
+        <View style={{ flexDirection: 'row'}}>
+          <View style={{ flex: 9 }}>
+            <InputBox 
+              value={authCode}
+              onChangeText={setAuthCode}
+              placeholder="인증번호 입력"
+            />
+          </View>
+          <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <MainButton 
+            title= "인증번호 확인"
+            textStyle={{fontSize: 15, textAlign: 'center', textAlign: 'justify'}}
+            onPress={AuthCodeSend}
+            style={[styles.button]}
+            disabled={false}
+          />
+          </View>
         </View>
-      </View><View style={styles.linkText}>
         <TouchableOpacity onPress={() => navigation.navigate('Register2', { email: email })}>
-          <Text style={styles.linkText}>등록화면</Text>
-        </TouchableOpacity>
-      </View></>
-  );
-};
+            <Text>등록화면</Text>
+          </TouchableOpacity>
+      </View>
+      <View style={{ flex: 0.5 }} />
+    </View>
+  </View>
+
+
+  ) 
+    };
 
 const styles = StyleSheet.create({
   container: {
@@ -117,25 +142,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  emailText: {
-    fontSize: 30,
-    marginBottom: 10,
-    color: "#887E7E",
-    paddingHorizontal: 10,
-    fontWeight: 'bold',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    
   },
   input: {
     flex: 1,
@@ -152,33 +158,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    paddingHorizontal: 20,
-  },
-  activeButton: {
-    backgroundColor: '#5782F1',
-  },
-  disabledButton: {
-    backgroundColor: '#ccc',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  linkContainer: {
-    marginTop: 20,
-  },
-  linkText: {
-    color: '#5782F1',
-    fontSize: 16,
-  },
-  imageContainer: {
-    alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 20,
-  },
-  imageStyle: {
-    width: 200,
-    height: 200,
+    paddingHorizontal: 10,
   },
 });
+
 export default Register1;

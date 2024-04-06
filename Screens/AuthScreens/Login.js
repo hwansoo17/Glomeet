@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Text, TouchableOpacity, Alert, Image, ScrollView} from 'react-native';
+import {View, TextInput, Text, TouchableOpacity, Alert, Image, ScrollView,SafeAreaView} from 'react-native';
 import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
@@ -47,7 +47,7 @@ const LoginScreen = ({navigation}) => {
   };
 
   return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ScrollView style={{flex:1}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex:1}}/>
@@ -97,7 +97,7 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:1}}/>
           </View>
         </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 };
 
