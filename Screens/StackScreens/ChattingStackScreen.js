@@ -1,8 +1,10 @@
 import React, {useLayoutEffect} from "react";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import ChattingMainScreen from '../ChattingScreens/ChattingMainScreen';
-import ChattingDetailScreen from '../ChattingScreens/ChattingDetailScreen';
+import ChattingMain from '../ChattingScreens/ChattingMain';
+import MatchingChatRoom from '../ChattingScreens/MatchingChatRoom';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import MeetingChatRoom from '../ChattingScreens/MeetingChatRoom';
+import { useContext } from "react";
 const Stack = createNativeStackNavigator();
 
 const ChattingStackScreen = ({navigation, route}) => {
@@ -18,10 +20,13 @@ const ChattingStackScreen = ({navigation, route}) => {
         <Stack.Navigator>
             <Stack.Screen 
             name="ChattingMain" 
-            component={ChattingMainScreen}/>
+            component={ChattingMain}/>
             <Stack.Screen
-            name="ChattingDetail"
-            component={ChattingDetailScreen}/>
+            name="MatchingChatRoom"
+            component={MatchingChatRoom}/>
+            <Stack.Screen
+            name="MeetingChatRoom"
+            component={MeetingChatRoom}/>
         </Stack.Navigator>
     )
     };
