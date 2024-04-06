@@ -1,12 +1,39 @@
-import React, { useState,useEffect } from "react";
-import {View, Text, TouchableOpacity, FlatList} from "react-native";
+import React, { useState,useEffect, useLayoutEffect } from "react";
+import {View, Text, TouchableOpacity, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api"
 import {RefreshControl} from 'react-native';
+import { formatDate } from "../ChattingScreens/formatDate";
 
 const MeetingMain = ({navigation}) => {
 	const [meetingData, setMeetingData] = useState([])
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [filteredMeetingData, setFilteredMeetingData] = useState([]);
+  const category = ['ALL', '운동', '여행', '게임', '문화', '음식', '언어']
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleAlign: "center",
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MeetingCreate')}>
+          <Text>모임 등록하기</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  const filterMeetingData = (category) => {
+    if (category === 'ALL') {
+      setFilteredMeetingData(meetingData);
+    } else {
+      const filtered = meetingData.filter(
+        (item) => item.meeting.category === category
+      );
+      setFilteredMeetingData(filtered);
+    }
+  };
 
   const handleRefresh = async () => {
     console.log('handleRefreshStore');
@@ -14,6 +41,7 @@ const MeetingMain = ({navigation}) => {
     getMeetingData()
     setIsRefreshing(false);
   };
+  
   const getMeetingData = async () => {
     try {
       const response = await authApi.get('/meeting/all')
@@ -28,35 +56,52 @@ const MeetingMain = ({navigation}) => {
   useEffect(() => {
     getMeetingData()
   }, [])
+  useEffect(() => {
+    filterMeetingData(selectedCategory)
+  },[meetingData,selectedCategory])
 
 	const goMeetingRoom = (meeting) => {
     navigation.navigate("MeetingDetail", { meeting });
   };
 	const renderItem = ({ item }) => (
-    <View>
       <TouchableOpacity
-        style={{}}
+        style={{flex:1}}
         onPress={() => goMeetingRoom(item)}>
-				<Text style={{fontSize:20}}>{item.meeting.title}</Text>
-				<Text>{item.meeting.meetingDate}</Text>
-				<Text>{item.meeting.location}</Text>
-				<Text>{item.participants}/{item.meeting.capacity}</Text>
+        <View style={{flex:1, flexDirection: "row", alignItems: "center"}}>
+          <View style={{width: 70, height: 70, backgroundColor:'grey', borderRadius: 10, margin:10}}>
+          </View>
+          <View style={{flex:1, height: 90, borderBottomWidth:1, borderColor: '#E1E5EB',justifyContent:'center', marginRight:10}}>
+            <View style={{flexDirection: "row", alignItems: "center", maxWidth: '80%'}}>
+              <Text style={{fontSize:16, fontFamily: 'Pretendard-Regular', marginRight:5, color: '#09111F'}} numberOfLines={1}>{item.meeting.title}</Text>
+              <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{item.meeting.category}</Text>
+            </View>
+            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{formatDate(item.meeting.meetingDate)}</Text>
+            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>현재 {item.participants}명이 가입중인 모임</Text>
+          </View>
+        </View>
       </TouchableOpacity>
-    </View>
+ 
   );
 	return (
-		<View style={{flex:1}}>
-			<Text>MeetingMainScreen</Text>
-			<FlatList
-        data={meetingData}
+		<View style={{flex:1, backgroundColor: 'white'}}>
+      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>카테고리</Text>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
+        {category.map((category) => (
+          <TouchableOpacity
+            key={category}
+            onPress={() => setSelectedCategory(category)}
+            style={[{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10}, selectedCategory == category && {backgroundColor: '#5782F1'}]}
+          >
+            <Text style={[{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory== category && { color: '#ffffff'}]}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <FlatList
+        data={filteredMeetingData}
         renderItem={renderItem}
         keyExtractor={item => item.meeting.id}
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
       />
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MeetingCreate')}>
-        <Text>모임 등록하기</Text>
-      </TouchableOpacity>
 		</View>
 	)
 };

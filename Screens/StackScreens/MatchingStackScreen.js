@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MatchingMainScreen from '../MatchingScreens/MatchingMainScreen';
 import MatchingFilterScreen from '../MatchingScreens/MatchingFilterScreen';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import SmallLogo from '../../assets/glomeet_logo_top_tab.svg';
 const Stack = createNativeStackNavigator();
 
 const MatchingStackScreen = ({navigation, route}) => {
@@ -15,7 +16,17 @@ const MatchingStackScreen = ({navigation, route}) => {
         }
     }, [navigation, route]);
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                // headerBackImage: () => (
+                // ),
+                headerBackTitleVisible: false,
+                headerTitle: () => (
+                    <SmallLogo/>
+                ),
+                headerTitleAlign: 'center',
+            }}
+        >
             <Stack.Screen 
             name="MatchingMain" 
             component={MatchingMainScreen}/>

@@ -7,13 +7,6 @@ const MatchingMainScreen = ({navigation}) => {
     return (
         <View style={styles.backgroundContainer}>
             <Image
-                source={require('../../assets/glomeet_logo.png')}
-                style={styles.logoImage} 
-                accessibilityRole="image"
-                accessibilityLabel="글로밋 로고"
-                resizeMode="contain"
-            />
-            <Image
                 source={require('../../assets/advertisement.png')}
                 style={styles.noticeImage} 
                 accessibilityRole="image"

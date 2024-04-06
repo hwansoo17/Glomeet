@@ -42,16 +42,16 @@ const OnBoarding3 = ({navigation}) => {
     <View style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
       <View style={{ flex: 1 }}/>
       <View style={{ flex: 8 }}>
-        <View style={{flex:1.5}}/>
-        <View style={{flex:16}}>
+        <View style={{flex:1}}/>
+        <View style={{flex:14}}>
           <TitleSubtitleComponent titles={title} subtitles={subtitle}/>
           <View style={{flex:2}}/>
           <SelectableList data={data} selectItem={selectItem} selectedItem={selectedItem} renderItemStyle={{height: 56}}/>
           <View style={{flex:2}}/>
-          <MainButton title='다음으로 넘어가기' onPress={savePersonalType} 
-            disabled={!isButtonActive} 
-          />
         </View>
+        <MainButton title='다음으로 넘어가기' onPress={savePersonalType} 
+            disabled={!isButtonActive} 
+        />
         <View style={{flex:1}}/>
       </View>
       <View style={{ flex: 1}}/>

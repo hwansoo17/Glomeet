@@ -10,7 +10,7 @@ const ChatListItem = ({ item, goChatRoom }) => {
         <View style={{ backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
         </View>
         <View style={{flex:1}}>
-          <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 18}}>{item.title}</Text>
+          <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 18}} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
           <Text style= {{fontFamily: "Pretendard-Light", fontSize: 14}} numberOfLines={2} ellipsizeMode="tail">{item.lastMessage}</Text>
         </View>
         <View>

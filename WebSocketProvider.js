@@ -39,7 +39,7 @@ export const WebSocketProvider = ({ children }) => {
     console.log("appState.current ::: ", appState.current, nextAppState);
 
     if (
-      appState.current.match(/inactive|background/) &&
+      appState.current.match(/background/) &&
       nextAppState === 'active'
     ) {
       console.log('⚽️⚽️App has come to the foreground!');
