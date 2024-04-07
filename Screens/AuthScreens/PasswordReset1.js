@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { api } from '../../api';
+import InputBox from "../../customComponents/InputBox";
+import MainButton from "../../customComponents/MainButton";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 const PasswordReset1 = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [emailValid, setEmailValid] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);  
+  const [isCheckButtonActive, setCheckButtonActive] = useState(false);  
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -22,6 +25,17 @@ const PasswordReset1 = ({navigation}) => {
     changeButtonStatus();
     setEmailValid(emailRegEx.test(email));
   }, [email]);
+  const changeCheckButtonStatus = () => {
+    if (authCode != '') {
+      setCheckButtonActive(true);
+    } else {
+      setCheckButtonActive(false);
+    }
+  };
+  useEffect (() => {
+    changeCheckButtonStatus();
+    
+  },[authCode]) // 인증번호 확인할 때 활성화 되도록 수정
 
   const AuthCodeSend = async () => {
     console.log(email)
@@ -72,24 +86,60 @@ const PasswordReset1 = ({navigation}) => {
     };
   };
     return (
-    <View>
-      <Text>PasswordResetScreen</Text>
-      <TextInput placeholder="이메일" value={email} onChangeText={setEmail} />
-      <TouchableOpacity
-        onPress={AuthCodeSend}
-        disabled={!isButtonActive}
-        style={[styles.button, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-        <Text style={styles.buttonText}>인증번호 받기</Text>
-      </TouchableOpacity>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder="인증번호 입력" value={authCode} onChangeText={setAuthCode} style={styles.input} />
-        <TouchableOpacity
-          onPress={checkAuthCode}
-          style={styles.button}>
-          <Text style={styles.buttonText}>인증번호 확인</Text>
-        </TouchableOpacity>
+      <View style={styles.container}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
+        <View style={{ flex: 1 }} />
+        <View style={{ flex: 10 }}>
+          <View style={{height: 10}}/>
+          <View style={{ flexDirection: 'row'}}>
+            <View style={{ flex: 10 }}>
+              <InputBox 
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+                placeholder="아주이메일 주소 입력"
+              />
+            </View>
+            <View style={{ flex: 0.5}}/>
+            <View style={{ flex: 5 }}>
+              <MainButton 
+                title = '인증번호 받기'
+                onPress = {AuthCodeSend}
+                disabled ={!isButtonActive}
+                style = {{borderRadius:5}}
+                textStyle={{fontSize:15}}
+              />
+            </View>
+          </View>
+          <View style={{height: 10}}/> 
+
+          <View style={{ flexDirection: 'row'}}>
+            <View style={{ flex: 10 }}>
+              <InputBox 
+                value={authCode}
+                onChangeText={setAuthCode}
+                style={styles.input}
+                placeholder="인증번호 입력"
+              />
+            </View>
+            <View style={{ flex: 0.5 }}/>
+            <View style={{ flex: 5}}>
+            <MainButton 
+                title = '인증번호 확인'
+                onPress = {checkAuthCode}
+                disabled ={!isCheckButtonActive}
+                style = {{borderRadius:5}}
+                textStyle={{fontSize:15}}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{ flex: 1 }} />
       </View>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('PasswordReset2', { email: email })}>
+            <Text>리셋2</Text>
+    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -98,70 +148,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  emailText: {
-    fontSize: 30,
-    marginBottom: 10,
-    color: "#887E7E",
-    paddingHorizontal: 10,
-    fontWeight: 'bold',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    
-  },
   input: {
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 50,
     borderWidth: 1,
     borderColor: '#887E7E',
     borderRadius: 5,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-  button: {
-    height: 50,
-    backgroundColor: '#5782F1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    paddingHorizontal: 20,
-  },
-  activeButton: {
-    backgroundColor: '#5782F1',
-  },
-  disabledButton: {
-    backgroundColor: '#ccc',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  linkContainer: {
-    marginTop: 20,
-  },
-  linkText: {
-    color: '#5782F1',
-    fontSize: 16,
-  },
-  imageContainer: {
-    alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 20,
-  },
-  imageStyle: {
-    width: 200,
-    height: 200,
   },
 });
 export default PasswordReset1;

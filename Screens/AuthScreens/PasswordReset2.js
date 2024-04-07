@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet   } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,SafeAreaView,ScrollView    } from "react-native";
 import { api } from '../../api';
-
+import LineInput from "../../customComponents/LineInput";
+import InputBox from "../../customComponents/InputBox";
+import MainButton from "../../customComponents/MainButton";
 const PasswordReset2 = ({route, navigation}) => {
   const {email} = route.params;
   const [password, setPassword] = useState('');
@@ -38,113 +40,45 @@ const PasswordReset2 = ({route, navigation}) => {
   };
 
   return (
-    <View>
-      <View style={styles.inputContainer}>
-      </View>
-          <TextInput
+    <SafeAreaView style={styles.container}>
+    <ScrollView style={{flex:1}}>
+     <View style={{height: 10}}/> 
+      <View style={{flexDirection: 'row'}}>
+        <View style={{flex:1}}/>
+        <View style={{flex:10}}>
+          <View style={{height: 10}}/>
+          <LineInput 
             placeholder="새로운 비밀번호"
-            secureTextEntry
+            secureTextEntry = {true}
             value={password}
             onChangeText={setPassword}
-            style={styles.password} />
-          <TextInput
+            />
+          <LineInput 
             placeholder="비밀번호 확인"
-            secureTextEntry
+            secureTextEntry= {true}
             value={passwordCheck}
             onChangeText={setPasswordCheck}
-            style={styles.passwordCheck} />
-          <View style = {styles.Register}>
-          <TouchableOpacity
+            /> 
+          <View style={{height: 20}}/>
+          <MainButton
+            title={'비밀번호 변경'}
             onPress={resetPassword}
             disabled={!isButtonActive}
-            style={[styles.Registerbutton, isButtonActive ? styles.activeButton : styles.disabledButton]}>
-            <Text style={styles.buttonText}>비밀번호 변경</Text>
-          </TouchableOpacity>
-          </View>
-        </View>
+            textStyle={{fontSize:15}}
+            />
+        </View> 
+        <View style={{flex:1}}/>
+      </View>
+    </ScrollView>
+  </SafeAreaView>  
       );
     }
     
-    const styles = StyleSheet.create({
-      inputContainer: {
-        paddingHorizontal: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-      },
-      borderContainer: {
-        flex:1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#887E7E',
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginTop: 20,
-      },
-      nickNameText: {
-        flex: 1,
-        color: '#887E7E',
-        fontSize: 14, 
-        paddingVertical:-10,
-      },
-      checkButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-      },
-      checkButtonText: {
-        color: '#5782F1', 
-        fontSize: 14,
-        fontWeight: "bold", 
-      },
-      Register: {
-        flex:1,
-        paddingHorizontal: 10,
-        flexDirection: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-        paddingVertical:10,
-      },
-      Registerbutton: {
-        height: 50,
-        width: 400,
-        backgroundColor: '#ccc',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
-      },
-      activeButton: {
-        marginTop: 10,
-        backgroundColor: '#5782F1',
-        paddingHorizontal: 20,
-      },
-      disabledButton: {
-        marginTop: 10,
-        backgroundColor: '#ccc',
-        paddingHorizontal: 20,
-      },
-      buttonText: {
-        color: '#fff',
-        fontSize: 16,
-    
-      },
-      password: {
-        color: "#887E7E",
-        borderBottomWidth: 2,
-        borderBottomColor: '#000000',
-        marginBottom: 10,
-        justifyContent: 'center',
-        marginHorizontal: 10,
-      },
-      passwordCheck: {
-        color: "#887E7E",
-        borderBottomWidth: 2,
-        borderBottomColor: '#000000',
-        justifyContent: 'center',
-        marginHorizontal: 10,
-      }
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    backgroundColor: 'white',
+  },
     });
     
     export default PasswordReset2;

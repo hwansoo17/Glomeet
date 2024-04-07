@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Text, TouchableOpacity, Alert, Image, ScrollView} from 'react-native';
+import {View, TextInput, Text, TouchableOpacity, Alert, Image, ScrollView,SafeAreaView} from 'react-native';
 import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWebSocket } from "../../WebSocketProvider";
 import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
 import MainButton from '../../customComponents/MainButton';
+import LineInput from '../../customComponents/LineInput';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,7 +48,7 @@ const LoginScreen = ({navigation}) => {
   };
 
   return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ScrollView style={{flex:1}}>
           <View style={{flexDirection: 'row'}}>
             <View style={{flex:1}}/>
@@ -57,18 +58,17 @@ const LoginScreen = ({navigation}) => {
                 <Logo width={120} height={120}/>  
               </View>
               <View style={{height: 20}}/>
-              <TextInput
-                style={styles.input}
+              <LineInput 
                 placeholder="이메일을 입력하세요"
                 value={email}
+                secureTextEntry ={false}
                 onChangeText={setEmail}
               />
               <View style={{height: 10}}/>
-              <TextInput
-                style={styles.input}
+              <LineInput 
                 placeholder="비밀번호를 입력하세요"
-                secureTextEntry
                 value={password}
+                secureTextEntry ={true}
                 onChangeText={setPassword}
               />
               <View style={{height: 20}}/>
@@ -97,7 +97,7 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:1}}/>
           </View>
         </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 };
 
