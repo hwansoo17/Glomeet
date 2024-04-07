@@ -6,26 +6,6 @@ import { useWebSocket } from "../../WebSocketProvider";
 import { api, authApi } from '../../api'
 const HomeMainScreen = ({navigation}) => {
   const webSocketClient = useWebSocket();
-  const getMyMeeting = async () => {
-    try {
-      const response = await authApi.post('/meeting/my')
-      if (response.status == 200) {
-        // console.log(response.data);
-      }
-    } catch (error) {
-      console.error(error.response.status)
-    }
-  }
-  const getMyMeetingData = async () => {
-    try {
-      const response = await authApi.post('/meeting/list')
-      if (response.status == 200) {
-        // console.log(response.data);
-      }
-    } catch (error) {
-      console.error(error.response.status)
-    }
-  }
   const loggedOut = async () => {
     const email = await AsyncStorage.getItem('email');
     const fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -54,16 +34,6 @@ const HomeMainScreen = ({navigation}) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.replace('Auth')}>
         <Text>로그인 화면으로(임시)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={getMyMeeting}
-      >
-        <Text>미팅 아이디 가져오기</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={getMyMeetingData}
-      >
-        <Text>미팅 데이터 가져오기</Text>
       </TouchableOpacity>
     </View>
   );
