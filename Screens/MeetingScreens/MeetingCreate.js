@@ -57,7 +57,7 @@ const MeetingCreate = ({navigation}) => {
       
       goChatRoom(response.data)
       Alert.alert('모임이 생성되었습니다')
-      publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id,"생성메세지인데 서버에서 할거임", "CREATE")
+      publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id, "새 모임이 생성되었습니다.", "CREATE")
     }
     } catch (error) {
       console.log(error)

@@ -75,7 +75,6 @@ const MeetingMain = ({navigation}) => {
               <Text style={{fontSize:16, fontFamily: 'Pretendard-Regular', marginRight:5, color: '#09111F'}} numberOfLines={1}>{item.meeting.title}</Text>
               <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{item.meeting.category}</Text>
             </View>
-            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{formatDate(item.meeting.meetingDate)}</Text>
             <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>현재 {item.participants}명이 가입중인 모임</Text>
           </View>
         </View>

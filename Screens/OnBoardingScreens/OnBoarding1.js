@@ -5,7 +5,7 @@ import MainButton from '../../customComponents/MainButton';
 import SelectableList from "./SelectableList";
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
 const OnBoarding1 = ({ navigation }) => {
-  const data = ['아시아', '유럽', '북아메리카', '남아메리카', '오세아니아', '아프리카'];
+  const data = ['한국', '아시아', '유럽', '북아메리카', '남아메리카', '오세아니아', '아프리카'];
   const [selectedItem, setSelectedItem] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);
   const selectItem = (item) => {
