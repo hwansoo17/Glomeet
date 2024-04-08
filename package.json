@@ -33,6 +33,7 @@
     "react-native-svg": "^15.1.0",
     "react-native-svg-transformer": "^1.3.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-wheel-scrollview-picker": "^2.0.4",
     "sockjs-client": "^1.6.1",
     "text-encoding": "^0.7.0"
   },

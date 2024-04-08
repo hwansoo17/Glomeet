@@ -18,7 +18,7 @@ const MeetingMain = ({navigation}) => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => navigation.navigate('MeetingCreate')}>
-          <Text>모임 등록하기</Text>
+          <Text style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: '#09111F'}}>모임 등록하기</Text>
         </TouchableOpacity>
       ),
     });
@@ -36,7 +36,7 @@ const MeetingMain = ({navigation}) => {
   };
 
   const handleRefresh = async () => {
-    console.log('handleRefreshStore');
+    // console.log('handleRefreshStore');
     setIsRefreshing(true);
     getMeetingData()
     setIsRefreshing(false);
@@ -47,7 +47,7 @@ const MeetingMain = ({navigation}) => {
       const response = await authApi.get('/meeting/all')
     if (response.status == 200) {
         setMeetingData(response.data)
-        console.log(response.data, ': 미팅all');
+        // console.log(response.data, ': 미팅all');
       };
     } catch (error) {
       console.log(error);

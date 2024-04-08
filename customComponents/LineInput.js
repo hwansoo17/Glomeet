@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
-const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = false }) => {
+const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = false, placeholderTextColor, maxLength, multiline}) => {
   return (
     <TextInput
       style={[styles.input, style]} 
@@ -9,6 +9,9 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
       secureTextEntry = {secureTextEntry}
       onChangeText={onChangeText}
       placeholder={placeholder}
+      placeholderTextColor={placeholderTextColor}
+      maxLength={maxLength}
+      multiline={multiline}
     />
   );
 };
@@ -16,10 +19,12 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
 // 기본 스타일 설정
 const styles = StyleSheet.create({
   input: {
-        fontFamily: 'Pretendard-Regular',
-        height: 50,
-        borderBottomWidth: 1.2,
-        borderColor: '#887E7E', 
+    fontSize: 14,
+    fontFamily: 'Pretendard-Regular',
+    paddingVertical:10,
+    borderBottomWidth: 1.2,
+    borderColor: '#F0EFF2', 
+    paddingLeft: -2
 }
 });
 

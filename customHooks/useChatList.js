@@ -37,7 +37,7 @@ const useChatList = (apiEndpoint) => {
     setChatData(currentChatData => {
       const updatedChatData = currentChatData.map(chatRoom => {
         if (chatRoom.id === newMessage.roomId) {
-          console.log(newMessage)
+          console.log(newMessage, 'useChatList')
           return {
             ...chatRoom,
             lastMessage: newMessage.message,
