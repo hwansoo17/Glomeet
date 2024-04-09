@@ -4,7 +4,6 @@ import ChattingMain from '../ChattingScreens/ChattingMain';
 import MatchingChatRoom from '../ChattingScreens/MatchingChatRoom';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import MeetingChatRoom from '../ChattingScreens/MeetingChatRoom';
-import { useContext } from "react";
 const Stack = createNativeStackNavigator();
 
 const ChattingStackScreen = ({navigation, route}) => {

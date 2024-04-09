@@ -21,7 +21,7 @@ const MeetingCreate = ({navigation}) => {
   const [isCreateEnabled, setIsCreateEnabled] = useState(false);
   const keyword = ['운동', '여행', '게임', '문화', '음식', '언어']
   const {publish} = useWebSocket();
-  const dataSource = Array.from({ length: 18 }, (_, i) => (i + 3).toString())
+  const dataSource = Array.from({ length: 28 }, (_, i) => (i + 3).toString())
   
   useEffect(() => {
     if (title != '' && description != '' && category != '') {
