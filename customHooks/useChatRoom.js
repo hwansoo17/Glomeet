@@ -20,7 +20,7 @@ const useChatRoom = (id) => {
         EventEmitter.emit("chatRoomMessage", message);
       }
       if(newMessage.type === "JOIN") {
-        // setMessages((prevMessages) => [newMessage, ...prevMessages]);
+        setMessages((prevMessages) => [newMessage, ...prevMessages]);
       }
       if(newMessage.type === "JOIN") {// 새 타입 커넥트
         EventEmitter.emit("chatRoomConnect", message);
@@ -84,12 +84,11 @@ const useChatRoom = (id) => {
           }
           return msg;
         });
-
         return updatedMessages;
       })
     }
   }
-
+  
   useEffect(() => {
     console.log(subscription, '채팅방 구독 내역')
     initialize().then(getMessageList);

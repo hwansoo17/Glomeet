@@ -5,7 +5,7 @@ import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
 import useChatRoom from "../../customHooks/useChatRoom";
 import MessageListItem from "./MessageListItem";
-
+import SendIcon from "../../assets/SendIcon.svg";
 const MatchingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
   const chat = route.params.chat;
@@ -65,16 +65,19 @@ const MatchingChatRoom = ({ route, navigation }) => {
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
         keyExtractor={(item, index) => index.toString()}
         inverted />
-      <View style={{ flex: 1 }} />
+      
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ borderWidth: 1, borderRadius: 30, flex: 1 }}>
+        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50}}>
           <TextInput
+            style={{fontFamily: "Pretendard-Regular", fontSize: 14}}
+            placeholder="메시지를 입력해주세요."
             value={message}
             onChangeText={setMessage}/>
         </View>
-        <View style={{ flex: 1 }} />
-        <TouchableOpacity onPress={sendMessage}>
-          <Text>전송</Text>
+        <TouchableOpacity 
+          style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
+          onPress={sendMessage}>
+          <SendIcon/>
         </TouchableOpacity>
       </View>
 
