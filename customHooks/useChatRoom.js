@@ -19,6 +19,12 @@ const useChatRoom = (id) => {
         setMessages((prevMessages) => [newMessage, ...prevMessages]);
         EventEmitter.emit("chatRoomMessage", message);
       }
+      if(newMessage.type === "JOIN") {
+        // setMessages((prevMessages) => [newMessage, ...prevMessages]);
+      }
+      if(newMessage.type === "JOIN") {// 새 타입 커넥트
+        EventEmitter.emit("chatRoomConnect", message);
+      }
     }, {'email' : email});
   };
 
@@ -56,13 +62,42 @@ const useChatRoom = (id) => {
       };
     };
   };
+  const chatRoomConnectEventListener = async (message) => {
+    const email = await AsyncStorage.getItem("email");
+    const connectMessage = JSON.parse(message.body);
+    if (email !== connectMessage.senderEmail) {
+      console.log(email, connectMessage.senderEmail)
+      console.log(connectMessage.senderEmail+ '채팅방 접속');
+      const unReadCount = parseInt(connectMessage.message, 10);
+      console.log(unReadCount, '언리드카운트')
+      setMessages(prevMessages => {
+        // 'SEND' 타입 메시지만 필터링
+        const sendMessages = prevMessages.filter(msg => msg.type === 'SEND');
+        // 가장 최근의 'SEND' 타입 메시지부터 unRead 개수만큼 선택
+        const recentUnreadMessages = sendMessages.slice(0, unReadCount);
+        console.log(recentUnreadMessages)
+
+        // 선택된 메시지들의 readCount를 1 증가시키고, 나머지 메시지는 그대로 유지
+        const updatedMessages = prevMessages.map(msg => {
+          if (recentUnreadMessages.includes(msg)) {
+            return { ...msg, readCount: msg.readCount + 1 };
+          }
+          return msg;
+        });
+
+        return updatedMessages;
+      })
+    }
+  }
 
   useEffect(() => {
     console.log(subscription, '채팅방 구독 내역')
     initialize().then(getMessageList);
     const appState1 = AppState.addEventListener('change', handleAppStateChange);
+    EventEmitter.on("chatRoomConnect", chatRoomConnectEventListener)
 
     return async () => {
+      EventEmitter.removeListener("chatRoomConnect", chatRoomConnectEventListener)
       appState1.remove()
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
