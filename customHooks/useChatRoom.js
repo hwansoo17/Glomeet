@@ -22,7 +22,7 @@ const useChatRoom = (id) => {
       if(newMessage.type === "JOIN") {
         setMessages((prevMessages) => [newMessage, ...prevMessages]);
       }
-      if(newMessage.type === "JOIN") {// 새 타입 커넥트
+      if(newMessage.type === "ENTER") {// 새 타입 커넥트
         EventEmitter.emit("chatRoomConnect", message);
       }
     }, {'email' : email});

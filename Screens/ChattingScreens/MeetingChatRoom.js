@@ -10,6 +10,8 @@ import MessageListItem from "./MessageListItem";
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
+  const unRead = route.params.chat.unRead;
+
   const messages = useChatRoom(id);
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -39,8 +41,15 @@ const MeetingChatRoom = ({ route, navigation }) => {
       setEmail(email);
     }
     getEmail()
+    chatRoomConnectMessage()
   }, []);
 
+  const chatRoomConnectMessage = async () => {
+    const email = await AsyncStorage.getItem("email");
+    const nickName = await AsyncStorage.getItem("nickName");
+    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, unRead, "ENTER");
+  };
+  
   const sendMessage = async () => {
     if (message === "") {
       return;
@@ -57,34 +66,15 @@ const MeetingChatRoom = ({ route, navigation }) => {
         <View style={styles.avatar}>
         {/* 여기에 모임 이미지 */}
         </View>
-        <View>
-          <View>
-            {/* 달력아이콘 */}
-            <Text>
-              모임 날짜
-            </Text>
-          </View>
-          <View style={{flex:1}}/>
-          <View>
-            <Text>
-              모임 카테고리
-            </Text>
-          </View>
-        </View>
         <View style={{flex:1}}/>
         <View>
-          <View>
-            {/* 인원 */}
-            <Text>
-              인원숫자
-            </Text>
-          </View>
+          <Text>
+            모임 카테고리
+          </Text>
           <View style={{flex:1}}/>
-          <View>
-            <Text>
-              모임 장소
-            </Text>
-          </View>
+          <Text>
+            인원숫자
+          </Text>
         </View>
       </TouchableOpacity>
       <FlatList

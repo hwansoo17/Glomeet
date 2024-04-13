@@ -45,7 +45,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const chatRoomConnectMessage = async () => {
     const email = await AsyncStorage.getItem("email");
     const nickName = await AsyncStorage.getItem("nickName");
-    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, chat.unRead, "JOIN");
+    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, chat.unRead, "ENTER");
   };
 
   const sendMessage = async () => {
