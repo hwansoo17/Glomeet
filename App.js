@@ -64,7 +64,6 @@ async function requestUserPermission() {
 
 const App = () => {
   const [initialRoute, setInitialRoute] = useState(null);
-  let [client, changeClient] = useState(null);
 
   const checkLoginStatus = async () => {
     await requestUserPermission();

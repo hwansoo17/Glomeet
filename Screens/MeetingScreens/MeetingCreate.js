@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import {View, Text, TouchableOpacity, TextInput, FlatList, Alert, Image, ScrollView, StyleSheet, ImageBackground} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { authApi } from "../../api";
+import { formDataApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
 import EventEmitter from "react-native-eventemitter";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -12,9 +12,9 @@ import ScrollPicker from "react-native-wheel-scrollview-picker";
 
 
 const MeetingCreate = ({navigation}) => {
-  const [url, setUrl] = useState('ㅋㅋㅋ')
+  const [imageFile, setImageFile] = useState(null);
   const [imageUri, setImageUri] = useState(null); // 상태 추가
-  const [capacity, setCapacity] = useState('')
+  const [capacity, setCapacity] = useState('4')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
@@ -29,7 +29,7 @@ const MeetingCreate = ({navigation}) => {
     } else {
       setIsCreateEnabled(false);
     }
-  }, [title, description,category]);
+  }, [title, description,category, capacity]);
   
   const selectImage = () => {
     launchImageLibrary({mediaType: 'photo'}, (response) => {
@@ -38,19 +38,33 @@ const MeetingCreate = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
+        const imageFile = response.assets[0];
         const source = { uri: response.assets[0].uri };
-        setImageUri(source.uri); // 선택된 이미지의 URI를 상태에 저장
-        setUrl(source.uri); // URL 상태도 업데이트(선택 사항)
+        setImageUri(source.uri);
+        setImageFile(imageFile);
       }
     });
   };
 
   const createMeeting = async() => {
-    // console.log(url, capacity, title, description, location, category)
+    console.log(imageFile, capacity, title, description, category)
     try{
       const nickName = await AsyncStorage.getItem('nickName')
       const email = await AsyncStorage.getItem('email')
-      const response = await authApi.post('/meeting/create', { url: url, title: title, comment: description, capacity: capacity, location: location, meetingDate: date, category: category})
+      const formData = new FormData();
+
+      formData.append('image', {
+        uri: imageFile.uri,
+        type: imageFile.type,
+        name: imageFile.fileName
+      });
+      formData.append('title', title);
+      formData.append('comment', description);
+      formData.append('capacity', capacity);
+      formData.append('category', category);
+      console.log(formData, '폼데이터')
+      console.log(imageFile, '이미지 파일')
+      const response = await formDataApi.post('/meeting/create', formData)
     if (response.status == 200) {
       console.log(response.data)
       console.log('@@@@')
@@ -60,7 +74,7 @@ const MeetingCreate = ({navigation}) => {
       publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id, "새 모임이 생성되었습니다.", "CREATE")
     }
     } catch (error) {
-      console.log(error)
+      console.log(error.response, '무슨 오류일까')
       if (error.response.status == 401) {
         console.log(error, '왜 오류?')
       };
@@ -99,11 +113,7 @@ const MeetingCreate = ({navigation}) => {
         </TouchableOpacity>
       ),
     });
-  }, [isCreateEnabled]);
-  const handleWebSocketMessage = (message) => {
-    // 메시지 이벤트를 발생시키는 메서드
-    EventEmitter.emit("newMessage", message);
-  };
+  }, [isCreateEnabled, imageFile, title, description, category, capacity]);
 
   return (
     <View style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
@@ -157,9 +167,7 @@ const MeetingCreate = ({navigation}) => {
             <ScrollPicker
               dataSource={dataSource}
               selectedIndex={1}
-              onValueChange={(data) => {
-                setCapacity(data)
-              }}
+              onValueChange={setCapacity}
               wrapperHeight={100}
               wrapperBackground="#FFFFFF"
               itemHeight={40}
