@@ -96,6 +96,7 @@ const useChatRoom = (id) => {
     EventEmitter.on("chatRoomConnect", chatRoomConnectEventListener)
 
     return async () => {
+      EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
       EventEmitter.removeListener("chatRoomConnect", chatRoomConnectEventListener)
       appState1.remove()
       setMessages([]);

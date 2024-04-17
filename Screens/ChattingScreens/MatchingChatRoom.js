@@ -19,16 +19,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
     navigation.setOptions({
       title: id,
       headerTitleAlign: "center",
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
-            navigation.goBack();
-          }}
-        >
-          <Text>뒤로</Text>
-        </TouchableOpacity>
-      ),
     });
   }, [navigation, id]);
 

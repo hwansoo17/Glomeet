@@ -21,16 +21,6 @@ const MeetingChatRoom = ({ route, navigation }) => {
     navigation.setOptions({
       title: "모임 타이틀",
       headerTitleAlign: "center",
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
-            navigation.goBack();
-          }}
-        >
-          <Text>뒤로</Text>
-        </TouchableOpacity>
-      ),
     });
   }, [navigation, id]);
 
