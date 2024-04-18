@@ -11,6 +11,7 @@ import MessageListItem from "./MessageListItem";
 const MeetingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
   const unRead = route.params.chat.unRead;
+  const title = route.params.chat.title;
 
   const messages = useChatRoom(id);
   const [message, setMessage] = useState("");
@@ -19,10 +20,10 @@ const MeetingChatRoom = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "모임 타이틀",
+      title: title,
       headerTitleAlign: "center",
     });
-  }, [navigation, id]);
+  }, [navigation]);
 
   useEffect(() => {
     console.log(id, '아이디 확인')

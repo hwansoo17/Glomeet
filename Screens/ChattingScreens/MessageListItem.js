@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { formatDate } from './formatDate';
 
 const MessageListItem = ({ item, userEmail }) => {
@@ -16,7 +16,11 @@ const MessageListItem = ({ item, userEmail }) => {
     }
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
-      {!isMyMessage && <View style={styles.avatar} />}
+      {!isMyMessage && 
+      <View style={styles.avatar}>
+        <Image src={item.imageAddress}
+        style={{width:48, height:48, borderRadius: 24,}}/>
+      </View>}
       {isMyMessage &&
         <View style={{alignSelf: 'flex-end', marginRight:5}}>
           <Text style={{alignSelf: 'flex-end'}}>{item.readCount}</Text>

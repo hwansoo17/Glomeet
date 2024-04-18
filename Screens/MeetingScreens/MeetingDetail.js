@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, TouchableOpacity, ScrollView} from "react-native";
+import {View, Text, TouchableOpacity, ScrollView, Image} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
@@ -11,14 +11,14 @@ const MeetingDetail = ({route, navigation}) => {
   const {subscribe, publish} = useWebSocket();
 
   const meetingJoin = async() => {
-    console.log(detail.meeting.id);
+    console.log(detail.id);
     const email = await AsyncStorage.getItem('email')
     const nickName = await AsyncStorage.getItem('nickName');
     try {
-      const response = await authApi.post('/meeting/join', { meetingId : detail.meeting.id});
+      const response = await authApi.post('/meeting/join', { meetingId : detail.id});
       if (response.status == 200) {
-        publish("/pub/chat/"+ detail.meeting.id, "application/json", email, nickName, detail.meeting.id, nickName+"님이 입장하셨습니다.", "JOIN")
-        goChatRoom(detail.meeting)
+        publish("/pub/chat/"+ detail.id, "application/json", email, nickName, detail.id, nickName+"님이 입장하셨습니다.", "JOIN")
+        goChatRoom(detail)
       };
     } catch (error) {
       if (error.response.status == 409) {
@@ -56,30 +56,32 @@ const MeetingDetail = ({route, navigation}) => {
 
   return (
     <View style={{flex:1, backgroundColor: '#fff'}}>
-      <View style={{flex:7, backgroundColor:'grey'}}/>
+      <View style={{flex:7, backgroundColor:'grey'}}>
+      <Image src={detail.meetingImageAddress} style={{flex:1}}/>
+      </View>
       <View style={{flex:9, flexDirection: 'row'}}>
         <View style={{flex:1}}/>
         <View style={{flex:8}}>
           <View style={{flex:8, paddingVertical:20}}>
-            <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 24, color: '#09111F'}} numberOfLines={1}>{detail.meeting.title}</Text>
-            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#999999'}}>{detail.meeting.meetingDate}</Text>
+            <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 24, color: '#09111F'}} numberOfLines={1}>{detail.title}</Text>
+            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#999999'}}>{detail.meetingDate}</Text>
             {/* 모임 생성일자로 바꾸기 */}
             <ScrollView>
-            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 16, color: '#09111F'}}>{detail.meeting.comment}</Text>
+            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 16, color: '#09111F'}}>{detail.comment}</Text>
             </ScrollView>
             <View style={{flex:3}}/>
             <View style={{borderBottomColor:'#E1E5EB', borderBottomWidth: 1, marginVertical:15}}/>
             <View style={{flexDirection: 'row', alignItems:'center'}}>
-              <View style={{width:48, height:48, borderRadius:24, backgroundColor: 'grey'}}>
-              {/* 프로필 이미지 */}
+              <View style={{width:48, height:48, borderRadius:24, backgroundColor: 'grey', overflow: 'hidden'}}>
+                <Image src={detail.masterImageAddress} style={{flex:1}}/>
               </View>
               <View style={{marginLeft:10}}>
-                <Text style={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#09111F'}}>{detail.meeting.masterEmail}</Text>
+                <Text style={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#09111F'}}>{detail.masterNickName}</Text>
                 <View style={{margin:2}}/>
-                <Text style={{fontFamily: 'Pretendard-Light', fontSize: 12, color: '#09111F'}}>{detail.participants}/{detail.meeting.capacity}명 참여중</Text>
+                <Text style={{fontFamily: 'Pretendard-Light', fontSize: 12, color: '#09111F'}}>{detail.participants}/{detail.capacity}명 참여중</Text>
               </View>
               <View style={{flex:1}}/>
-              <Text style={{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10, fontSize:12, fontFamily: 'Pretendard-Regular', color: '#2D68FF'}}>{detail.meeting.category}</Text>
+              <Text style={{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10, fontSize:12, fontFamily: 'Pretendard-Regular', color: '#2D68FF'}}>{detail.category}</Text>
             </View>
             <View style={{flex:1}}/>
           </View>
