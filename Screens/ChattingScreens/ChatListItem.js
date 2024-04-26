@@ -8,8 +8,8 @@ const ChatListItem = ({ item, goChatRoom }) => {
       style= {{backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E4E5E6', height: 80, alignItems:'center', flexDirection: "row", padding: 10}}
       onPress={() => goChatRoom(item)}>
         <View style={{ backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
-        <Image src={item.imageAddress}
-          style={{width:48, height:48, borderRadius: 24,}}/>
+          <Image src={item.imageAddress}
+            style={{width:48, height:48, borderRadius: 24}}/>
         </View>
         <View style={{flex:1}}>
           <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 18, color: '#000'}} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>

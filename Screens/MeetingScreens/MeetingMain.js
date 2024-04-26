@@ -29,14 +29,14 @@ const MeetingMain = ({navigation}) => {
       setFilteredMeetingData(meetingData);
     } else {
       const filtered = meetingData.filter(
-        (item) => item.meeting.category === category
+        (item) => item.category === category
       );
       setFilteredMeetingData(filtered);
     }
   };
 
   const handleRefresh = async () => {
-    // console.log('handleRefreshStore');
+    console.log('handleRefreshStore');
     setIsRefreshing(true);
     getMeetingData()
     setIsRefreshing(false);

@@ -19,7 +19,7 @@ const MessageListItem = ({ item, userEmail }) => {
       {!isMyMessage && 
       <View style={styles.avatar}>
         <Image src={item.imageAddress}
-        style={{width:48, height:48, borderRadius: 24,}}/>
+          style={{width:48, height:48, borderRadius: 24,}}/>
       </View>}
       {isMyMessage &&
         <View style={{alignSelf: 'flex-end', marginRight:5}}>

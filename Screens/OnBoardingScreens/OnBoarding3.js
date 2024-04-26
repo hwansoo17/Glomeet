@@ -1,7 +1,7 @@
 import React ,{useState} from "react";
 import {View, Text, TouchableOpacity, FlatList} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { api } from "../../api"
+import { authApi } from "../../api"
 import MainButton from '../../customComponents/MainButton';
 import SelectableList from "./SelectableList";
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
@@ -19,11 +19,10 @@ const OnBoarding3 = ({navigation}) => {
     }
   } 
   const savePersonalType = async() => {
-    const email = await AsyncStorage.getItem('email')
     const userContinent = await AsyncStorage.getItem('userContinent')
     const userHobby = await AsyncStorage.getItem('userHobby')
     try {
-      const response = await api.post('/auth/inputAdditionalInfo', {email: email, country: userContinent, interest: userHobby, type: selectedItem}) 
+      const response = await authApi.post('/auth/inputAdditionalInfo', {country: userContinent, interest: userHobby, type: selectedItem}) 
       if (response.status == 200) {
         console.log(email, userContinent, userHobby, selectedItem)
         navigation.navigate('OnBoarding4')

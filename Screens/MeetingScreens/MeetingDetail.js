@@ -5,7 +5,7 @@ import { authApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
 import EventEmitter from "react-native-eventemitter";
 import MainButton from "../../customComponents/MainButton";
-
+import { formatDate } from "../ChattingScreens/formatDate";
 const MeetingDetail = ({route, navigation}) => {
   const detail = route.params.meeting;
   const {subscribe, publish} = useWebSocket();
@@ -64,7 +64,7 @@ const MeetingDetail = ({route, navigation}) => {
         <View style={{flex:8}}>
           <View style={{flex:8, paddingVertical:20}}>
             <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 24, color: '#09111F'}} numberOfLines={1}>{detail.title}</Text>
-            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#999999'}}>{detail.meetingDate}</Text>
+            <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#999999'}}>{formatDate(detail.createdAt)}</Text>
             {/* 모임 생성일자로 바꾸기 */}
             <ScrollView>
             <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 16, color: '#09111F'}}>{detail.comment}</Text>
@@ -76,7 +76,7 @@ const MeetingDetail = ({route, navigation}) => {
                 <Image src={detail.masterImageAddress} style={{flex:1}}/>
               </View>
               <View style={{marginLeft:10}}>
-                <Text style={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#09111F'}}>{detail.masterNickName}</Text>
+                <Text style={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#09111F'}}>{detail.nickName}</Text>
                 <View style={{margin:2}}/>
                 <Text style={{fontFamily: 'Pretendard-Light', fontSize: 12, color: '#09111F'}}>{detail.participants}/{detail.capacity}명 참여중</Text>
               </View>
