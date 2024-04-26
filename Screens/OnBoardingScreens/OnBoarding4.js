@@ -6,7 +6,7 @@ const OnBoarding4 = ({navigation}) => {
 
   
   return (
-  <View>
+  <SafeAreaView>
     <TouchableOpacity
       onPress={() => navigation.reset({
         index: 0,
@@ -15,7 +15,7 @@ const OnBoarding4 = ({navigation}) => {
       <Text>시작하기</Text>
     </TouchableOpacity>
     
-  </View>
+  </SafeAreaView>
 
   )
 };

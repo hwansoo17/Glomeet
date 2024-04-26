@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MainButton from '../../customComponents/MainButton';
 import SelectableList from "./SelectableList";
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
+import { SafeAreaView } from "react-native-safe-area-context";
 const OnBoarding1 = ({ navigation }) => {
   const data = ['한국', '아시아', '유럽', '북아메리카', '남아메리카', '오세아니아', '아프리카'];
   const [selectedItem, setSelectedItem] = useState('');
@@ -26,7 +27,7 @@ const OnBoarding1 = ({ navigation }) => {
   const subtitle = ['Choose one option for now.', 'You can explore others later.']
   
   return (
-    <View style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
+    <SafeAreaView style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
       <View style={{ flex: 1 }}/>
       <View style={{ flex: 8 }}>
         <View style={{flex:1}}/>
@@ -42,7 +43,7 @@ const OnBoarding1 = ({ navigation }) => {
         <View style={{flex:1}}/>
       </View>
       <View style={{ flex: 1}}/>
-    </View>
+    </SafeAreaView>
   );
 };
 

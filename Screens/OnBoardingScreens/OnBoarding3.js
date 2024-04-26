@@ -38,7 +38,7 @@ const OnBoarding3 = ({navigation}) => {
   const subtitle = ['Choose one option for now.', 'You can explore others later.']
 
   return (
-    <View style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
+    <SafeAreaView style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
       <View style={{ flex: 1 }}/>
       <View style={{ flex: 8 }}>
         <View style={{flex:1}}/>
@@ -54,7 +54,7 @@ const OnBoarding3 = ({navigation}) => {
         <View style={{flex:1}}/>
       </View>
       <View style={{ flex: 1}}/>
-    </View>
+    </SafeAreaView>
   );
 };
 

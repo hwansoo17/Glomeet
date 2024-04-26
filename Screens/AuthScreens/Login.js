@@ -56,7 +56,7 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
                 <Logo width={120} height={120}/>
-                <Text style={{fontFamily: 'GmarketSansMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}><Text style={{fontFamily: 'GmarketSansBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스 <Text style={{fontFamily: 'GmarketSansBold', color: '#5782F1'}}>글로밋</Text></Text>  
+                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}><Text style={{fontFamily: 'GmarketSansTTFBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스 <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>글로밋</Text></Text>  
               </View>
               <View style={{height: 20}}/>
               <LineInput 
