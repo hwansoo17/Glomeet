@@ -53,10 +53,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <TouchableOpacity style={{flexDirection: "row", padding: 20, borderBottomWidth:1, borderBottomColor:"#E4E5E6"}}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      {/* <TouchableOpacity style={{flexDirection: "row", padding: 20, borderBottomWidth:1, borderBottomColor:"#E4E5E6"}}>
         <View style={styles.avatar}>
-        {/* 여기에 모임 이미지 */}
         </View>
         <View style={{flex:1}}/>
         <View>
@@ -68,7 +67,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
             인원숫자
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <FlatList
         data={messages}
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
@@ -89,8 +88,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
           <SendIcon/>
         </TouchableOpacity>
       </View>
-
-    </SafeAreaView>
+    </View>
   );
 };
 
