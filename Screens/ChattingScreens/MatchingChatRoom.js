@@ -55,7 +55,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
         keyExtractor={(item, index) => index.toString()}
         inverted />
-      
+      <View style={{ flex: 1 }} />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50}}>
           <TextInput
