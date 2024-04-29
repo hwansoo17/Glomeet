@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList ,Image } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, FlatList, SafeAreaView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
@@ -49,7 +49,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <FlatList
         data={messages}
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
@@ -71,7 +71,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,12 +1,11 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
 import useChatRoom from "../../customHooks/useChatRoom";
 import MessageListItem from "./MessageListItem";
 import SendIcon from "../../assets/SendIcon.svg";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
@@ -53,7 +52,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       {/* <TouchableOpacity style={{flexDirection: "row", padding: 20, borderBottomWidth:1, borderBottomColor:"#E4E5E6"}}>
         <View style={styles.avatar}>
         </View>
@@ -74,13 +73,14 @@ const MeetingChatRoom = ({ route, navigation }) => {
         keyExtractor={(item, index) => index.toString()}
         inverted />
       <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50}}>
+      <View style={{ flexDirection: "row", alignItems: "center"}}>
+        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
           <TextInput
             style={{fontFamily: "Pretendard-Regular", fontSize: 14}}
             placeholder="메시지를 입력해주세요."
             value={message}
-            onChangeText={setMessage}/>
+            onChangeText={setMessage}
+            textAlignVertical='center'/>
         </View>
         <TouchableOpacity 
           style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
@@ -88,7 +88,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
           <SendIcon/>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
