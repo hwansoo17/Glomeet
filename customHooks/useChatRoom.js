@@ -7,10 +7,17 @@ import { useWebSocket } from "../WebSocketProvider";
 
 const useChatRoom = (id) => {
   const [messages, setMessages] = useState([]);
+  const [hasMoreData, setHasMoreData] = useState(true);
   const webSocketClient = useWebSocket();
   const appState = useRef(AppState.currentState);
   let subscription = null;
-
+  useEffect(()=>{
+    console.log(hasMoreData)
+    EventEmitter.on("loadMoreMessage", loadMoreMessageEventListener)
+    return async () => {
+      EventEmitter.removeListener("loadMoreMessage", loadMoreMessageEventListener)
+    }
+  },[hasMoreData])
   const initialize = async () => {
     const email = await AsyncStorage.getItem("email");
     subscription = webSocketClient.subscribe("/sub/chat/"+id, (message) => {
@@ -50,15 +57,21 @@ const useChatRoom = (id) => {
     appState.current = nextAppState;
   };
 
-  const getMessageList = async () => {
+  const getMessageList = async (roomId, lastMessageId) => {
     try {
-      const response = await authApi.post("/chat/message-list", { "roomId": id});
+      const response = await authApi.get("chat/message-list", {params: {roomId: roomId, lastMessageId: lastMessageId}})
       if (response.status == 200) {
+        console.log(response.data)
         setMessages(response.data);
+        if (response.data.length < 50) {
+          setHasMoreData(false); // 더 이상 데이터가 없다고 상태 업데이트
+        }
       }
+
     } catch (error) {
       if (error.response.status == 401) {
-      console.log(error);
+        console.log(id);
+        console.log(error);
       };
     };
   };
@@ -88,16 +101,41 @@ const useChatRoom = (id) => {
       })
     }
   }
-  
+  const loadMoreMessageEventListener = async (data) => {
+    if (hasMoreData) {
+      try {
+        console.log(data)
+        const response = await authApi.get("chat/message-list", {params: {roomId: data.roomId, lastMessageId: data.lastMessageId}})
+        if (response.status == 200) {
+          console.log(response.data)
+          setMessages((prevMessages) => [...prevMessages,...response.data]);
+          if (response.data.length < 50) {
+            console.log(response.data.length);
+            setHasMoreData(false); // 더 이상 데이터가 없다고 상태 업데이트
+          }
+        }
+        
+      } catch (error) {
+        if (error) {
+          console.log(id);
+          console.log(error);
+        };
+      };
+    } else {
+      console.log('더이상 불러올 메시지가 없습니다.')
+    }
+    
+  }
   useEffect(() => {
     console.log(subscription, '채팅방 구독 내역')
-    initialize().then(getMessageList);
+    initialize().then(getMessageList(id, null));
     const appState1 = AppState.addEventListener('change', handleAppStateChange);
     EventEmitter.on("chatRoomConnect", chatRoomConnectEventListener)
-
+    
     return async () => {
       EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
       EventEmitter.removeListener("chatRoomConnect", chatRoomConnectEventListener)
+      EventEmitter.removeListener("loadMoreMessage", loadMoreMessageEventListener)
       appState1.remove()
       setMessages([]);
       const email = await AsyncStorage.getItem("email");

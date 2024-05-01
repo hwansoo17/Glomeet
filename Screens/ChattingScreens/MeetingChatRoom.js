@@ -5,7 +5,7 @@ import { useWebSocket } from "../../WebSocketProvider";
 import useChatRoom from "../../customHooks/useChatRoom";
 import MessageListItem from "./MessageListItem";
 import SendIcon from "../../assets/SendIcon.svg";
-
+import EventEmitter from "react-native-eventemitter";
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
@@ -50,7 +50,14 @@ const MeetingChatRoom = ({ route, navigation }) => {
     webSocketClient.publish("/pub/chat/"+id, "application/json", email, nickName, id, message+"\u0000", 'SEND');
     setMessage("");
   };
+  const loadMoreMessage= () => {
+    console.log(messages[messages.length-1]?._id)
+    const lastMessage = messages[messages.length - 1];
+  if (lastMessage) {
+    EventEmitter.emit('loadMoreMessage', {roomId: id, lastMessageId:  messages[messages.length-1]?._id})
+  }
 
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       {/* <TouchableOpacity style={{flexDirection: "row", padding: 20, borderBottomWidth:1, borderBottomColor:"#E4E5E6"}}>
@@ -71,7 +78,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
         data={messages}
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
         keyExtractor={(item, index) => index.toString()}
-        inverted />
+        inverted 
+        onEndReached={loadMoreMessage}
+        onEndReachedThreshold={0.7}/>
       <View style={{ flex: 1 }} />
       <View style={{ flexDirection: "row", alignItems: "center"}}>
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>

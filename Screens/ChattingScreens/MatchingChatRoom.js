@@ -48,21 +48,31 @@ const MatchingChatRoom = ({ route, navigation }) => {
     setMessage("");
   };
 
+  const loadMoreMessage= () => {
+    console.log(messages[messages.length-1]?._id)
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage) {
+      EventEmitter.emit('loadMoreMessage', {roomId: id, lastMessageId:  messages[messages.length-1]?._id})
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <FlatList
         data={messages}
         renderItem={({item}) => <MessageListItem item={item} userEmail={email}/>}
         keyExtractor={(item, index) => index.toString()}
-        inverted />
+        inverted 
+        onEndReached={loadMoreMessage}
+        onEndReachedThreshold={0.7}/>
       <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50}}>
+      <View style={{ flexDirection: "row", alignItems: "center"}}>
+        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
           <TextInput
             style={{fontFamily: "Pretendard-Regular", fontSize: 14}}
             placeholder="메시지를 입력해주세요."
             value={message}
-            onChangeText={setMessage}/>
+            onChangeText={setMessage}
+            textAlignVertical='center'/>
         </View>
         <TouchableOpacity 
           style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
@@ -70,7 +80,6 @@ const MatchingChatRoom = ({ route, navigation }) => {
           <SendIcon/>
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 };

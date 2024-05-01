@@ -28,7 +28,7 @@ const HomeMain = ({navigation}) => {
       style={{width: 160, height: 180, backgroundColor:'grey', borderRadius:10, overflow: 'hidden'}}
       //onPress={() => goMeetingRoom(item)}
     >
-      <ImageBackground source={require('../../assets/image1.png')}
+      <ImageBackground source={TestImage} //아이템 이미지링크로
         style={{width: 160, height: 180}}
       >
         <View style={{flex:1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
@@ -65,6 +65,7 @@ const HomeMain = ({navigation}) => {
           renderItem={renderItem}
           horizontal
           ListHeaderComponent={<View style={{width:10}}/>}
+          ListFooterComponent={<View style={{width:10}}/>}
           ItemSeparatorComponent={<View style={{width:10}}/>}
           showsHorizontalScrollIndicator={false}
           />

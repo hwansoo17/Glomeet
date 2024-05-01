@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import {View, Text, TouchableOpacity, TextInput, FlatList, Alert, Image, ScrollView, StyleSheet, ImageBackground} from "react-native";
+import {SafeAreaView, View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet, ImageBackground} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formDataApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
@@ -115,7 +115,7 @@ const MeetingCreate = ({navigation}) => {
   }, [isCreateEnabled, imageFile, title, description, category, capacity]);
 
   return (
-    <View style={{flex:1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex:1, backgroundColor: '#fff'}}>
       <ScrollView>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex:1}}/>
@@ -195,7 +195,7 @@ const MeetingCreate = ({navigation}) => {
           <View style={{flex:1}}/>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 };
 
