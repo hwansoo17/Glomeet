@@ -1,12 +1,56 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, FlatList, ImageBackground} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View, Text, TouchableOpacity, FlatList, ImageBackground, Image} from 'react-native';
 import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
-import TestImage from '../../assets/image1.png'; 
+import { authApi } from '../../api';
 const HomeMain = ({navigation}) => {
-  const data = ['운동', '운동', '문화', '음식']
-
+  const [userProfile, setUserProfile] = useState([])
+  const [trendMeetingData, setTrendMeetingData] = useState([])
+  const getUserProfile = async() => {
+    try {
+      const response = await authApi.get('/user/profile')
+      if (response.status == 200) {
+        setUserProfile(response.data)
+        console.log(response.data, ': 프로필');
+      };
+    } catch (error) {
+      console.log(error);
+    };
+  };
+  const getTrendMeetings = async() => {
+    try {
+      const response = await authApi.get('/meeting/trend')
+      if (response.status == 200) {
+        setTrendMeetingData(response.data)
+        console.log(response.data, ': 지금 뜨는 모임');
+      };
+    } catch (error) {
+      console.log(error);
+    };
+  }
+  const goMeetingRoom = (meeting) => {
+    navigation.reset({
+      index: 0, 
+      routes: [{
+          name: 'Meeting', 
+          state: {
+            routes: [
+              { name: 'MeetingMain'},
+              {
+                name: 'MeetingDetail',
+                params: { meeting }, 
+              },
+            ],
+          },
+        },
+      ],
+    })
+  }
+  useEffect(() => {
+    getUserProfile()
+    getTrendMeetings()
+  },[])
   const goMeetingChatList = () => {
     navigation.reset({
         index: 0, 
@@ -26,17 +70,17 @@ const HomeMain = ({navigation}) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={{width: 160, height: 180, backgroundColor:'grey', borderRadius:10, overflow: 'hidden'}}
-      //onPress={() => goMeetingRoom(item)}
+      onPress={() => goMeetingRoom(item)}
     >
-      <ImageBackground source={TestImage} //아이템 이미지링크로
-        style={{width: 160, height: 180}}
+      <ImageBackground src={item.meetingImageAddress} //아이템 이미지링크로
+        style={{flex:1}} 
       >
         <View style={{flex:1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
         <View style={{width:50, height:24, backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius:10, alignItems:'center', justifyContent: 'center', margin:10}}>
-          <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 12, color: '#fff'}}>{item}</Text>
+          <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 12, color: '#fff'}}>{item.category}</Text>
         </View>
         <View style={{flex:1}}/>
-        <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 18, color: '#fff', margin:13}}>{item}</Text>
+        <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 18, color: '#fff', margin:13}}>{item.title}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -45,10 +89,15 @@ const HomeMain = ({navigation}) => {
     <View style={{ flex:1, backgroundColor: '#fff'}}>
       <View style={{flex:0.5}}/>
       <View style={{flexDirection:'row', alignItems:'center', margin: 10}}> 
-        <View style={{ backgroundColor: 'grey', width:50, height:50, borderRadius: 25, marginRight:10}}>
+        <View style={{ width:50, height:50, borderRadius: 25, marginRight:10, overflow: 'hidden'}}>
+          {userProfile.imageAddress ? (
+            <Image style={{flex:1}} src={userProfile.imageAddress}/>
+          ) : (
+            <View style={{backgroundColor: 'grey'}}/>
+          )}
         </View>
         <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 18, color: '#000'}}>
-          nickName
+          {userProfile.nickName}
         </Text>
         <View style={{flex:1}}/>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
@@ -61,7 +110,7 @@ const HomeMain = ({navigation}) => {
       </Text>
       <View>
         <FlatList
-          data={data}
+          data={trendMeetingData}
           renderItem={renderItem}
           horizontal
           ListHeaderComponent={<View style={{width:10}}/>}

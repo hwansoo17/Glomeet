@@ -68,8 +68,8 @@ const MeetingMain = ({navigation}) => {
         style={{flex:1}}
         onPress={() => goMeetingRoom(item)}>
         <View style={{flex:1, flexDirection: "row", alignItems: "center"}}>
-          <View style={{width: 70, height: 70, backgroundColor:'grey', borderRadius: 10, margin:10}}>
-            <Image src={item.meetingImageAddress} style={{flex:1, borderRadius: 10,}}/>
+          <View style={{width: 70, height: 70, backgroundColor:'grey', borderRadius: 10, margin:10, overflow: 'hidden'}}>
+            <Image src={item.meetingImageAddress} style={{flex:1}}/>
           </View>
           <View style={{flex:1, height: 90, borderBottomWidth:1, borderColor: '#E1E5EB',justifyContent:'center', marginRight:10}}>
             <View style={{flexDirection: "row", alignItems: "center", maxWidth: '80%'}}>
