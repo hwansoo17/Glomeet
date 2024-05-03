@@ -53,10 +53,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const loadMoreMessage= () => {
     console.log(messages[messages.length-1]?._id)
     const lastMessage = messages[messages.length - 1];
-  if (lastMessage) {
-    EventEmitter.emit('loadMoreMessage', {roomId: id, lastMessageId:  messages[messages.length-1]?._id})
-  }
-
+    if (lastMessage) {
+      EventEmitter.emit('loadMoreMessage', {roomId: id, lastMessageId:  messages[messages.length-1]?._id})
+    }
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>

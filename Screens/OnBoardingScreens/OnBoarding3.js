@@ -1,5 +1,5 @@
 import React ,{useState} from "react";
-import {View, Text, TouchableOpacity, FlatList} from "react-native";
+import {View, Text, TouchableOpacity, FlatList, SafeAreaView} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api"
 import MainButton from '../../customComponents/MainButton';
@@ -24,13 +24,11 @@ const OnBoarding3 = ({navigation}) => {
     try {
       const response = await authApi.post('/auth/inputAdditionalInfo', {country: userContinent, interest: userHobby, type: selectedItem}) 
       if (response.status == 200) {
-        console.log(email, userContinent, userHobby, selectedItem)
+        console.log(userContinent, userHobby, selectedItem)
         navigation.navigate('OnBoarding4')
       }; 
     } catch (error) {
-      if (error.response.status == 409) {
-        console.log(error.response.status);
-      };
+        console.log(error);
     }
   }  
 

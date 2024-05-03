@@ -4,6 +4,7 @@ import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
 import { authApi } from '../../api';
+import { Screen } from 'react-native-screens';
 const HomeMain = ({navigation}) => {
   const [userProfile, setUserProfile] = useState([])
   const [trendMeetingData, setTrendMeetingData] = useState([])
@@ -29,23 +30,9 @@ const HomeMain = ({navigation}) => {
       console.log(error);
     };
   }
-  const goMeetingRoom = (meeting) => {
-    navigation.reset({
-      index: 0, 
-      routes: [{
-          name: 'Meeting', 
-          state: {
-            routes: [
-              { name: 'MeetingMain'},
-              {
-                name: 'MeetingDetail',
-                params: { meeting }, 
-              },
-            ],
-          },
-        },
-      ],
-    })
+  const goMeetingRoom = async(meeting) => {
+    await navigation.navigate('Meeting')
+    await navigation.navigate('Meeting', {screen: 'MeetingDetail', params: {meeting}})
   }
   useEffect(() => {
     getUserProfile()

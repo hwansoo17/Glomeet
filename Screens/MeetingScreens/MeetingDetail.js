@@ -1,4 +1,5 @@
 import React from "react";
+import { useLayoutEffect } from "react";
 import {View, Text, TouchableOpacity, ScrollView, Image} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
@@ -8,8 +9,8 @@ import MainButton from "../../customComponents/MainButton";
 import { formatDate } from "../ChattingScreens/formatDate";
 const MeetingDetail = ({route, navigation}) => {
   const detail = route.params.meeting;
-  const {subscribe, publish} = useWebSocket();
-
+  const {publish} = useWebSocket()
+  
   const meetingJoin = async() => {
     console.log(detail.id);
     const email = await AsyncStorage.getItem('email')

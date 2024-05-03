@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, TouchableOpacity} from "react-native";
+import {View, Text, TouchableOpacity, SafeAreaView} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OnBoarding4 = ({navigation}) => {

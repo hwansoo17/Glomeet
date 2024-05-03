@@ -34,7 +34,11 @@ const useChatRoom = (id) => {
       }
     }, {'email' : email});
   };
-
+  const chatRoomConnectMessage = async () => {
+    const email = await AsyncStorage.getItem("email");
+    const nickName = await AsyncStorage.getItem("nickName");
+    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, unRead, "ENTER");
+  };
   const handleAppStateChange = async(nextAppState) => {
     console.log("appState.current ::: ", appState.current, nextAppState);
 
@@ -42,9 +46,10 @@ const useChatRoom = (id) => {
       appState.current.match(/background/) &&
       nextAppState === 'active'
     ) {
-      // console.log('⚽️⚽️App has come to the foreground!');
-      // console.log(appState.current, nextAppState, '백에서 프론트');
-      initialize().then(getMessageList);
+      console.log('⚽️⚽️App has come to the foreground!');
+      console.log(appState.current, nextAppState, '백에서 프론트');
+      initialize().then(getMessageList(id, null));
+      console.log(messages)
     }
     if (
       appState.current.match(/inactive|active/) &&
@@ -71,7 +76,7 @@ const useChatRoom = (id) => {
     } catch (error) {
       if (error.response.status == 401) {
         console.log(id);
-        console.log(error);
+        console.log(error, '채팅메시지리스트 불러오는거 오류');
       };
     };
   };
@@ -135,7 +140,6 @@ const useChatRoom = (id) => {
     return async () => {
       EventEmitter.emit('leaveChatRoom', { chatRoomId: id });
       EventEmitter.removeListener("chatRoomConnect", chatRoomConnectEventListener)
-      EventEmitter.removeListener("loadMoreMessage", loadMoreMessageEventListener)
       appState1.remove()
       setMessages([]);
       const email = await AsyncStorage.getItem("email");
