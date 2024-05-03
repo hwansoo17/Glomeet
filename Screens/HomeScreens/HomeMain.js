@@ -4,7 +4,6 @@ import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
 import { authApi } from '../../api';
-import { Screen } from 'react-native-screens';
 const HomeMain = ({navigation}) => {
   const [userProfile, setUserProfile] = useState([])
   const [trendMeetingData, setTrendMeetingData] = useState([])
@@ -13,7 +12,7 @@ const HomeMain = ({navigation}) => {
       const response = await authApi.get('/user/profile')
       if (response.status == 200) {
         setUserProfile(response.data)
-        console.log(response.data, ': 프로필');
+        // console.log(response.data, ': 프로필');
       };
     } catch (error) {
       console.log(error);
@@ -24,7 +23,7 @@ const HomeMain = ({navigation}) => {
       const response = await authApi.get('/meeting/trend')
       if (response.status == 200) {
         setTrendMeetingData(response.data)
-        console.log(response.data, ': 지금 뜨는 모임');
+        //console.log(response.data, ': 지금 뜨는 모임');
       };
     } catch (error) {
       console.log(error);

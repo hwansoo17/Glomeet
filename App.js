@@ -13,12 +13,13 @@ import messaging from "@react-native-firebase/messaging";
 import pushNoti from "./pushNoti";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { authApi } from "./api"
-
+import EventEmitter from "react-native-eventemitter";
 
 export const AppContext = createContext();
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
   await pushNoti.displayNoti(remoteMessage.data.title, remoteMessage.data.body);
+  EventEmitter.emit("backgroundMessage", remoteMessage);
 });
 
 const Stack = createNativeStackNavigator();
