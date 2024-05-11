@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     // 기타 스타일
   },
   senderNickName: {
+    color: "#000",
     fontFamily: "Pretendard-SemiBold",
     fontSize: 16,
   },

@@ -9,7 +9,7 @@ import CameraIcon from '../../assets/cameraIcon.svg';
 import MainButton from "../../customComponents/MainButton";
 import LineInput from "../../customComponents/LineInput";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
-
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const MeetingCreate = ({navigation}) => {
   const [imageFile, setImageFile] = useState(null);
@@ -30,15 +30,28 @@ const MeetingCreate = ({navigation}) => {
       setIsCreateEnabled(false);
     }
   }, [title, description, category, capacity, imageFile]);
-  
-  const selectImage = () => {
-    launchImageLibrary({mediaType: 'photo'}, (response) => {
+  const resizeImage = async (image) => {
+    const resizedImage = await ImageResizer.createResizedImage(
+      image.uri,
+      1000, 
+      1000, 
+      'JPEG', 
+      100
+      );
+    console.log(resizedImage, '이미지 리사이즈')
+    return resizedImage;
+  }
+  const selectImage = async() => {
+    launchImageLibrary({mediaType: 'photo'}, async(response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const imageFile = response.assets[0];
+        const originalImage = response.assets[0]
+        console.log('Original image: ', originalImage)
+        const imageFile = await resizeImage(response.assets[0])
+        console.log('Resized image: ', imageFile)
         const source = { uri: response.assets[0].uri };
         setImageUri(source.uri);
         setImageFile(imageFile);
@@ -57,8 +70,8 @@ const MeetingCreate = ({navigation}) => {
       } else {
         formData.append('image', {
           uri: imageFile.uri,
-          type: imageFile.type,
-          name: imageFile.fileName
+          type: "image/jpeg",
+          name: imageFile.name
         });
       }
       formData.append('title', title);
@@ -118,7 +131,7 @@ const MeetingCreate = ({navigation}) => {
   }, [isCreateEnabled, imageFile, title, description, category, capacity]);
 
   return (
-    <SafeAreaView style={{flex:1, backgroundColor: '#fff'}}>
+    <View style={{flex:1, backgroundColor: '#fff'}}>
       <ScrollView>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex:1}}/>
@@ -198,7 +211,7 @@ const MeetingCreate = ({navigation}) => {
           <View style={{flex:1}}/>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 };
 

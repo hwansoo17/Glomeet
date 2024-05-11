@@ -19,6 +19,11 @@ import EventEmitter from "react-native-eventemitter";
 import {LogBox} from "react-native"
 import { Platform } from "react-native";
 import { PERMISSIONS, RESULTS, request } from "react-native-permissions";
+import HomeIcon from "./assets/Glomeet_logo.svg"
+import MatchingIcon from "./assets/MatchingIcon.svg";
+import MeetingIcon from "./assets/MeetingIcon.svg";
+import ChattingIcon from "./assets/ChattingIcon.svg";
+
 export const AppContext = createContext();
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
@@ -35,19 +40,67 @@ function BottomTabNavigator() {
       <Tab.Screen
         name="Home"
         component={HomeStackScreen}
-        options={{ headerShown: false }} />
+        options={{ 
+          headerShown: false, 
+          tabBarIcon: ({ focused }) => (
+            <HomeIcon
+              width="28" 
+              height="28"
+              color={focused? "#5782F1" : "#949698"}
+            />
+          ),
+          tabBarLabel: "홈",
+          tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
+        }} 
+      />
       <Tab.Screen
         name="Matching"
         component={MatchingStackScreen}
-        options={{ headerShown: false }} />
+        options={{ 
+          headerShown: false, 
+          tabBarIcon: ({ focused }) => (
+            <MatchingIcon
+              width="28" 
+              height="28"
+              color={focused? "#5782F1" : "#949698"}
+            />
+          ),
+          tabBarLabel: "매칭",
+          tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
+        }} 
+      />
       <Tab.Screen
         name="Meeting"
         component={MeetingStackScreen}
-        options={{ headerShown: false }} />
+        options={{ 
+          headerShown: false, 
+          tabBarIcon: ({ focused }) => (
+            <MeetingIcon
+              width="28" 
+              height="28"
+              color={focused? "#5782F1" : "#949698"}
+            />
+          ),
+          tabBarLabel: "미팅",
+          tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
+        }}  
+      />
       <Tab.Screen
         name="Chatting"
         component={ChattingStackScreen}
-        options={{ headerShown: false }} />
+        options={{ 
+          headerShown: false, 
+          tabBarIcon: ({ focused }) => (
+            <ChattingIcon
+              width="28" 
+              height="28"
+              color={focused? "#5782F1" : "#949698"}
+            />
+          ),
+          tabBarLabel: "채팅",
+          tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
+        }}
+      />
     </Tab.Navigator>
   );
 };

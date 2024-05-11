@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {View, Text, TouchableOpacity,StyleSheet,Image} from "react-native";
+import {View, Text, TouchableOpacity,StyleSheet,Image, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import MainButton from "../../customComponents/MainButton";
@@ -39,7 +39,7 @@ const MatchingMainScreen = ({navigation}) => {
       console.log(error);
     };
   };
-
+  
   useEffect(() => {
     updateMatchStatus();
   }, []);
@@ -83,8 +83,30 @@ const MatchingMainScreen = ({navigation}) => {
     };
   },[])
   const goChatRoom = async() => {
-    await navigation.navigate("Chatting")
-    await navigation.navigate("Chatting", {screen: 'MatchingChatRoom', params: {chat: {id: chatRoomId, title: partnerNickName}}})
+    try {
+      const response = await authApi.get(`/matching/check/${chatRoomId}`)
+      if (response.status == 200) {
+        await navigation.navigate("Chatting")
+        await navigation.navigate("Chatting", {screen: 'MatchingChatRoom', params: {chat: {id: chatRoomId, title: partnerNickName}}})
+      }
+    } catch (error) {
+      if (error.response.status == 400) {
+        Alert.alert("나간 채팅방입니다.")
+      }
+    }
+    
+  }
+  const cancelMatching = async() => {
+    try {
+      const response = await authApi.delete('/matching/cancel')
+      if (response.status == 200) {
+        Alert.alert("매칭을 취소했어요.")
+        updateMatchStatus()
+      }
+    } catch (error) {
+      if (error.response.status == 400) {
+      }
+    }
   }
   const renderContent = () => {
     switch (matchStatus) {
@@ -127,7 +149,7 @@ const MatchingMainScreen = ({navigation}) => {
             </View>
             <View style={{flex:2}}/>
             <MainButton 
-              onPress={() => navigation.navigate('MatchingFilter')} 
+              onPress={() => cancelMatching()} 
               title={'매칭 취소하기'} 
               style={{ marginVertical: 15}}
             />
@@ -158,7 +180,9 @@ const MatchingMainScreen = ({navigation}) => {
               </TouchableOpacity>
               <View style={{flex:2}}/>
             </View>
-            <View style={{flex:2}}/>
+            
+            <View style={{flex:1}}/>
+            <Text style={[styles.matchingSubtitle,{fontSize: 12, alignSelf:'center'}]}>가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!</Text>
             <MainButton 
               onPress={() => navigation.navigate('MatchingFilter')} 
               title={'추가 매칭하기'} 

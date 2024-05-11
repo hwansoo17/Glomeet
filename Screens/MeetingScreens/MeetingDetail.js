@@ -1,6 +1,6 @@
 import React from "react";
 import { useLayoutEffect } from "react";
-import {View, Text, TouchableOpacity, ScrollView, Image} from "react-native";
+import {View, Text, TouchableOpacity, ScrollView, Image, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
@@ -23,6 +23,7 @@ const MeetingDetail = ({route, navigation}) => {
       };
     } catch (error) {
       if (error.response.status == 409) {
+        Alert.alert(error.response.data.message)
         console.log(error.response.data.message, '이미속해있음?');
       } else {
         console.log(error);
