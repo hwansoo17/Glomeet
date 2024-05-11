@@ -22,9 +22,9 @@ const useChatList = (apiEndpoint) => {
       console.log("chatlist");
       const response = await authApi.post(apiEndpoint);
       if (response.status == 200) {
-        console.log(apiEndpoint);
+        //console.log(apiEndpoint);
         setChatData(response.data.sort(sortChatData));
-        console.log(response.data, ': 채팅방 리스트');
+        //console.log(response.data, ': 채팅방 리스트');
       };
     } catch (error) {
       if (error.response.status == 401) {
@@ -127,7 +127,7 @@ const useChatList = (apiEndpoint) => {
   }, []);
   
 
-  return chatData;
+  return { chatData, getChatList };
 }
 
 export default useChatList; 

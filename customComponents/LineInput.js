@@ -19,6 +19,7 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
 // 기본 스타일 설정
 const styles = StyleSheet.create({
   input: {
+    color:'#000',
     fontSize: 14,
     fontFamily: 'Pretendard-Regular',
     paddingVertical:10,

@@ -6,6 +6,7 @@ import config from "./config";
 import EventEmitter from "react-native-eventemitter";
 import {api} from "./api";
 import pushNoti from "./pushNoti";
+import messaging from '@react-native-firebase/messaging';
 
 const WebSocketContext = createContext();
 // let [webSocketClient, setWebSocketClient] = useRef(null);
@@ -24,11 +25,11 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     connectWebSocket()
-
-    const appState1 = AppState.addEventListener('change', fn_handleAppStateChange);
+    const appStateListener = AppState.addEventListener('change', fn_handleAppStateChange);
     return () => {
       // 사용자가 앱의 상태가 변경 되었을 경우 실행이 된다.
-      appState1.remove()
+      appStateListener.remove()
+      webSocketClient.deactivate();
   };
 
   }, []); //연결하는 부분
@@ -43,9 +44,16 @@ export const WebSocketProvider = ({ children }) => {
     ) {
       console.log('⚽️⚽️App has come to the foreground!');
       console.log(appState.current, nextAppState, '백에서 프론트');
-      subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
+      if (!webSocketClient.connected) {
+        console.log('웹소켓 연결 상태: 연결되지 않음. 재연결을 시도합니다.');
+        await connectWebSocket();
+      }
+      if (webSocketClient.connected) {
+        console.log('웹소켓 연결 상태: 연결됨. 채널만 구독.');
+        subscription = webSocketClient.subscribe("/sub/new-message/" + email, (message) => {
         handleWebSocketMessage(message);
-      },{ 'email': email });
+        },{ 'email': email });
+      }
     }
     if (
       appState.current.match(/inactive|active/) &&
@@ -142,12 +150,17 @@ export const WebSocketProvider = ({ children }) => {
     webSocketClient.deactivate();
   }
 
+  const isConnected = () => {
+    return webSocketClient.connected;
+  };
+
   const contextValue = {
-    publish,login, logout, subscribe
+    publish,login, logout, subscribe, isConnected
   };
 
   const handleWebSocketMessage = async (message) => {
     // 메시지 이벤트를 발생시키는 메서드
+    console.log(message.body, '온앱 푸시알림 이벤트 발생');
     const newMessage = JSON.parse(message.body);
     await pushNoti.displayNoti(newMessage.senderNickName, newMessage.message);
     EventEmitter.emit("newMessage", message);

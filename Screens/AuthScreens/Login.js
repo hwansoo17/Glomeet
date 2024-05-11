@@ -61,6 +61,7 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 20}}/>
               <LineInput 
                 placeholder="이메일을 입력하세요"
+                placeholderTextColor="#000"
                 value={email}
                 secureTextEntry ={false}
                 onChangeText={setEmail}
@@ -68,6 +69,7 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/>
               <LineInput 
                 placeholder="비밀번호를 입력하세요"
+                placeholderTextColor="#000"
                 value={password}
                 secureTextEntry ={true}
                 onChangeText={setPassword}

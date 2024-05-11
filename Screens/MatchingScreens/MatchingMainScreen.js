@@ -1,129 +1,221 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {View, Text, TouchableOpacity,StyleSheet,Image} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import EventEmitter from "react-native-eventemitter";
+import MainButton from "../../customComponents/MainButton";
+import { authApi } from "../../api";
+import BannerImage from "../../assets/BannerImage.svg";
+import MatchingLoading from "../../assets/MatchingLoading.svg";
+import character from "../../assets/character.png";
 const MatchingMainScreen = ({navigation}) => {
-    
-    return (
-        <View style={styles.backgroundContainer}>
-            <Image
-                source={require('../../assets/advertisement.png')}
-                style={styles.noticeImage} 
-                accessibilityRole="image"
-                accessibilityLabel="알림"
-                resizeMode="contain"
-            />
-            <Text style={styles.matchingTitle}>오늘의 <Text style ={{color:"#5782F1"}}>매칭</Text>을 시작해보세요!</Text>
-            <Text style={styles.matchingSubtitle}>오늘은 또 어떤 새로운 친구를 만날까?</Text>
-            <Image
-                source={require('../../assets/character.png')}
-                style={styles.characterImage} 
-                accessibilityRole="image"
-                accessibilityLabel="캐릭터"
-                resizeMode="contain"
-            />
-            <View style={styles.pointBox}>
-                <Text style={styles.pointTitle}>보유 포인트</Text>
-                <Text style={styles.pointAmount}>1,400P</Text>
+  const [matchStatus, setMatchStatus] = useState('noMatch');
+  const [partnerNickName, setPartnerNickName] = useState('')
+  const [partnerProfileImage, setPartnerProfileImage] = useState(null)
+  const [chatRoomId, setChatRoomId] = useState('')
+  const [dots, setDots] = useState('');
+  const updateMatchStatus = async () => {
+    try {
+      const response = await authApi.get('/matching/status')
+      if (response.status == 200) {
+        if (response.data.status == 211) {
+          console.log(response.data)
+          setMatchStatus("matchingInProgress");
+        }
+        if (response.data.status == 212) {
+          console.log(response.data)
+          setMatchStatus("noMatch");
+          
+        }
+        if (response.data.status == 213) {
+          console.log(response.data)
+          setPartnerNickName(response.data.nickName)
+          setPartnerProfileImage(response.data.imageAddress)
+          setChatRoomId(response.data.id)
+          setMatchStatus("matchCompleted");
+        }
+      }
+    } catch (error) {
+      //if (error.response.status == 400) {
+      console.log(error);
+    };
+  };
+
+  useEffect(() => {
+    updateMatchStatus();
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (matchStatus =='matchingInProgress') {
+      interval = setInterval(() => {
+        setDots((prevDots) => {
+          if (prevDots.length < 2) {
+            return prevDots + '.';
+          } else {
+            return '';
+          }
+        });
+      }, 500);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [matchStatus]);
+
+  const matchingSuccessEventListener = (message) => {
+    setPartnerNickName(message.data.nickName);
+    setPartnerProfileImage(message.data.imageAddress);
+    setChatRoomId(message.data.id);
+    setMatchStatus('matchCompleted');
+  }
+  const matchingInProgressEventListener = (e) => {
+    setMatchStatus(e);
+  }
+  useEffect(()=>{
+    EventEmitter.on("matchingInProgress",matchingInProgressEventListener)
+    EventEmitter.on("matchingSuccess",matchingSuccessEventListener)
+      
+    return () => {
+      EventEmitter.removeListener("matchingInProgress",matchingInProgressEventListener)
+      EventEmitter.removeListener("matchingSuccess", matchingSuccessEventListener);
+    };
+  },[])
+  const goChatRoom = async() => {
+    await navigation.navigate("Chatting")
+    await navigation.navigate("Chatting", {screen: 'MatchingChatRoom', params: {chat: {id: chatRoomId, title: partnerNickName}}})
+  }
+  const renderContent = () => {
+    switch (matchStatus) {
+      case 'noMatch':
+        return (
+          <View style={{flex:1}}>
+            <View style={{flex:2}}/>
+            <View style={{alignItems:'center'}}>
+              <Text style={styles.matchingTitle}>오늘의 <Text style ={{color:"#5782F1"}}>매칭</Text>을 시작해보세요!</Text>
+              <Text style={styles.matchingSubtitle}>오늘은 또 어떤 새로운 친구를 만날까?👀</Text>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('MatchingFilter')} style={styles.matchingButton}>
-                <Text style={styles.matchingButtonText}>매칭하러 가기</Text>
-            </TouchableOpacity>
+            <View style={{flex:1}}/>
+            <View style={{backgroundColor: 'white', height:300, alignItems:'center', justifyContent:'center'}}>
+                <Image source={character} style={{width:300, height:200}}/>
+                <View style={{flex:1}}/>
+                <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center'}}>
+                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>P</Text>
+                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>보유 포인트</Text>
+                </View>
             </View>
-    );
+            <View style={{flex:1}}/>
+            <MainButton 
+              onPress={() => navigation.navigate('MatchingFilter')}
+              title={'매칭 시작하기'} 
+              style={{ marginVertical: 15}}
+            />
+          </View>
+        );
+      case 'matchingInProgress':
+        return (
+          <View style={{flex:1}}> 
+            <View style={{flex:1}}/>
+            <View style={{alignItems:'center'}}>
+              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>매칭</Text> 진행 중{dots}.</Text>
+              <Text style={styles.matchingSubtitle}>조금만 기다려주세요!</Text>
+            </View>
+            <View style={{flex:1}}/>
+            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
+              <MatchingLoading/>
+            </View>
+            <View style={{flex:2}}/>
+            <MainButton 
+              onPress={() => navigation.navigate('MatchingFilter')} 
+              title={'매칭 취소하기'} 
+              style={{ marginVertical: 15}}
+            />
+          </View>
+          
+        );
+      case 'matchCompleted':
+        return (
+          <View style={{flex:1}}>
+            <View style={{flex:1}}/>
+            <View style={{alignItems:'center'}}>
+              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>매칭</Text>이 완료되었어요!</Text>
+              <Text style={styles.matchingSubtitle}>이제 메세지를 보내보세요 👀</Text>
+            </View>
+            <View style={{flex:1}}/>
+            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center'}}>
+              <View style={{flex:2}}/>
+              <View style={{ width:120, height:120, borderRadius: 60, overflow: 'hidden', backgroundColor: 'grey'}}>
+                <Image src={partnerProfileImage} style={{ width:120, height:120}}/>
+              </View>
+              <View style={{flex:1}}/>
+              <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 30, color: '#5782F1'}}>{partnerNickName}</Text>
+              <View style={{flex:3}}/>
+              <TouchableOpacity 
+              onPress={goChatRoom}
+              style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center'}}>
+                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#635C5C', marginLeft:15}}>{partnerNickName}에게 메세지 보내기</Text>
+              </TouchableOpacity>
+              <View style={{flex:2}}/>
+            </View>
+            <View style={{flex:2}}/>
+            <MainButton 
+              onPress={() => navigation.navigate('MatchingFilter')} 
+              title={'추가 매칭하기'} 
+              style={{ marginVertical: 15}}
+            />
+          </View>
+        );
+      default:
+        return (
+          <Text style={styles.matchingTitle}>상태를 불러오는 중...</Text>
+        );
+  }
+  };
+  return (
+    <View style={styles.backgroundContainer}>
+
+      <View style={{flex:1}}/>
+      <View style={{flex:8}}>
+      <View style={{height:90, backgroundColor: '#ACD495', borderRadius: 10, paddingHorizontal:20, flexDirection: 'row', alignItems:'center', marginTop:20}}>
+        <View>
+          <Text style={{fontFamily: "Pretendard-Medium", fontSize: 12, color: "white"}}>
+            건전한 문화 안내
+          </Text>
+          <Text style={{fontFamily: "Pretendard-Bold", fontSize: 14, color: "white"}}>
+          비슷한 취미를 가진{"\n"}친구와 매칭돼요!
+          </Text>
+        </View>
+        <View style={{flex:1}}/>
+        <BannerImage/>
+      </View>
+      {renderContent()}
+      </View>
+      <View style={{flex:1}}/>
+
+      
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,
         backgroundColor: '#FFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logoImage: {
-        width: "80%", 
-        marginBottom: '10%', 
-        paddingHorizontal: '5%',
-
-    },
-    noticeImage: {
-        width: '90%', 
-        marginBottom: '5%', 
-        marginLeft: 20,
-    },
-    characterImage: {
-        width: '90%',
-        marginTop: "5%",
-        marginBottom: '15%', 
+        flexDirection: 'row'
     },
     matchingTitle: {
-        fontFamily: 'Pretendard',
-        fontWeight: '700',
+        fontFamily: 'Pretendard-Bold',
         fontSize: 26,
-        lineHeight: 31,
-        textAlign: 'center',
-        marginTop: '10%', 
-        marginBottom: '3%', 
         color:'#000000',
+        marginBottom:10
     },
     matchingSubtitle: {
-        fontFamily: 'Pretendard',
+        fontFamily: 'Pretendard-Medium',
         fontWeight: '500',
         fontSize: 14,
-        lineHeight: 17,
-        textAlign: 'center',
         color: '#B4B4B4',
-        marginBottom: '5%', 
     },
-    matchingButton: {
-        width: '70%', 
-        height: 50, 
-        backgroundColor: '#5782F1',
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: '10%',
-        marginBottom: '0%', 
-    },
-    matchingButtonText: {
-        fontFamily: 'Pretendard',
-        fontWeight: '700',
-        fontSize: 18,
-        lineHeight: 21,
-        color: '#FFFFFF',
-    },
-    pointBox: {
-        position: 'absolute',
-        width: '45%', 
-        backgroundColor: '#FFFFFF',
-        borderColor: '#D3D3D3',
-        borderWidth: 2,
-        borderRadius: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        bottom: '15%', 
-    },
-    pointTitle: {
-        fontFamily: 'Pretendard',
-        fontWeight: '500',
-        fontSize: 11,
-        lineHeight: 13,
-        letterSpacing: 0.0703846,
-        color: '#949698',
-        marginBottom: '3%', 
-        marginTop: '3%', 
-    },
-    pointAmount: {
-        fontFamily: 'Pretendard',
-        fontWeight: '600',
-        fontSize: 20,
-        lineHeight: 24,
-        letterSpacing: 0.0703846,
-        color: '#6E87E5',
-        marginTop: '3%',
-        marginBottom: '3%', 
-    }
-    
 });
 
 

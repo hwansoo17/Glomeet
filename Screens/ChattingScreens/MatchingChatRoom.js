@@ -9,6 +9,7 @@ import SendIcon from "../../assets/SendIcon.svg";
 const MatchingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
   const chat = route.params.chat;
+  const unRead = route.params.chat.unRead;
 
   const messages = useChatRoom(id);
   const [message, setMessage] = useState("");
@@ -17,7 +18,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: id,
+      title: chat.title,
       headerTitleAlign: "center",
     });
   }, [navigation, id]);
@@ -35,7 +36,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const chatRoomConnectMessage = async () => {
     const email = await AsyncStorage.getItem("email");
     const nickName = await AsyncStorage.getItem("nickName");
-    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, chat.unRead, "ENTER");
+    webSocketClient.publish("/pub/chat/"+id, "application/json",  email, nickName, id, unRead, "ENTER");
   };
 
   const sendMessage = async () => {
@@ -68,10 +69,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
       <View style={{ flexDirection: "row", alignItems: "center"}}>
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
           <TextInput
-            style={{fontFamily: "Pretendard-Regular", fontSize: 14}}
+            style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
             placeholder="메시지를 입력해주세요."
             value={message}
             onChangeText={setMessage}
+            placeholderTextColor={'#d3d3d3'}
             textAlignVertical='center'/>
         </View>
         <TouchableOpacity 

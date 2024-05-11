@@ -83,11 +83,12 @@ const MeetingChatRoom = ({ route, navigation }) => {
       <View style={{ flex: 1 }} />
       <View style={{ flexDirection: "row", alignItems: "center"}}>
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
-          <TextInput
-            style={{fontFamily: "Pretendard-Regular", fontSize: 14}}
+        <TextInput
+            style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
             placeholder="메시지를 입력해주세요."
             value={message}
             onChangeText={setMessage}
+            placeholderTextColor={'#d3d3d3'}
             textAlignVertical='center'/>
         </View>
         <TouchableOpacity 

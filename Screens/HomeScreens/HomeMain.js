@@ -4,9 +4,12 @@ import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
 import { authApi } from '../../api';
+
 const HomeMain = ({navigation}) => {
+
   const [userProfile, setUserProfile] = useState([])
   const [trendMeetingData, setTrendMeetingData] = useState([])
+  const [point, setPoint] = useState([])
   const getUserProfile = async() => {
     try {
       const response = await authApi.get('/user/profile')
@@ -23,10 +26,21 @@ const HomeMain = ({navigation}) => {
       const response = await authApi.get('/meeting/trend')
       if (response.status == 200) {
         setTrendMeetingData(response.data)
-        //console.log(response.data, ': 지금 뜨는 모임');
+        console.log(response.data, ': 지금 뜨는 모임');
       };
     } catch (error) {
       console.log(error);
+    };
+  }
+  const getPoint = async() => {
+    try {
+      const response = await authApi.get('/point/sum')
+      if (response.status == 200) {
+        setPoint(response.data.point)
+        console.log(response.data)
+      };
+    } catch (error) {
+      console.log(error,'너야?');
     };
   }
   const goMeetingRoom = async(meeting) => {
@@ -36,6 +50,7 @@ const HomeMain = ({navigation}) => {
   useEffect(() => {
     getUserProfile()
     getTrendMeetings()
+    getPoint()
   },[])
   const goMeetingChatList = () => {
     navigation.reset({
@@ -110,7 +125,7 @@ const HomeMain = ({navigation}) => {
       <TouchableOpacity 
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
       >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>P</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{point.toString()}P</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>포인트내역</Text>
       </TouchableOpacity>
       <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          

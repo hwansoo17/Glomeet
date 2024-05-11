@@ -13,6 +13,9 @@ const displayNotification = async (title, body) => {
         android: {
             channelId: channelAnnouncement,
             smallIcon: 'ic_launcher',
+            pressAction: {
+                id: 'default',
+              },
         },
     });
 };

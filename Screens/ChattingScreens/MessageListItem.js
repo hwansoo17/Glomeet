@@ -5,7 +5,7 @@ import { formatDate } from './formatDate';
 const MessageListItem = ({ item, userEmail }) => {
   const screenWidth = Dimensions.get('window').width;
   const isMyMessage = item.senderEmail === userEmail;
-  const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE';
+  const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE'|| item.type === 'LEAVE';
 
     if (isSystemMessage) {
       return (
@@ -23,8 +23,8 @@ const MessageListItem = ({ item, userEmail }) => {
       </View>}
       {isMyMessage &&
         <View style={{alignSelf: 'flex-end', marginRight:5}}>
-          <Text style={{alignSelf: 'flex-end'}}>{item.readCount}</Text>
-          <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
+          {/* <Text style={{alignSelf: 'flex-end', fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
+          <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
         </View>
       }
       <View style={styles.messageContent}>
@@ -40,8 +40,8 @@ const MessageListItem = ({ item, userEmail }) => {
       </View>
       {!isMyMessage &&
       <View style={{alignSelf: 'flex-end', marginLeft:5}}>
-        <Text style={{fontFamily:"Pretendard-Light"}}>{item.readCount}</Text>
-        <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
+        {/* <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
+        <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
       </View>}
       
     </View>

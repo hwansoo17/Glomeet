@@ -24,12 +24,12 @@ const MeetingCreate = ({navigation}) => {
   const dataSource = Array.from({ length: 28 }, (_, i) => (i + 3).toString())
   
   useEffect(() => {
-    if (title != '' && description != '' && category != '') {
+    if (title != '' && description != '' && category != '' && imageFile!= null) {
       setIsCreateEnabled(true);
     } else {
       setIsCreateEnabled(false);
     }
-  }, [title, description,category, capacity]);
+  }, [title, description, category, capacity, imageFile]);
   
   const selectImage = () => {
     launchImageLibrary({mediaType: 'photo'}, (response) => {
@@ -52,12 +52,15 @@ const MeetingCreate = ({navigation}) => {
       const nickName = await AsyncStorage.getItem('nickName')
       const email = await AsyncStorage.getItem('email')
       const formData = new FormData();
-
-      formData.append('image', {
-        uri: imageFile.uri,
-        type: imageFile.type,
-        name: imageFile.fileName
-      });
+      if (imageFile == null) {
+        formData.append('image', null)
+      } else {
+        formData.append('image', {
+          uri: imageFile.uri,
+          type: imageFile.type,
+          name: imageFile.fileName
+        });
+      }
       formData.append('title', title);
       formData.append('comment', description);
       formData.append('capacity', capacity);
@@ -175,7 +178,7 @@ const MeetingCreate = ({navigation}) => {
                   highlightColor="#F0EFF2"
                   highlightBorderWidth={1.2}
                   activeItemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Medium', color:'#25282B'}}
-                  itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light'}}
+                  itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
                 />
                 <View style={{height:20}}/>
                 <Text style={styles.title}>키워드 선택</Text>

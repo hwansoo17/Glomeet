@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { navigationRef } from './RootNavigation';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AuthStackScreen from "./Screens/StackScreens/AuthStackScreen";
@@ -13,8 +14,11 @@ import messaging from "@react-native-firebase/messaging";
 import pushNoti from "./pushNoti";
 import { WebSocketProvider } from "./WebSocketProvider";
 import { authApi } from "./api"
+import { navigate } from './RootNavigation';
 import EventEmitter from "react-native-eventemitter";
-
+import {LogBox} from "react-native"
+import { Platform } from "react-native";
+import { PERMISSIONS, RESULTS, request } from "react-native-permissions";
 export const AppContext = createContext();
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
@@ -48,6 +52,21 @@ function BottomTabNavigator() {
   );
 };
 
+const requestUserPermissionAos= async() => {
+  if (Platform.OS === 'android') {
+    // Android 권한 요청 (특히 Android 13 이상)
+    try {
+      const permission = PERMISSIONS.ANDROID.POST_NOTIFICATIONS;
+      const result = await request(permission);
+      if (result === RESULTS.GRANTED) {
+        console.log("권한이 허용되었습니다.")
+      }
+    } catch (e) {
+      Alert.alert("권한이 거부되었습니다.");
+      console.warn(err);
+    }
+  }
+}
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -85,17 +104,20 @@ const App = () => {
       setInitialRoute("Auth");
     }
   };
-
+  
   useEffect(() => {
-    checkLoginStatus().then(() => {
-      // connectWebSocket();
-    });
+    checkLoginStatus()
+    requestUserPermissionAos()
+    // LogBox.ignoreAllLogs()
   }, []);
-
+  
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log("[온 앱 메시지]", remoteMessage);
+      if (remoteMessage.data.requestType == 'matching') { //매칭완료 알림일때만 이벤트 쏴주기
+      EventEmitter.emit("matchingSuccess", remoteMessage);
       pushNoti.displayNoti(remoteMessage.notification.title, remoteMessage.notification.body);
+      }
     });
     return unsubscribe;
   }, []);
@@ -106,7 +128,7 @@ const App = () => {
 
   return (
     <WebSocketProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName={initialRoute}>
           <Stack.Screen
             name="Root"

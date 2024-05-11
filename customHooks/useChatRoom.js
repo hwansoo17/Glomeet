@@ -19,22 +19,26 @@ const useChatRoom = (id) => {
   }
  
   const initialize = async () => {
-    const email = await AsyncStorage.getItem("email");
-    subscription = webSocketClient.subscribe("/sub/chat/"+id, (message) => {
-      console.log("@@@@@@@@@@")
-      const newMessage = JSON.parse(message.body);
-      if(newMessage.type === "SEND") {
-        setMessages((prevMessages) => [newMessage, ...prevMessages]);
-        EventEmitter.emit("chatRoomMessage", message);
-      }
-      if(newMessage.type === "JOIN") {
-        setMessages((prevMessages) => [newMessage, ...prevMessages]);
-      }
-      if(newMessage.type === "ENTER") {// 새 타입 커넥트
-        EventEmitter.emit("chatRoomConnect", message);
-      }
-    }, {'email' : email});
+      const email = await AsyncStorage.getItem("email");
+      subscription = webSocketClient.subscribe("/sub/chat/"+id, (message) => {
+        console.log("@@@@@@@@@@")
+        const newMessage = JSON.parse(message.body);
+        if(newMessage.type === "SEND") {
+          setMessages((prevMessages) => [newMessage, ...prevMessages]);
+          EventEmitter.emit("chatRoomMessage", message);
+        }
+        if(newMessage.type === "JOIN") {
+          setMessages((prevMessages) => [newMessage, ...prevMessages]);
+        }
+        if(newMessage.type === "LEAVE") {
+          setMessages((prevMessages) => [newMessage, ...prevMessages]);
+        }
+        if(newMessage.type === "ENTER") {// 새 타입 커넥트
+          EventEmitter.emit("chatRoomConnect", message);
+        }
+      }, {'email' : email});
   };
+
 
   
 
@@ -52,12 +56,24 @@ const useChatRoom = (id) => {
     ) {
       console.log('⚽️⚽️App has come to the foreground!');
       console.log(appState.current, nextAppState, '백에서 프론트');
-      await initialize();
-      await getMessageList(id, null);
-      await backToForeConnectMessage(); // 이 함수가 완료될 때까지 기다립니다.
-      backgroundMessageCount.current = 0;
-      console.log(messages)
-      
+      console.log(webSocketClient.isConnected(), '어떻게 나올까');
+      if (webSocketClient.isConnected()) {
+        await initialize();
+        await getMessageList(id, null);
+        await backToForeConnectMessage(); // 이 함수가 완료될 때까지 기다립니다.
+        backgroundMessageCount.current = 0;
+        console.log(messages)
+      }
+      if (!webSocketClient.isConnected()) {
+        console.log('웹소켓 연결이 끊겼을때 기다려..')
+        setTimeout(async()=> {await initialize();
+          console.log(webSocketClient.isConnected(),'진짜 기다리는거 맞아?')
+          await getMessageList(id, null);
+          await backToForeConnectMessage(); // 이 함수가 완료될 때까지 기다립니다.
+          backgroundMessageCount.current = 0;
+          console.log(messages)
+        }, 500)
+      }
     }
     if (
       appState.current.match(/inactive|active/) &&
