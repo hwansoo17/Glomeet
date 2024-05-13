@@ -10,6 +10,7 @@ const HomeMain = ({navigation}) => {
   const [userProfile, setUserProfile] = useState([])
   const [trendMeetingData, setTrendMeetingData] = useState([])
   const [point, setPoint] = useState([])
+  const [MyMeetingCount, setMyMeetingCount] = useState(0)
   const getUserProfile = async() => {
     try {
       const response = await authApi.get('/user/profile')
@@ -43,6 +44,17 @@ const HomeMain = ({navigation}) => {
       console.log(error,'너야?');
     };
   }
+  const getMyMeetingCount = async() => {
+    try {
+      const response = await authApi.get('/meeting/count')
+      if (response.status == 200) {
+        setMyMeetingCount(response.data.count)
+        console.log(response.data)
+      };
+    } catch (error) {
+      console.log(error,'너야?');
+    };
+  }
   const goMeetingRoom = async(meeting) => {
     await navigation.navigate('Meeting')
     await navigation.navigate('Meeting', {screen: 'MeetingDetail', params: {meeting}})
@@ -50,7 +62,8 @@ const HomeMain = ({navigation}) => {
   useEffect(() => {
     getUserProfile()
     getTrendMeetings()
-    getPoint()
+    getMyMeetingCount()
+    // getPoint()
   },[])
   const goMeetingChatList = () => {
     navigation.reset({
@@ -106,7 +119,7 @@ const HomeMain = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={{flex:1}}/>
-      <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 18, color: '#000',margin:10}}>
+      <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 20, color: '#000',margin:10}}>
         지금 뜨는 모임
       </Text>
       <View>
@@ -125,7 +138,7 @@ const HomeMain = ({navigation}) => {
       <TouchableOpacity 
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
       >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{point.toString()}P</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>포인트내역</Text>
       </TouchableOpacity>
       <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          
@@ -133,7 +146,7 @@ const HomeMain = ({navigation}) => {
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
         onPress={goMeetingChatList}
       >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>개</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}개</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>참여중인 모임</Text>
       </TouchableOpacity>
       </View>

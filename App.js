@@ -16,7 +16,7 @@ import { WebSocketProvider } from "./WebSocketProvider";
 import { authApi } from "./api"
 import { navigate } from './RootNavigation';
 import EventEmitter from "react-native-eventemitter";
-import {LogBox} from "react-native"
+import {Alert, LogBox} from "react-native"
 import { Platform } from "react-native";
 import { PERMISSIONS, RESULTS, request } from "react-native-permissions";
 import HomeIcon from "./assets/Glomeet_logo.svg"
@@ -105,21 +105,7 @@ function BottomTabNavigator() {
   );
 };
 
-const requestUserPermissionAos= async() => {
-  if (Platform.OS === 'android') {
-    // Android 권한 요청 (특히 Android 13 이상)
-    try {
-      const permission = PERMISSIONS.ANDROID.POST_NOTIFICATIONS;
-      const result = await request(permission);
-      if (result === RESULTS.GRANTED) {
-        console.log("권한이 허용되었습니다.")
-      }
-    } catch (e) {
-      Alert.alert("권한이 거부되었습니다.");
-      console.warn(err);
-    }
-  }
-}
+
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -138,6 +124,21 @@ async function requestUserPermission() {
 const App = () => {
   const [initialRoute, setInitialRoute] = useState(null);
 
+  const requestUserPermissionAos= async() => {
+    if (Platform.OS === 'android') {
+      // Android 권한 요청 (특히 Android 13 이상)
+      try {
+        const permission = PERMISSIONS.ANDROID.POST_NOTIFICATIONS;
+        const result = await request(permission);
+        if (result === RESULTS.GRANTED) {
+          console.log("권한이 허용되었습니다.")
+        }
+      } catch (err) {
+        console.log("권한이 거부되었습니다.");
+        console.warn(err);
+      }
+    }
+  }
   const checkLoginStatus = async () => {
     await requestUserPermission();
     const accessToken = await AsyncStorage.getItem("accessToken");
@@ -157,7 +158,7 @@ const App = () => {
       setInitialRoute("Auth");
     }
   };
-  
+
   useEffect(() => {
     checkLoginStatus()
     requestUserPermissionAos()
@@ -191,10 +192,10 @@ const App = () => {
             name="Auth"
             component={AuthStackScreen}
             options={{ headerShown: false }} />
-            <Stack.Screen
-            name="OnBoard"
-            component={OnBoardingStackScreen}
-            options={{ headerShown: false }} />
+          <Stack.Screen
+          name="OnBoard"
+          component={OnBoardingStackScreen}
+          options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </WebSocketProvider>

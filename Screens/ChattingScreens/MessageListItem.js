@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { formatDate } from './formatDate';
 
-const MessageListItem = ({ item, userEmail }) => {
+const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser }) => {
   const screenWidth = Dimensions.get('window').width;
   const isMyMessage = item.senderEmail === userEmail;
   const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE'|| item.type === 'LEAVE';
@@ -17,10 +17,15 @@ const MessageListItem = ({ item, userEmail }) => {
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && 
-      <View style={styles.avatar}>
+      <TouchableOpacity 
+        onPress={() => {
+          setModalVisible(true)
+          setSelectedChatUser(item)}}
+        style={styles.avatar}
+      >
         <Image src={item.imageAddress}
           style={{width:48, height:48, borderRadius: 24,}}/>
-      </View>}
+      </TouchableOpacity>}
       {isMyMessage &&
         <View style={{alignSelf: 'flex-end', marginRight:5}}>
           {/* <Text style={{alignSelf: 'flex-end', fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}

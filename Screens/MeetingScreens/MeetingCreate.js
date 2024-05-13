@@ -18,7 +18,7 @@ const MeetingCreate = ({navigation}) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
-  const [isCreateEnabled, setIsCreateEnabled] = useState(false);
+  const [isCreateEnabled, setIsCreateEnabled] = useState(true);
   const keyword = ['운동', '여행', '게임', '문화', '음식', '언어']
   const {publish} = useWebSocket();
   const dataSource = Array.from({ length: 28 }, (_, i) => (i + 3).toString())
@@ -138,7 +138,7 @@ const MeetingCreate = ({navigation}) => {
           <View style={{flex:8}}>
             <View style={{flex:8}}>
               
-              <View style={{height:30}}/>
+              <View style={{height:20}}/>
                 <TouchableOpacity 
                   style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}
                   onPress={selectImage}> 
@@ -200,12 +200,13 @@ const MeetingCreate = ({navigation}) => {
                   <TouchableOpacity
                     key={item}
                     onPress={() => setCategory(item)}
-                    style={[{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10}, category == item && {backgroundColor: '#5782F1'}]}
+                    style={[{backgroundColor: '#D1DCFB', paddingHorizontal:12, paddingVertical:5, borderRadius:10}, category == item && {backgroundColor: '#5782F1'}]}
                   >
                     <Text style={[{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, category == item && { color: '#ffffff'}]}>{item}</Text>
                   </TouchableOpacity>
                   ))}
                 </View>
+                <View style={{height:50}}/>
             </View>
           </View>
           <View style={{flex:1}}/>

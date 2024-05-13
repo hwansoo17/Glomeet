@@ -64,8 +64,8 @@ export const WebSocketProvider = ({ children }) => {
       subscription.unsubscribe({"email" : email, "destination" : "/sub/new-message/"+email});
     }
     appState.current = nextAppState;
-};
-
+  };
+  
   const connectWebSocket = async () => {
     const email = await AsyncStorage.getItem("email");
     const accessToken = await AsyncStorage.getItem("accessToken");
@@ -78,7 +78,7 @@ export const WebSocketProvider = ({ children }) => {
       connectHeaders: {
         accessToken: token,
       },
-      reconnectDelay : 0,
+      reconnectDelay :0,
       debug: function(str) {
         console.log(str, '웹소켓 연결 로그'); // 웹소켓 연결 로그보려면 이거 주석 해제
       },

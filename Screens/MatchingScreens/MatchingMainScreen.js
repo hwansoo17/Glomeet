@@ -12,6 +12,8 @@ const MatchingMainScreen = ({navigation}) => {
   const [partnerNickName, setPartnerNickName] = useState('')
   const [partnerProfileImage, setPartnerProfileImage] = useState(null)
   const [chatRoomId, setChatRoomId] = useState('')
+  const [partnerCountry, setPartnerCountry] = useState('')
+  const [partnerType, setPartnerType] = useState('')
   const [dots, setDots] = useState('');
   const updateMatchStatus = async () => {
     try {
@@ -30,6 +32,8 @@ const MatchingMainScreen = ({navigation}) => {
           console.log(response.data)
           setPartnerNickName(response.data.nickName)
           setPartnerProfileImage(response.data.imageAddress)
+          setPartnerCountry(response.data.country)
+          setPartnerType(response.data.type)
           setChatRoomId(response.data.id)
           setMatchStatus("matchCompleted");
         }
@@ -67,7 +71,10 @@ const MatchingMainScreen = ({navigation}) => {
   const matchingSuccessEventListener = (message) => {
     setPartnerNickName(message.data.nickName);
     setPartnerProfileImage(message.data.imageAddress);
+    setPartnerCountry(message.data.country)
+    setPartnerType(message.data.type)
     setChatRoomId(message.data.id);
+    
     setMatchStatus('matchCompleted');
   }
   const matchingInProgressEventListener = (e) => {
@@ -123,7 +130,7 @@ const MatchingMainScreen = ({navigation}) => {
                 <Image source={character} style={{width:300, height:200}}/>
                 <View style={{flex:1}}/>
                 <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center'}}>
-                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>P</Text>
+                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
                   <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>보유 포인트</Text>
                 </View>
             </View>
@@ -172,7 +179,15 @@ const MatchingMainScreen = ({navigation}) => {
               </View>
               <View style={{flex:1}}/>
               <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 30, color: '#5782F1'}}>{partnerNickName}</Text>
-              <View style={{flex:3}}/>
+              <View style={{flex:0.5}}/>
+              <View style={{flexDirection:'row'}}>
+                <View style={{flex:2}}/>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {partnerCountry}</Text>
+                <View style={{flex:1}}/>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {partnerType}</Text>
+                <View style={{flex:2}}/>
+              </View>
+              <View style={{flex:1.5}}/>
               <TouchableOpacity 
               onPress={goChatRoom}
               style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center'}}>
