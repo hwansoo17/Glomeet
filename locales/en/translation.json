@@ -28,13 +28,18 @@
     "startadditionalmatching": "Start Additional Matching",
     "to": "To ",
     "sendmessage": ", send a message",
-    "info": "Recent match details displayed for a day!"
+    "info": "Recent match details displayed for a day!",
+    "exitroom": "Already Exited Chat Room.",
+    "matchingcancelled": "Matching cancelled."
   },
   "nav": {
     "home": "Home",
     "matching": "Matching",
     "chatting": "Chatting",
     "meeting": "Meeting"
+  },
+  "meeting": {
+    "current": "Current"
   }
 
 }

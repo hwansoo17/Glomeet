@@ -28,12 +28,17 @@
     "startadditionalmatching": "추가 매칭하기",
     "to": "",
     "sendmessage": "에게 메시지 보내기",
-    "info": "가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!"
+    "info": "가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!",
+    "exitroom": "나간 채팅방입니다.",
+    "matchingcancelled": "매칭을 취소했어요."
   },
   "nav": {
     "home": "홈",
     "matching": "매칭",
     "chatting": "채팅",
     "meeting": "미팅"
+  },
+  "meeting": {
+    "current": "현재"
   }
 }

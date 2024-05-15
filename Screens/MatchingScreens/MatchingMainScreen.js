@@ -100,7 +100,7 @@ const MatchingMainScreen = ({navigation}) => {
       }
     } catch (error) {
       if (error.response.status == 400) {
-        Alert.alert("나간 채팅방입니다.")
+        Alert.alert(t("matching.exitroom"))
       }
     }
     
@@ -109,7 +109,7 @@ const MatchingMainScreen = ({navigation}) => {
     try {
       const response = await authApi.delete('/matching/cancel')
       if (response.status == 200) {
-        Alert.alert("매칭을 취소했어요.")
+        Alert.alert(t("matching.matchingcancelled"))
         updateMatchStatus()
       }
     } catch (error) {
