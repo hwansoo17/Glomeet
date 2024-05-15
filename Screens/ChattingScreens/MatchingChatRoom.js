@@ -11,6 +11,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const id =  route.params.chat.id;
   const chat = route.params.chat;
   const unRead = route.params.chat.unRead;
+  const roomStatus = route.params.chat.roomStatus;
 
   const messages = useChatRoom(id);
   const [message, setMessage] = useState("");
@@ -20,6 +21,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [selectedChatUser, setSelectedChatUser] = useState([])
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
+  const [isRoomActive, setIsRoomActive] = useState(true)
   const webSocketClient = useWebSocket();
 
   useLayoutEffect(() => {
@@ -30,6 +32,10 @@ const MatchingChatRoom = ({ route, navigation }) => {
   }, [navigation, id]);
 
   useEffect(() => {
+    if (roomStatus == 'INACTIVE') {
+      Alert.alert('없는 채팅방입니다.')
+      setIsRoomActive(false)
+    }
     console.log(id, '아이디 확인')
     const getEmail = async() => {
       const email = await AsyncStorage.getItem("email");
@@ -38,7 +44,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
     getEmail()
     chatRoomConnectMessage()
   },[])
-  
+
   useEffect(() => {
     if (reportComment != '') {
       setReportEnabled(true);
@@ -191,13 +197,21 @@ const MatchingChatRoom = ({ route, navigation }) => {
       <View style={{ flex: 1 }} />
       <View style={{ flexDirection: "row", alignItems: "center"}}>
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
+        {isRoomActive ? (
           <TextInput
             style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
             placeholder="메시지를 입력해주세요."
             value={message}
             onChangeText={setMessage}
             placeholderTextColor={'#d3d3d3'}
-            textAlignVertical='center'/>
+            textAlignVertical='center'
+          />
+          ) : (
+          <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>
+            대화가 불가능한 상태입니다.
+          </Text>
+          )
+        }
         </View>
         <TouchableOpacity 
           style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}

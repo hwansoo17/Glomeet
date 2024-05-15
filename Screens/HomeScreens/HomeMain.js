@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, TouchableOpacity, FlatList, ImageBackground, Image} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, ImageBackground, Image, Alert} from 'react-native';
 import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
@@ -16,7 +16,7 @@ const HomeMain = ({navigation}) => {
       const response = await authApi.get('/user/profile')
       if (response.status == 200) {
         setUserProfile(response.data)
-        // console.log(response.data, ': 프로필');
+        console.log(response.data, ': 프로필');
       };
     } catch (error) {
       console.log(error);
@@ -86,7 +86,7 @@ const HomeMain = ({navigation}) => {
       style={{width: 160, height: 180, backgroundColor:'grey', borderRadius:10, overflow: 'hidden'}}
       onPress={() => goMeetingRoom(item)}
     >
-      <ImageBackground src={item.meetingImageAddress} //아이템 이미지링크로
+      <ImageBackground src={item.meetingImageAddress}
         style={{flex:1}} 
       >
         <View style={{flex:1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
@@ -114,7 +114,7 @@ const HomeMain = ({navigation}) => {
           {userProfile.nickName}
         </Text>
         <View style={{flex:1}}/>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile', {userProfile})}>
         <EditIcon/>
         </TouchableOpacity>
       </View>
@@ -137,6 +137,7 @@ const HomeMain = ({navigation}) => {
       <View style={{height:80, margin:10, elevation:10, backgroundColor:'#fff', borderRadius:10, flexDirection: 'row'}}>
       <TouchableOpacity 
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
+        onPress={() => {Alert.alert("준비중입니다.")}}
       >
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>포인트내역</Text>
@@ -156,7 +157,7 @@ const HomeMain = ({navigation}) => {
       </Text>
       <TouchableOpacity 
         style={{height:48, margin:10, backgroundColor:'#5782F1', borderRadius:10, flexDirection:'row', alignItems:'center'}}
-        onPress={() => navigation.navigate('ChallengeList')}
+        onPress={() => {Alert.alert("준비중입니다.")}}
       >
         <Arcade style={{marginHorizontal :15}}/>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#fff'}}>도전챌린지 하러가기</Text>

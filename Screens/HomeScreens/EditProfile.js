@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useState } from 'react';
-import {View, Text, TouchableOpacity, ImageBackground} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config';
 import { useWebSocket } from "../../WebSocketProvider";
@@ -8,10 +8,14 @@ import { api, formDataApi } from '../../api'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import CameraIcon from '../../assets/cameraIcon.svg';
 
-const EditProfile = ({navigation}) => {
+const EditProfile = ({navigation, route}) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageUri, setImageUri] = useState(null);
-
+  const [disabled, setDisabled] = useState(true);
+  const userProfile = route.params.userProfile;
+  useEffect(() => {
+    console.log(userProfile);
+  },[])
   const webSocketClient = useWebSocket();
   const loggedOut = async () => {
     const email = await AsyncStorage.getItem('email');
@@ -42,6 +46,7 @@ const EditProfile = ({navigation}) => {
         const source = { uri: response.assets[0].uri };
         setImageUri(source.uri);
         setImageFile(imageFile);
+        setDisabled(false)
       }
     });
   };
@@ -63,38 +68,49 @@ const EditProfile = ({navigation}) => {
         });
       };
     } catch (error) {
-      console.error(error.response.status);
+      console.error(error);
     };
   }
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleAlign: "center",
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => profileImageUpload()}
+          disabled={disabled}
+        >
+          <Text  style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: !disabled ? '#09111F' : '#D3D3D3'}}>적용하기</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [disabled]);
   return (
-    <View>
-      <Text>MainScreen</Text>
-      <TouchableOpacity 
-        style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}
-        onPress={selectImage}> 
+    <View style={{flex:1, backgroundColor:'#fff', padding:10}}>
+      <View style={{flex:2}}/>
+      <Text style={{alignSelf: 'center',fontFamily:"GmarketSansTTFBold", fontSize: 30, color: '#5782F1'}}>{userProfile.nickName}</Text>
+      <View style={{flex:1}}/>
+      <View style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 90, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}> 
         {imageUri ? (
-        <ImageBackground source={{ uri: imageUri }} style={{ width: 180, height: 180, borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center' }}>
-          <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
-            <CameraIcon/>
-          </View>
-        </ImageBackground>
+        <Image source={{ uri: imageUri }} style={{ width: 180, height: 180, borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center' }}/>
         ) : (
-        <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
-          <CameraIcon/>
-        </View>
+        <Image source={{ uri: userProfile.imageAddress }} style={{ width: 180, height: 180, borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center' }}/>
         )}
-      </TouchableOpacity>
+      </View>
+      <View style={{flex:1}}/>
       <TouchableOpacity
-      onPress={() => profileImageUpload()}
+      style={{alignSelf: 'center', padding:12, borderRadius:10, backgroundColor: '#5782F1'}}
+      onPress={selectImage}
       >
-        <Text>프로필사진 변경</Text>
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>프로필사진 변경</Text>
       </TouchableOpacity>
+      <View style={{flex:20}}/>
       <TouchableOpacity
+      style={{alignSelf: 'flex-end'}}
       onPress={() => loggedOut()}
       >
-        <Text>로그아웃</Text>
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>로그아웃</Text>
       </TouchableOpacity>
+      <View style={{flex:1}}/>
     </View>
   );
 };
