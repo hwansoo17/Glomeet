@@ -1,0 +1,40 @@
+{
+  "homemain": {
+    "trendmeeting": "Trends",
+    "mypage": {
+      "changeProfileImage": "Change profile image",
+      "logout": "Logout",
+      "apply": "Apply"},
+    "point": "POINT",
+    "challange": "Challenge\nand get points!",
+    "mymeeting": "My meetings",
+    "gochallange": "Going for a challenge",
+    "comingsoon" : "Coming soon."
+  },
+  "matching":{
+    "start":"Start",
+    "today":" today!",
+    "matching":"Matching",
+    "inprogress":"in progress",
+    "iscomplete":" is complete!",
+    "subtitle": "How about making some new friends today?",
+    "subtitle2":"Just a moment, please!",
+    "subtitle3":"Send a message now!",
+    "point": "Available Points",
+    "bannertitle": "Guidelines for Healthy Culture",
+    "bannercontent": "Match with friends\nwho share similar hobbies!",
+    "startmatching": "Start Matching",
+    "cancelmatching": "Cancel Matching",
+    "startadditionalmatching": "Start Additional Matching",
+    "to": "To ",
+    "sendmessage": ", send a message",
+    "info": "Recent match details displayed for a day!"
+  },
+  "nav": {
+    "home": "Home",
+    "matching": "Matching",
+    "chatting": "Chatting",
+    "meeting": "Meeting"
+  }
+
+}

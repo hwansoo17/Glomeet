@@ -7,7 +7,9 @@ import { authApi } from "../../api";
 import BannerImage from "../../assets/BannerImage.svg";
 import MatchingLoading from "../../assets/MatchingLoading.svg";
 import character from "../../assets/character.png";
+import { useTranslation } from "react-i18next";
 const MatchingMainScreen = ({navigation}) => {
+  const { t } = useTranslation();
   const [matchStatus, setMatchStatus] = useState('noMatch');
   const [partnerNickName, setPartnerNickName] = useState('')
   const [partnerProfileImage, setPartnerProfileImage] = useState(null)
@@ -122,8 +124,8 @@ const MatchingMainScreen = ({navigation}) => {
           <View style={{flex:1}}>
             <View style={{flex:2}}/>
             <View style={{alignItems:'center'}}>
-              <Text style={styles.matchingTitle}>오늘의 <Text style ={{color:"#5782F1"}}>매칭</Text>을 시작해보세요!</Text>
-              <Text style={styles.matchingSubtitle}>오늘은 또 어떤 새로운 친구를 만날까?👀</Text>
+              <Text style={styles.matchingTitle}>{t("matching.start")} <Text style ={{color:"#5782F1"}}>{t("matching.matching")}</Text>{t("matching.today")}</Text>
+              <Text style={styles.matchingSubtitle}>{t("matching.subtitle")} 👀</Text>
             </View>
             <View style={{flex:1}}/>
             <View style={{backgroundColor: 'white', height:300, alignItems:'center', justifyContent:'center'}}>
@@ -131,13 +133,13 @@ const MatchingMainScreen = ({navigation}) => {
                 <View style={{flex:1}}/>
                 <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center'}}>
                   <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
-                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>보유 포인트</Text>
+                  <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("matching.point")}</Text>
                 </View>
             </View>
             <View style={{flex:1}}/>
             <MainButton 
               onPress={() => navigation.navigate('MatchingFilter')}
-              title={'매칭 시작하기'} 
+              title= {t("matching.startmatching")} 
               style={{ marginVertical: 15}}
             />
           </View>
@@ -147,8 +149,8 @@ const MatchingMainScreen = ({navigation}) => {
           <View style={{flex:1}}> 
             <View style={{flex:1}}/>
             <View style={{alignItems:'center'}}>
-              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>매칭</Text> 진행 중{dots}.</Text>
-              <Text style={styles.matchingSubtitle}>조금만 기다려주세요!</Text>
+              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>{t("matching.matching")}</Text> {t("matching.inprogress")}{dots}.</Text>
+              <Text style={styles.matchingSubtitle}>{t("matching.subtitle2")}</Text>
             </View>
             <View style={{flex:1}}/>
             <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
@@ -157,7 +159,7 @@ const MatchingMainScreen = ({navigation}) => {
             <View style={{flex:2}}/>
             <MainButton 
               onPress={() => cancelMatching()} 
-              title={'매칭 취소하기'} 
+              title={t("matching.cancelmatching")}
               style={{ marginVertical: 15}}
             />
           </View>
@@ -168,8 +170,8 @@ const MatchingMainScreen = ({navigation}) => {
           <View style={{flex:1}}>
             <View style={{flex:1}}/>
             <View style={{alignItems:'center'}}>
-              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>매칭</Text>이 완료되었어요!</Text>
-              <Text style={styles.matchingSubtitle}>이제 메세지를 보내보세요 👀</Text>
+              <Text style={styles.matchingTitle}><Text style ={{color:"#5782F1"}}>{t("matching.matching")}</Text>{t("matching.iscomplete")}</Text>
+              <Text style={styles.matchingSubtitle}>{t("matching.subtitle3")} 👀</Text>
             </View>
             <View style={{flex:1}}/>
             <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center'}}>
@@ -191,16 +193,16 @@ const MatchingMainScreen = ({navigation}) => {
               <TouchableOpacity 
               onPress={goChatRoom}
               style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center'}}>
-                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#635C5C', marginLeft:15}}>{partnerNickName}에게 메세지 보내기</Text>
+                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#635C5C', marginLeft:15}}>{t("matching.to")}{partnerNickName}{t("matching.sendmessage")}</Text>
               </TouchableOpacity>
               <View style={{flex:2}}/>
             </View>
             
             <View style={{flex:1}}/>
-            <Text style={[styles.matchingSubtitle,{fontSize: 12, alignSelf:'center'}]}>가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!</Text>
+            <Text style={[styles.matchingSubtitle,{fontSize: 12, alignSelf:'center'}]}>{t("matching.info")}</Text>
             <MainButton 
               onPress={() => navigation.navigate('MatchingFilter')} 
-              title={'추가 매칭하기'} 
+              title={t("matching.startadditionalmatching")}
               style={{ marginVertical: 15}}
             />
           </View>
@@ -216,13 +218,13 @@ const MatchingMainScreen = ({navigation}) => {
 
       <View style={{flex:1}}/>
       <View style={{flex:8}}>
-      <View style={{height:90, backgroundColor: '#ACD495', borderRadius: 10, paddingHorizontal:20, flexDirection: 'row', alignItems:'center', marginTop:20}}>
+      <View style={{height:90, backgroundColor: '#ACD495', borderRadius: 10, paddingHorizontal:20, flexDirection: 'row', alignItems:'center', marginTop:20, overflow:'hidden'}}>
         <View>
           <Text style={{fontFamily: "Pretendard-Medium", fontSize: 12, color: "white"}}>
-            건전한 문화 안내
+            {t("matching.bannertitle")}
           </Text>
           <Text style={{fontFamily: "Pretendard-Bold", fontSize: 14, color: "white"}}>
-          비슷한 취미를 가진{"\n"}친구와 매칭돼요!
+            {t("matching.bannercontent")}
           </Text>
         </View>
         <View style={{flex:1}}/>

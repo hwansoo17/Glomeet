@@ -4,9 +4,10 @@ import EditIcon from '../../assets/editIcon.svg'
 import Arcade from '../../assets/Arcade.svg';
 import Arrow from '../../assets/arrow.svg';
 import { authApi } from '../../api';
+import { useTranslation } from "react-i18next";
 
 const HomeMain = ({navigation}) => {
-
+  const { t } = useTranslation();
   const [userProfile, setUserProfile] = useState([])
   const [trendMeetingData, setTrendMeetingData] = useState([])
   const [point, setPoint] = useState([])
@@ -60,6 +61,7 @@ const HomeMain = ({navigation}) => {
     await navigation.navigate('Meeting', {screen: 'MeetingDetail', params: {meeting}})
   }
   useEffect(() => {
+    // getLocale()
     getUserProfile()
     getTrendMeetings()
     getMyMeetingCount()
@@ -120,7 +122,7 @@ const HomeMain = ({navigation}) => {
       </View>
       <View style={{flex:1}}/>
       <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 20, color: '#000',margin:10}}>
-        지금 뜨는 모임
+        {t('homemain.trendmeeting')}
       </Text>
       <View>
         <FlatList
@@ -137,10 +139,10 @@ const HomeMain = ({navigation}) => {
       <View style={{height:80, margin:10, elevation:10, backgroundColor:'#fff', borderRadius:10, flexDirection: 'row'}}>
       <TouchableOpacity 
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
-        onPress={() => {Alert.alert("준비중입니다.")}}
+        onPress={() => {Alert.alert(t("homemain.comingsoon"))}}
       >
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>포인트내역</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.point")}</Text>
       </TouchableOpacity>
       <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          
       <TouchableOpacity 
@@ -148,19 +150,19 @@ const HomeMain = ({navigation}) => {
         onPress={goMeetingChatList}
       >
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}개</Text>
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>참여중인 모임</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.mymeeting")}</Text>
       </TouchableOpacity>
       </View>
       <View style={{flex:1}}/>
       <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 20, color: '#000',margin:10}}>
-        챌린지하고{'\n'}포인트를 획득하세요!
+      {t("homemain.challange")}
       </Text>
       <TouchableOpacity 
         style={{height:48, margin:10, backgroundColor:'#5782F1', borderRadius:10, flexDirection:'row', alignItems:'center'}}
-        onPress={() => {Alert.alert("준비중입니다.")}}
+        onPress={() => {Alert.alert(t("homemain.comingsoon"))}}
       >
         <Arcade style={{marginHorizontal :15}}/>
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#fff'}}>도전챌린지 하러가기</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#fff'}}>{t("homemain.gochallange")}</Text>
         <View style={{flex: 1}}/>
         <Arrow style={{marginHorizontal :8}}/>
       </TouchableOpacity>

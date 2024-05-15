@@ -23,7 +23,7 @@ import HomeIcon from "./assets/Glomeet_logo.svg"
 import MatchingIcon from "./assets/MatchingIcon.svg";
 import MeetingIcon from "./assets/MeetingIcon.svg";
 import ChattingIcon from "./assets/ChattingIcon.svg";
-
+import { useTranslation } from "react-i18next";
 export const AppContext = createContext();
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
@@ -35,6 +35,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
+  const { t } = useTranslation()
   return (
     <Tab.Navigator initialRouteName="Home">
       <Tab.Screen
@@ -49,7 +50,7 @@ function BottomTabNavigator() {
               color={focused? "#5782F1" : "#949698"}
             />
           ),
-          tabBarLabel: "홈",
+          tabBarLabel: t("nav.home"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
         }} 
       />
@@ -65,7 +66,7 @@ function BottomTabNavigator() {
               color={focused? "#5782F1" : "#949698"}
             />
           ),
-          tabBarLabel: "매칭",
+          tabBarLabel: t("nav.matching"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
         }} 
       />
@@ -81,7 +82,7 @@ function BottomTabNavigator() {
               color={focused? "#5782F1" : "#949698"}
             />
           ),
-          tabBarLabel: "미팅",
+          tabBarLabel: t("nav.meeting"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
         }}  
       />
@@ -97,7 +98,7 @@ function BottomTabNavigator() {
               color={focused? "#5782F1" : "#949698"}
             />
           ),
-          tabBarLabel: "채팅",
+          tabBarLabel: t("nav.chatting"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
         }}
       />

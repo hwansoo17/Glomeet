@@ -7,12 +7,17 @@ import { useWebSocket } from "../../WebSocketProvider";
 import { api, formDataApi } from '../../api'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import CameraIcon from '../../assets/cameraIcon.svg';
+import { useTranslation } from "react-i18next";
+import i18n from '../../locales/i18n'
 
 const EditProfile = ({navigation, route}) => {
+  const { t } = useTranslation();
   const [imageFile, setImageFile] = useState(null);
   const [imageUri, setImageUri] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const userProfile = route.params.userProfile;
+
+  
   useEffect(() => {
     console.log(userProfile);
   },[])
@@ -71,6 +76,10 @@ const EditProfile = ({navigation, route}) => {
       console.error(error);
     };
   }
+  const setLocale = async(language) => {
+    await AsyncStorage.setItem('locale', language);
+    i18n.changeLanguage(language);
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleAlign: "center",
@@ -79,11 +88,11 @@ const EditProfile = ({navigation, route}) => {
           onPress={() => profileImageUpload()}
           disabled={disabled}
         >
-          <Text  style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: !disabled ? '#09111F' : '#D3D3D3'}}>적용하기</Text>
+          <Text  style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: !disabled ? '#09111F' : '#D3D3D3'}}>{t("homemain.mypage.apply")}</Text>
         </TouchableOpacity>
       ),
     });
-  }, [disabled]);
+  }, [disabled, t]);
   return (
     <View style={{flex:1, backgroundColor:'#fff', padding:10}}>
       <View style={{flex:2}}/>
@@ -101,14 +110,26 @@ const EditProfile = ({navigation, route}) => {
       style={{alignSelf: 'center', padding:12, borderRadius:10, backgroundColor: '#5782F1'}}
       onPress={selectImage}
       >
-        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>프로필사진 변경</Text>
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.changeProfileImage")}</Text>
       </TouchableOpacity>
       <View style={{flex:20}}/>
       <TouchableOpacity
       style={{alignSelf: 'flex-end'}}
       onPress={() => loggedOut()}
       >
-        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>로그아웃</Text>
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.logout")}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+      style={{alignSelf: 'flex-end'}}
+      onPress={() => setLocale('ko')}
+      >
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>한국어</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+      style={{alignSelf: 'flex-end'}}
+      onPress={() => setLocale('en')}
+      >
+        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>english</Text>
       </TouchableOpacity>
       <View style={{flex:1}}/>
     </View>

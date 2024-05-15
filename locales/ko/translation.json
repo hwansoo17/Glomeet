@@ -1,0 +1,39 @@
+{
+  "homemain": {
+    "trendmeeting": "지금 뜨는 모임",
+    "mypage": {
+      "changeProfileImage": "프로필 이미지 변경",
+      "logout": "로그아웃",
+      "apply": "적용하기"},
+    "point": "포인트내역",
+    "challange": "챌린지하고\n포인트를 획득하세요!",
+    "mymeeting": "참여중인 모임",
+    "gochallange": "챌린지 하러가기",
+    "comingsoon" : "준비중 입니다."
+  },
+  "matching":{
+    "start":"오늘의",
+    "today":"을 시작해보세요!",
+    "matching":"매칭",
+    "inprogress":"진행 중",
+    "iscomplete":"이 완료되었어요!",
+    "subtitle": "오늘은 또 어떤 새로운 친구를 만날까?",
+    "subtitle2":"조금만 기다려주세요!",
+    "subtitle3":"이제 메시지를 보내보세요!",
+    "point": "보유 포인트",
+    "bannertitle": "건전한 문화 안내",
+    "bannercontent": "비슷한 취미를 가진\n친구와 매칭돼요!",
+    "startmatching": "매칭 시작하기",
+    "cancelmatching": "매칭 취소하기",
+    "startadditionalmatching": "추가 매칭하기",
+    "to": "",
+    "sendmessage": "에게 메시지 보내기",
+    "info": "가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!"
+  },
+  "nav": {
+    "home": "홈",
+    "matching": "매칭",
+    "chatting": "채팅",
+    "meeting": "미팅"
+  }
+}
