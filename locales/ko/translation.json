@@ -39,6 +39,42 @@
     "meeting": "미팅"
   },
   "meeting": {
-    "current": "현재"
+    "current": "현재",
+    "joining": "가입중인",
+    "group": "모임",
+    "people": "명이",
+    "category": "카테고리",
+    "create": "모임 등록하기",
+    "meetingCreate": {
+      "createMeeting": "모임 생성하기",
+      "meetingName": "모임 이름",
+      "NameContent": "모임 이름을 입력하세요",
+      "meetingDescription": "모임 소개",
+      "DescriptionContent": "모임 설명을 입력하세요",
+      "participants": "참여 인원 수",
+      "selectKeywords": "키워드 선택",
+      "meetingCreated":"모임이 생성되었습니다.",
+      "newMeetingCreated": "새 모임이 생성되었습니다."
+  },
+  "JoinMeeting": "모임 참여하기",
+  "chatJoin": "님이 입장하셨습니다.",
+  "이미 가입된 미팅입니다": "이미 가입된 미팅입니다",
+  "제한 인원을 초과했어요": "제한 인원을 초과했어요",
+  "meetingChatRoom":{
+    "noChatRoom": "없는 채팅방입니다.",
+    "report": "신고가 정상적으로 접수되었습니다.",
+    "toReport": "신고하기",
+    "notConversation":"대화가 불가능한 상태입니다.",
+    "enterMessage": "메세지를 입력해 주세요.",
+    "reasonReporting":"신고 사유를 작성해주세요."
+  },
+  "meetingChatList": {
+    "leftChatRoom": "님이 채팅방을 나갔습니다.",
+    "leaveChatRoom?": "채팅방을 나가시겠습니까?",
+    "leave": "나가기",
+    "leaveChatRoom": "채팅방 나가기",
+    "cancel": "취소"
+
+  }
   }
 }

@@ -19,11 +19,11 @@ const MeetingMain = ({navigation}) => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => navigation.navigate('MeetingCreate')}>
-          <Text style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: '#09111F'}}>모임 등록하기</Text>
+          <Text style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: '#09111F'}}> {t("meeting.create")} </Text>
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [t]);
 
   const filterMeetingData = (category) => {
     if (category === 'ALL') {
@@ -77,7 +77,7 @@ const MeetingMain = ({navigation}) => {
               <Text style={{fontSize:16, fontFamily: 'Pretendard-Regular', marginRight:5, color: '#09111F'}} numberOfLines={1}>{item.title}</Text>
               <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{item.category}</Text>
             </View>
-            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants}명이 가입중인 모임</Text>
+            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants} {t("meeting.people")} {t("meeting.joining")} {t("meeting.group")}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -85,7 +85,7 @@ const MeetingMain = ({navigation}) => {
   );
 	return (
 		<View style={{flex:1, backgroundColor: 'white'}}>
-      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>카테고리</Text>
+      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
         {category.map((category) => (
           <TouchableOpacity

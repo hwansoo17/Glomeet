@@ -7,9 +7,11 @@ import MessageListItem from "./MessageListItem";
 import SendIcon from "../../assets/SendIcon.svg";
 import EventEmitter from "react-native-eventemitter";
 import { authApi } from "../../api";
+import { useTranslation } from "react-i18next";
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
+  const { t } = useTranslation();
   const id =  route.params.chat.id;
   const unRead = route.params.chat.unRead;
   const title = route.params.chat.title;
@@ -35,7 +37,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   useEffect(() => {
     console.log(roomStatus, '방상태 확인')
     if (roomStatus == 'INACTIVE') {
-      Alert.alert('없는 채팅방입니다.')
+      Alert.alert(t("meeting.meetingChatRoom.noChatRoom"))
       setIsRoomActive(false)
     }
     console.log(id, '아이디 확인')
@@ -83,7 +85,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
       const response = await authApi.post('/report/user', { roomId: selectedChatUser.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
       if (response.status == 200) {
         setReportComment('')
-        Alert.alert('신고가 정상적으로 접수되었습니다.')
+        Alert.alert(t("meeting.meetingChatRoom.report"))
       }
     } catch (e) {
       console.log(e)
@@ -124,7 +126,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
             onPress={() => setModalVisible2(false)}
             />
             <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
-              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>신고 사유를 작성해주세요.</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("meeting.meetingChatRoom.reasonReporting")}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex:1}}/>
                 <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
@@ -142,7 +144,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
                   onPress={() => {setModalVisible2(false); reportUser(); }}
                   disabled={!reportEnabled}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>신고하기</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("meeting.meetingChatRoom.toReport")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -189,7 +191,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
                     setModalVisible2(true)
                   }}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: '#EC3232'}}>신고하기</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: '#EC3232'}}>{t("meeting.meetingChatRoom.toReport")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -215,11 +217,11 @@ const MeetingChatRoom = ({ route, navigation }) => {
         <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
         {isRoomActive ? (<TextInput
             style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
-            placeholder="메시지를 입력해주세요."
+            placeholder={t("meeting.meetingChatRoom.enterMessage")}
             value={message}
             onChangeText={setMessage}
             placeholderTextColor={'#d3d3d3'}
-            textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>대화가 불가능한 상태입니다.</Text>)}
+            textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("meeting.meetingChatRoom.notConversation")}</Text>)}
         
         </View>
         <TouchableOpacity 

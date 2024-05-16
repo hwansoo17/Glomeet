@@ -10,8 +10,9 @@ import MainButton from "../../customComponents/MainButton";
 import LineInput from "../../customComponents/LineInput";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-
+import { useTranslation } from "react-i18next";
 const MeetingCreate = ({navigation}) => {
+  const { t } = useTranslation();
   const [imageFile, setImageFile] = useState(null);
   const [imageUri, setImageUri] = useState(null); // 상태 추가
   const [capacity, setCapacity] = useState('4')
@@ -85,8 +86,8 @@ const MeetingCreate = ({navigation}) => {
       console.log(response.data)
       console.log('@@@@')
       goChatRoom(response.data)
-      Alert.alert('모임이 생성되었습니다')
-      publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id, "새 모임이 생성되었습니다.", "CREATE")
+      Alert.alert(t("meeting.meetingCreate.meetingCreated"))
+      publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id, t("meeting.meetingCreat.newMeetingCreated"), "CREATE")
     }
     } catch (error) {
       console.log(error.response, '무슨 오류일까')
@@ -124,7 +125,7 @@ const MeetingCreate = ({navigation}) => {
         <TouchableOpacity
           onPress={createMeeting}
           disabled={!isCreateEnabled}>
-          <Text  style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: isCreateEnabled ? '#09111F' : '#D3D3D3'}}>모임 생성하기</Text>
+          <Text  style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: isCreateEnabled ? '#09111F' : '#D3D3D3'}}> {t("meeting.meetingCreate.createMeeting")} </Text>
         </TouchableOpacity>
       ),
     });
@@ -156,31 +157,31 @@ const MeetingCreate = ({navigation}) => {
                 </TouchableOpacity>
                 <View style={{height:30}}/>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.title}>모임 이름</Text>
+                  <Text style={styles.title}>{t("meeting.meetingCreate.meetingName")}</Text>
                   <View style={{flex:1}}/>
                   <Text style={styles.contentsLength}>{title.length}/20</Text>
                 </View>
                 <LineInput
                   value={title}
                   onChangeText={setTitle}
-                  placeholder={'모임 이름을 입력하세요.'}
+                  placeholder={t("meeting.meetingCreate.NameContent")}
                   placeholderTextColor={'#D3D3D3'}
                   maxLength={20}/>
                   <View style={{height:30}}/>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={styles.title}>모임 소개</Text>
+                  <Text style={styles.title}>{t("meeting.meetingCreate.meetingDescription")}</Text>
                   <View style={{flex:1}}/>
                   <Text style={styles.contentsLength}>{description.length}/80</Text>
                 </View>
                 <LineInput
                   value={description}
                   onChangeText={setDescription}
-                  placeholder={'모임 소개를 입력하세요.'}
+                  placeholder={t("meeting.meetingCreate.DescriptionContent")}
                   placeholderTextColor={'#D3D3D3'}
                   maxLength={80}
                   multiline={true}/>
                 <View style={{height:30}}/>  
-                <Text style={styles.title}>참여 인원 수</Text>
+                <Text style={styles.title}>{t("meeting.meetingCreate.participants")}</Text>
                 <ScrollPicker
                   dataSource={dataSource}
                   selectedIndex={1}
@@ -194,7 +195,7 @@ const MeetingCreate = ({navigation}) => {
                   itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
                 />
                 <View style={{height:20}}/>
-                <Text style={styles.title}>키워드 선택</Text>
+                <Text style={styles.title}>{t("meeting.meetingCreate.selectKeywords")}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingVertical:15, marginBottom:15  }}>
                   {keyword.map((item) => (
                   <TouchableOpacity

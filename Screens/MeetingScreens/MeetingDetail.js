@@ -7,10 +7,11 @@ import { useWebSocket } from '../../WebSocketProvider'
 import EventEmitter from "react-native-eventemitter";
 import MainButton from "../../customComponents/MainButton";
 import { formatDate } from "../ChattingScreens/formatDate";
+import { useTranslation } from "react-i18next";
 const MeetingDetail = ({route, navigation}) => {
   const detail = route.params.meeting;
   const {publish} = useWebSocket()
-  
+  const { t } = useTranslation();
   const meetingJoin = async() => {
     console.log(detail.id);
     const email = await AsyncStorage.getItem('email')
@@ -18,13 +19,14 @@ const MeetingDetail = ({route, navigation}) => {
     try {
       const response = await authApi.post('/meeting/join', { meetingId : detail.id});
       if (response.status == 200) {
-        publish("/pub/chat/"+ detail.id, "application/json", email, nickName, detail.id, nickName+"님이 입장하셨습니다.", "JOIN")
+        publish("/pub/chat/"+ detail.id, "application/json", email, nickName, detail.id, nickName +t("meeting.chatJoin"), "JOIN")
         goChatRoom(detail)
       };
     } catch (error) {
       if (error.response.status == 409) {
-        Alert.alert(error.response.data.message)
-        console.log(error.response.data.message, '이미속해있음?');
+        const errorMessage = error.response.data.message;
+        Alert.alert(t(`meeting.${errorMessage}`))
+        console.log(errorMessage, '이미속해있음?');
       } else {
         console.log(error);
       }
@@ -80,7 +82,7 @@ const MeetingDetail = ({route, navigation}) => {
               <View style={{marginLeft:10}}>
                 <Text style={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#09111F'}}>{detail.nickName}</Text>
                 <View style={{margin:2}}/>
-                <Text style={{fontFamily: 'Pretendard-Light', fontSize: 12, color: '#09111F'}}>{detail.participants}/{detail.capacity}명 참여중</Text>
+                <Text style={{fontFamily: 'Pretendard-Light', fontSize: 12, color: '#09111F'}}>{detail.participants}/{detail.capacity} {t("meeting.people")} {t("meeting.joining")} </Text>
               </View>
               <View style={{flex:1}}/>
               <Text style={{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10, fontSize:12, fontFamily: 'Pretendard-Regular', color: '#2D68FF'}}>{detail.category}</Text>
@@ -89,7 +91,7 @@ const MeetingDetail = ({route, navigation}) => {
           </View>
           <MainButton
             onPress={meetingJoin}
-            title={'모임 참여하기'}
+            title={t("meeting.JoinMeeting")}
           />
           <View style={{flex:1}}/>
         </View>
