@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image,SafeAreaView,ScrollView } from "react-native";
 import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
+import LineInput from "../../customComponents/LineInput";
 import InputBox from "../../customComponents/InputBox";
 import MainButton from "../../customComponents/MainButton";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
@@ -50,6 +51,7 @@ const Register1 = ({navigation}) => {
     try {
       const response = await api.post('/auth/emailCheck', {email})
       console.log(response.status);
+      setButtonActive(false);
         if (response.status == 200) {
           try {
             const response = await api.post('/mail/auth', {email});
@@ -98,11 +100,10 @@ const Register1 = ({navigation}) => {
         <View style={{height: 10}}/>
         <View style={{ flexDirection: 'row'}}>
           <View style={{ flex: 10 }}>
-            <InputBox 
+            <LineInput 
               value={email}
               onChangeText={setEmail}
-              style={styles.input}
-              placeholder="아주이메일 주소 입력"
+              placeholder="아주대 이메일 주소를 입력해주세요."
             />
           </View>
           <View style={{ flex: 0.5}}/>
@@ -120,11 +121,10 @@ const Register1 = ({navigation}) => {
 
         <View style={{ flexDirection: 'row'}}>
           <View style={{ flex: 10 }}>
-            <InputBox 
+            <LineInput 
               value={authCode}
               onChangeText={setAuthCode}
-              style={styles.input}
-              placeholder="인증번호 입력"
+              placeholder="인증번호를 입력해주세요."
             />
           </View>
           <View style={{ flex: 0.5 }}/>

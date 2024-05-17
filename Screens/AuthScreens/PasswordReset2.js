@@ -64,7 +64,6 @@ const PasswordReset2 = ({route, navigation}) => {
             title={'비밀번호 변경'}
             onPress={resetPassword}
             disabled={!isButtonActive}
-            textStyle={{fontSize:15}}
             />
         </View> 
         <View style={{flex:1}}/>

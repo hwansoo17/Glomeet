@@ -7,7 +7,10 @@ import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
 import MainButton from '../../customComponents/MainButton';
 import LineInput from '../../customComponents/LineInput';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 const LoginScreen = ({navigation}) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const webSocketClient = useWebSocket();
@@ -56,37 +59,45 @@ const LoginScreen = ({navigation}) => {
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
                 <Logo width={120} height={120} color="#5782F1"/>
-                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}><Text style={{fontFamily: 'GmarketSansTTFBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스 <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>글로밋</Text></Text>  
+                {i18n.language === 'ko' ? (
+                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}>
+                  <Text style={{fontFamily: 'GmarketSansTTFBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스{' '}
+                  <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>글로밋</Text>
+                </Text>
+              ) : (
+                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 16, textAlign: 'center', lineHeight: 24, color: '#000'}}>
+                  Matching Service for{'\n'}<Text style={{fontFamily: 'GmarketSansTTFBold'}}>International Students{' '}</Text>
+                  <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>Glomeet</Text>
+                </Text>
+              )}
               </View>
               <View style={{height: 20}}/>
               <LineInput 
-                placeholder="이메일을 입력하세요"
-                placeholderTextColor="#000"
+                placeholder={t("login.emailinput")}
                 value={email}
                 secureTextEntry ={false}
                 onChangeText={setEmail}
               />
               <View style={{height: 10}}/>
               <LineInput 
-                placeholder="비밀번호를 입력하세요"
-                placeholderTextColor="#000"
+                placeholder={t("login.passwordinput")}
                 value={password}
                 secureTextEntry ={true}
                 onChangeText={setPassword}
               />
               <View style={{height: 20}}/>
-              <MainButton onPress={login} title={'로그인'}/>
+              <MainButton onPress={login} title={t("login.login")}/>
               <View style={{height: 20}}/>
               <MainButton
                 style={{backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1.2}}
                 textStyle={{color: '#5782F1'}}
-                title={'회원가입'}
+                title={t("login.signup")}
                 onPress={() => navigation.navigate('Register1')}/>
               <View style={{height: 10}}/>
               <TouchableOpacity
                 style={{padding:10}}
                 onPress={() => navigation.navigate('PasswordReset1')}>
-                <Text style={styles.linkText}>비밀번호를 잊으셨나요?</Text>
+                <Text style={styles.linkText}>{t("login.forgotpassword")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.replace('Root')}>

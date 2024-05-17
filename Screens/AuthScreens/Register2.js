@@ -73,11 +73,10 @@ return (
         <View style={{flex:10}}>
         <View style={{ flexDirection: 'row'}}>
           <View style={{ flex: 7 }}>  
-            <InputBox 
+            <LineInput 
               value={nickName}
               onChangeText={setNickName}
-              placeholder="닉네임을 입력하세요"
-              style={styles.input}
+              placeholder="사용할 닉네임을 입력해주세요."
             />
             </View>
             <View style={{flex:0.5}}/>  
@@ -96,13 +95,13 @@ return (
               value={password}
               onChangeText={setPassword}
               secureTextEntry={true}
-              placeholder= '비밀번호를 입력하세요'
+              placeholder= '사용할 비밀번호를 입력해주세요.'
             />
           <LineInput 
               value={passwordCheck}
               onChangeText={setPasswordCheck}
               secureTextEntry={true}
-              placeholder= '비밀번호를 확인하세요'
+              placeholder= '비밀번호 확인'
             /> 
           <View style={{height: 20}}/>
           <MainButton

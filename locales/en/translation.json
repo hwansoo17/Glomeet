@@ -9,7 +9,8 @@
     "challange": "Challenge\nand get points!",
     "mymeeting": "My meetings",
     "gochallange": "Going for a challenge",
-    "comingsoon" : "Coming soon."
+    "comingsoon" : "Coming soon.",
+    "ea": "EA"
   },
   "matching":{
     "start":"Start",
@@ -39,7 +40,52 @@
     "meeting": "Meeting"
   },
   "meeting": {
-    "current": "Current"
+    "category": "Category",
+    "current": "Currently",
+    "signingup": "people are signing up",
+    "registermeeting": "Register Meeting"
+    
+  },
+  "category": {
+    "ALL": "ALL",
+    "운동": "Sports",
+    "여행": "Travel",
+    "게임": "Game", 
+    "문화": "Culture",
+    "음식": "Food",
+    "언어": "Language"
+  },
+  "login": {
+    "emailinput": "Enter your email",
+    "passwordinput": "Enter your password",
+    "login": "Login",
+    "signup": "Sign Up",
+    "forgotpassword": "Forgot your password?"
+  },
+  "onboarding": {
+    "title1": "Which\ncontinent are you from?",
+    "title2": "What are\nyour interests?",
+    "title3": "What is\nyour personality?",
+    "title4": "Now you can go meet your friends!",
+    "subtitle": "Please select one of the options below.\nThen press the 'Next' button to proceed.",
+    "subtitle2": "The Glomit app creates a wholesome and healthy culture of foreign exchange.",
+    "한국": "Korea",
+    "아시아": "Asia",
+    "유럽": "Europe",
+    "북아메리카": "North America",
+    "남아메리카": "South America",
+    "오세아니아": "Oceania",
+    "아프리카": "Africa",
+    "운동": "Sports",
+    "여행": "Travel",
+    "게임": "Game",
+    "문화": "Culture",
+    "음식": "Food",
+    "언어": "Language",
+    "내향적": "Introverted",
+    "외향적": "Extroverted",
+    "buttontext": "NEXT",
+    "start": "START"
   }
-
+  
 }

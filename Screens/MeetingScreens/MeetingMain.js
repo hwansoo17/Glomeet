@@ -10,7 +10,7 @@ const MeetingMain = ({navigation}) => {
 	const [meetingData, setMeetingData] = useState([])
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filteredMeetingData, setFilteredMeetingData] = useState([]);
-  const category = ['ALL', '운동', '여행', '게임', '문화', '음식', '언어']
+  const category = ['ALL', '운동', '여행','게임','문화','음식','언어']
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   
   useLayoutEffect(() => {
@@ -19,11 +19,11 @@ const MeetingMain = ({navigation}) => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => navigation.navigate('MeetingCreate')}>
-          <Text style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: '#09111F'}}>모임 등록하기</Text>
+          <Text style={{paddingTop:2, fontSize:14, fontFamily: 'Pretendard-SemiBold', color: '#09111F'}}>{t("meeting.registermeeting")}</Text>
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [t]);
 
   const filterMeetingData = (category) => {
     if (category === 'ALL') {
@@ -75,34 +75,55 @@ const MeetingMain = ({navigation}) => {
           <View style={{flex:1, height: 90, borderBottomWidth:1, borderColor: '#E1E5EB',justifyContent:'center', marginRight:10}}>
             <View style={{flexDirection: "row", alignItems: "center", maxWidth: '80%'}}>
               <Text style={{fontSize:16, fontFamily: 'Pretendard-Regular', marginRight:5, color: '#09111F'}} numberOfLines={1}>{item.title}</Text>
-              <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{item.category}</Text>
+              <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{t(`category.${item.category}`)}</Text>
             </View>
-            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants}명이 가입중인 모임</Text>
+            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants}{t("meeting.signingup")}</Text>
           </View>
         </View>
       </TouchableOpacity>
  
   );
-	return (
+  const renderCategory = ({ item }) => (
+  <TouchableOpacity
+    onPress={() => setSelectedCategory(item)}
+    style={[{backgroundColor: '#D1DCFB', paddingHorizontal:16, paddingVertical:6, borderRadius:10}, selectedCategory == item && {backgroundColor: '#5782F1'}]}
+  >
+    <Text style={[{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory == item && { color: '#ffffff'}]}>{t(`category.${item}`)}</Text>
+  </TouchableOpacity>
+  )
+  return (
 		<View style={{flex:1, backgroundColor: 'white'}}>
-      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>카테고리</Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
+      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
+      <View>
+        <FlatList
+          data={category}
+          renderItem={renderCategory}
+          horizontal
+          ListHeaderComponent={<View style={{width:10}}/>}
+          ListFooterComponent={<View style={{width:10}}/>}
+          ItemSeparatorComponent={<View style={{width:5}}/>}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      {/* <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
         {category.map((category) => (
           <TouchableOpacity
             key={category}
             onPress={() => setSelectedCategory(category)}
             style={[{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10}, selectedCategory == category && {backgroundColor: '#5782F1'}]}
           >
-            <Text style={[{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory== category && { color: '#ffffff'}]}>{category}</Text>
+            <Text style={[{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory== category && { color: '#ffffff'}]}>{t(`category.${category}`)}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </View> */}
+      <View>
       <FlatList
         data={filteredMeetingData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
       />
+      </View>
 		</View>
 	)
 };

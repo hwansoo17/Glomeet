@@ -89,12 +89,14 @@ const HomeMain = ({navigation}) => {
       onPress={() => goMeetingRoom(item)}
     >
       <ImageBackground src={item.meetingImageAddress}
-        style={{flex:1}} 
+        style={{width: 160, height: 180}} 
       >
-        <View style={{flex:1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-        <View style={{width:50, height:24, backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius:10, alignItems:'center', justifyContent: 'center', margin:10}}>
-          <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 12, color: '#fff'}}>{item.category}</Text>
-        </View>
+        <View style={{width: 160, height: 180, backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
+          <View style={{flexDirection:"row"}}>    
+            <View style={{paddingHorizontal:12, paddingVertical:6, backgroundColor: 'rgba(0, 0, 0, 0.6)', borderRadius:10, margin:10}}>
+              <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 12, color: '#fff'}}>{t(`category.${item.category}`)}</Text>
+            </View>
+          </View>
         <View style={{flex:1}}/>
         <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 18, color: '#fff', margin:13}}>{item.title}</Text>
         </View>
@@ -149,7 +151,7 @@ const HomeMain = ({navigation}) => {
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
         onPress={goMeetingChatList}
       >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}개</Text>
+        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}{t("homemain.ea")}</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.mymeeting")}</Text>
       </TouchableOpacity>
       </View>

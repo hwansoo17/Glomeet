@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { api } from '../../api';
-import InputBox from "../../customComponents/InputBox";
+import LineInput from "../../customComponents/LineInput";
 import MainButton from "../../customComponents/MainButton";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 const PasswordReset1 = ({navigation}) => {
@@ -93,11 +93,10 @@ const PasswordReset1 = ({navigation}) => {
           <View style={{height: 10}}/>
           <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 10 }}>
-              <InputBox 
+              <LineInput 
                 value={email}
                 onChangeText={setEmail}
-                style={styles.input}
-                placeholder="아주이메일 주소 입력"
+                placeholder="아주대 이메일 주소를 입력해주세요"
               />
             </View>
             <View style={{ flex: 0.5}}/>
@@ -115,11 +114,10 @@ const PasswordReset1 = ({navigation}) => {
 
           <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 10 }}>
-              <InputBox 
+              <LineInput 
                 value={authCode}
                 onChangeText={setAuthCode}
-                style={styles.input}
-                placeholder="인증번호 입력"
+                placeholder="인증번호를 입력해주세요."
               />
             </View>
             <View style={{ flex: 0.5 }}/>

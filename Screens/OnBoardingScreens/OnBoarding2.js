@@ -4,7 +4,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MainButton from '../../customComponents/MainButton';
 import SelectableList from "./SelectableList";
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
+import { useTranslation } from "react-i18next";
 const OnBoarding2 = ({navigation}) => {
+  const { t } = useTranslation();
   const data = ['운동', '여행', '게임', '문화', '음식', '언어']
   const [selectedItem, setSelectedItem] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);
@@ -22,8 +24,8 @@ const OnBoarding2 = ({navigation}) => {
     navigation.navigate('OnBoarding3')
   }   
 
-  const title =  ['당신의','관심사는 무엇인가요']
-  const subtitle = ['Choose one option for now.', 'You can explore others later.']
+  const title = t("onboarding.title2")
+  const subtitle = t("onboarding.subtitle")
 
   return (
     <SafeAreaView style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
@@ -31,12 +33,12 @@ const OnBoarding2 = ({navigation}) => {
       <View style={{ flex: 8 }}>
         <View style={{flex:1}}/>
         <View style={{flex:14}}>
-          <TitleSubtitleComponent titles={title} subtitles={subtitle}/>
+          <TitleSubtitleComponent title={title} subtitle={subtitle}/>
           <View style={{flex:2}}/>
           <SelectableList data={data} selectItem={selectItem} selectedItem={selectedItem}/>
           <View style={{flex:2}}/>
         </View>
-        <MainButton title='다음으로 넘어가기' onPress={saveHobby} 
+        <MainButton title={t("onboarding.buttontext")} onPress={saveHobby} 
             disabled={!isButtonActive} 
         />
         <View style={{flex:1}}/>

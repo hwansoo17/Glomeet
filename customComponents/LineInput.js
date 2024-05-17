@@ -9,7 +9,7 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
       secureTextEntry = {secureTextEntry}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor={placeholderTextColor}
+      placeholderTextColor={"#868686"}
       maxLength={maxLength}
       multiline={multiline}
     />
