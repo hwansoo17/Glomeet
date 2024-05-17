@@ -8,14 +8,8 @@ const useChatList = (apiEndpoint) => {
   const appState = useRef(AppState.currentState);
 
   const sortChatData = (a, b) => {
-    if ((a.unRead > 0) && (b.unRead === 0)) {
-      return -1;
-    } else if ((a.unRead === 0) && (b.unRead > 0)) {
-      return 1;
-    } else {
-      return new Date(b.sendAt) - new Date(a.sendAt);
-    }
-  };
+    return new Date(b.sendAt) - new Date(a.sendAt);
+};
 
   const getChatList = async () => {
     try {

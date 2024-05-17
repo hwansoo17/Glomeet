@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, SafeAreaView, Modal, Image, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, FlatList, SafeAreaView, Modal, Image, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
@@ -38,6 +38,9 @@ const MatchingChatRoom = ({ route, navigation }) => {
       Alert.alert(t("ChatRoom.noChatRoom"))
       setIsRoomActive(false)
     }
+    if (roomStatus == 'ACTIVE') {
+      checkChatRoomStatus(id)
+    }
     console.log(id, '아이디 확인')
     const getEmail = async() => {
       const email = await AsyncStorage.getItem("email");
@@ -54,6 +57,22 @@ const MatchingChatRoom = ({ route, navigation }) => {
       setReportEnabled(false);
     }
   }, [reportComment]);
+
+  const checkChatRoomStatus = async (id) => {
+    try {
+      const response = await authApi.get("/chat/status", {params:{id: id}})
+      if (response.status == 200) {
+        if (response.data.roomStatus == "ACTIVE") {
+          setIsRoomActive(true)
+        } else {
+          Alert.alert(t("ChatRoom.noChatRoom"))
+          setIsRoomActive(false)
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const chatRoomConnectMessage = async () => {
     const email = await AsyncStorage.getItem("email");
@@ -197,30 +216,35 @@ const MatchingChatRoom = ({ route, navigation }) => {
         onEndReached={loadMoreMessage}
         onEndReachedThreshold={0.7}/>
       <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "row", alignItems: "center"}}>
-        <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
-        {isRoomActive ? (
-          <TextInput
-            style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
-            placeholder={t("ChatRoom.enterMessage")}
-            value={message}
-            onChangeText={setMessage}
-            placeholderTextColor={'#d3d3d3'}
-            textAlignVertical='center'
-          />
-          ) : (
-          <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>
-            {t("ChatRoom.notConversation")}
-          </Text>
-          )
-        }
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // 키보드 오프셋을 적절하게 설정합니다. 
+      >
+        <View style={{ flexDirection: "row", alignItems: "center"}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
+          {isRoomActive ? (
+            <TextInput
+              style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
+              placeholder={t("ChatRoom.enterMessage")}
+              value={message}
+              onChangeText={setMessage}
+              placeholderTextColor={'#d3d3d3'}
+              textAlignVertical='center'
+            />
+            ) : (
+            <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>
+              {t("ChatRoom.notConversation")}
+            </Text>
+            )
+          }
+          </View>
+          <TouchableOpacity 
+            style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
+            onPress={sendMessage}>
+            <SendIcon/>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity 
-          style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
-          onPress={sendMessage}>
-          <SendIcon/>
-        </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

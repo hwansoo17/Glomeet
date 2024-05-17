@@ -17,38 +17,45 @@ const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && 
-      <TouchableOpacity 
-        onPress={() => {
-          setModalVisible(true)
-          setSelectedChatUser(item)}}
-        style={styles.avatar}
-      >
-        <Image src={item.imageAddress}
-          style={{width:48, height:48, borderRadius: 24,}}/>
-      </TouchableOpacity>}
+      <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
+        <TouchableOpacity 
+          onPress={() => {
+            setModalVisible(true)
+            setSelectedChatUser(item)}}
+          style={styles.avatar}
+        >
+          <Image src={item.imageAddress}
+            style={{width:48, height:48, borderRadius: 24,}}/>
+        </TouchableOpacity>
+        <View>
+        <View style={{width:'0%', height:26}}>
+          <Text style={styles.senderNickName}>{item.senderNickName}</Text>
+        </View>
+          <View style={[styles.otherMessageBubble, {maxWidth: screenWidth * 0.6}]}>
+            <Text style={styles.otherMessageText}>
+              {item.message}
+            </Text>
+          </View>
+        </View>
+        <View style={{alignSelf: 'flex-end', marginLeft:5}}>
+          {/* <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
+          <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
+        </View>
+      </View>
+      }
       {isMyMessage &&
+      <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
         <View style={{alignSelf: 'flex-end', marginRight:5}}>
           {/* <Text style={{alignSelf: 'flex-end', fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
           <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
         </View>
-      }
-      <View style={styles.messageContent}>
-        <Text style={styles.senderNickName}>{!isMyMessage && item.senderNickName}</Text>
-        <View style={[
-          isMyMessage ? styles.myMessageBubble : styles.otherMessageBubble,
-          { maxWidth: isMyMessage ? screenWidth * 0.7 : screenWidth * 0.6 }
-        ]}>
-          <Text style={isMyMessage ? styles.myMessageText : styles.otherMessageText}>
+        <View style={[styles.myMessageBubble,{ maxWidth: screenWidth * 0.7}]}>
+          <Text style={styles.myMessageText}>
             {item.message}
           </Text>
         </View>
       </View>
-      {!isMyMessage &&
-      <View style={{alignSelf: 'flex-end', marginLeft:5}}>
-        {/* <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
-        <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
-      </View>}
-      
+      }
     </View>
   );
 };
@@ -57,8 +64,11 @@ const styles = StyleSheet.create({
   messageRow: {
     flexDirection: "row",
     padding: 10,
+    flex:1
   },
   myMessageBubble: {
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal:16,
     backgroundColor: "#5782F1",
@@ -72,14 +82,14 @@ const styles = StyleSheet.create({
     color: "white",
     // 기타 스타일
   },
-  otherMessageContent: {
-    flexDirection: "row",
-  },
   otherMessageBubble: {
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal:16,
     backgroundColor: "#F1F1F1",
     borderRadius: 20,
+    flexWrap: 'wrap'
     // 기타 스타일
   },
   otherMessageText: {
@@ -100,6 +110,8 @@ const styles = StyleSheet.create({
     color: "#000",
     fontFamily: "Pretendard-SemiBold",
     fontSize: 16,
+    position: 'absolute'
+       
   },
   systemMessageContainer: {
     alignItems: 'center',
