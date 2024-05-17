@@ -218,7 +218,7 @@ const MatchingMainScreen = ({navigation}) => {
 
       <View style={{flex:1}}/>
       <View style={{flex:8}}>
-      <View style={{height:90, backgroundColor: '#ACD495', borderRadius: 10, paddingHorizontal:20, flexDirection: 'row', alignItems:'center', marginTop:20, overflow:'hidden'}}>
+      <View style={{height:90, backgroundColor: '#ACD495', borderRadius: 10, paddingHorizontal:10, flexDirection: 'row', alignItems:'center', marginTop:20, overflow:'hidden'}}>
         <View>
           <Text style={{fontFamily: "Pretendard-Medium", fontSize: 12, color: "white"}}>
             {t("matching.bannertitle")}

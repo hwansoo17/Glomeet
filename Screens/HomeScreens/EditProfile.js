@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import { useState } from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config';
 import { useWebSocket } from "../../WebSocketProvider";
@@ -12,6 +12,7 @@ import i18n from '../../locales/i18n'
 
 const EditProfile = ({navigation, route}) => {
   const { t } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language);
   const [imageFile, setImageFile] = useState(null);
   const [imageUri, setImageUri] = useState(null);
   const [disabled, setDisabled] = useState(true);
@@ -78,6 +79,7 @@ const EditProfile = ({navigation, route}) => {
   }
   const setLocale = async(language) => {
     await AsyncStorage.setItem('locale', language);
+    setLanguage(language)
     i18n.changeLanguage(language);
   }
   useLayoutEffect(() => {
@@ -112,28 +114,72 @@ const EditProfile = ({navigation, route}) => {
       >
         <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.changeProfileImage")}</Text>
       </TouchableOpacity>
-      <View style={{flex:20}}/>
+      <View style={{flex:4}}/>
+      <View style={{flexDirection: 'row', justifyContent:'center'}}>
+        <TouchableOpacity
+        style={[language == 'ko' ? styles.selectedLanguageBox : styles.languageBox]}
+        onPress={() => setLocale('ko')}
+        >
+          <Text style={[language == 'ko' ? styles.selectedLanguageText : styles.languageText]}>한국어</Text>
+        </TouchableOpacity>
+        <View style={{width: 20}}/>
+        <TouchableOpacity
+        style={[language == 'en' ? styles.selectedLanguageBox : styles.languageBox]}
+        onPress={() => setLocale('en')}
+        >
+          <Text style={[language == 'en' ? styles.selectedLanguageText : styles.languageText]}>English</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{flex:16}}/>
       <TouchableOpacity
-      style={{alignSelf: 'flex-end'}}
+      style={styles.logoutBox}
       onPress={() => loggedOut()}
       >
-        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.logout")}</Text>
+        <Text style={{fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.logout")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-      style={{alignSelf: 'flex-end'}}
-      onPress={() => setLocale('ko')}
-      >
-        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>한국어</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-      style={{alignSelf: 'flex-end'}}
-      onPress={() => setLocale('en')}
-      >
-        <Text style={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#EC3232', margin:10}}tyle={{fontFamily:"Pretendard-Medium", fontSize: 14, color: '#fff'}}>english</Text>
-      </TouchableOpacity>
+      
       <View style={{flex:1}}/>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  languageBox: {
+    backgroundColor: '#fff', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  selectedLanguageBox: {
+    backgroundColor: '#5782F1', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  languageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#5782F1'
+  },
+  selectedLanguageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'
+  },
+  logoutBox: {
+    backgroundColor: '#EC3232', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#EC3232", 
+    borderWidth:2, 
+    alignItems: "center",
+    alignSelf: 'flex-end'
+  }
+});
 
 export default EditProfile;

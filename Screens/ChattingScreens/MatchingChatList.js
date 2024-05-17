@@ -6,8 +6,9 @@ import EventEmitter from "react-native-eventemitter";
 import { authApi } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useWebSocket } from '../../WebSocketProvider'
-
+import { useTranslation } from "react-i18next";
 const MatchingChatList = ({ navigation }) => {
+  const { t } = useTranslation();
   const { chatData, getChatList } = useChatList("/matching/list");
   //챗리스트 가져오는 커스텀훅
   const { publish } = useWebSocket();
@@ -28,7 +29,7 @@ const MatchingChatList = ({ navigation }) => {
         console.log(response.data, ': 매칭채팅방 나가기')
         getChatList()
         setModalVisible(false)
-        publish("/pub/chat/"+ chat.id, "application/json", email, nickName, chat.id, `${nickName}님이 채팅방을 나갔습니다.`, "LEAVE")
+        publish("/pub/chat/"+ chat.id, "application/json", email, nickName, chat.id, nickName, "LEAVE")
       }
     } catch (error) {
       console.log(error)
@@ -75,14 +76,14 @@ const MatchingChatList = ({ navigation }) => {
                 </View>
               </View>
               <View style={{flex:1}}/>
-              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>채팅방을 나가시겠습니까?</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatList.leaveChatRoom?")}</Text>
               <View style={{flex:1}}/>
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <View style={{flex:2}}/>
                 <TouchableOpacity 
                   onPress={() => setModalVisible2(false)}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#6B7079'}}>취소</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#6B7079'}}>{t("ChatList.cancel")}</Text>
                 </TouchableOpacity>
                 <View style={{flex:1}}/>
                 <TouchableOpacity
@@ -91,7 +92,7 @@ const MatchingChatList = ({ navigation }) => {
                     leaveChatRoom(selectedChatRoom)
                   }}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#EC3232'}}>나가기</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#EC3232'}}>{t("ChatList.leave")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -141,13 +142,13 @@ const MatchingChatList = ({ navigation }) => {
                 setModalVisible(false)
                 }}
             >
-              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>채팅방 나가기</Text>
+              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>{t("ChatList.leaveChatRoom")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
             style={{flex:5, justifyContent: 'center'}}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#000', paddingLeft:15}}>닫기</Text>
+              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#000', paddingLeft:15}}>{t("ChatList.cancel")}</Text>
             </TouchableOpacity>
             <View style={{flex:1}}/>
           </View>

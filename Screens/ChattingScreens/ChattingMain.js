@@ -5,9 +5,12 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import MatchingChatList from "./MatchingChatList";
 import MeetingChatList from "./MeetingChatList";
 import SmallLogo from '../../assets/glomeet_logo_top_tab.svg';
+import { useTranslation } from "react-i18next";
 const topTab = createMaterialTopTabNavigator();
 
+
 const ChattingMain = ({navigation}) => {
+    const { t } = useTranslation()
     useLayoutEffect(() => {
         navigation.setOptions({
           headerTitleAlign: "center",
@@ -21,8 +24,8 @@ const ChattingMain = ({navigation}) => {
         screenOptions={{
             tabBarLabelStyle: { fontSize: 16, fontFamily: 'Pretendard-SemiBold' }}}
         >
-            <topTab.Screen name="매칭" component={MatchingChatList}/>
-            <topTab.Screen name="모임" component={MeetingChatList}/>     
+            <topTab.Screen name={t("nav.matching")} component={MatchingChatList}/>
+            <topTab.Screen name={t("nav.meeting")} component={MeetingChatList}/>     
         </topTab.Navigator>
     )
     };

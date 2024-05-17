@@ -7,7 +7,9 @@ import useChatRoom from "../../customHooks/useChatRoom";
 import MessageListItem from "./MessageListItem";
 import SendIcon from "../../assets/SendIcon.svg";
 import { authApi } from "../../api";
+import { useTranslation } from "react-i18next";
 const MatchingChatRoom = ({ route, navigation }) => {
+  const { t } = useTranslation();
   const id =  route.params.chat.id;
   const chat = route.params.chat;
   const unRead = route.params.chat.unRead;
@@ -33,7 +35,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
 
   useEffect(() => {
     if (roomStatus == 'INACTIVE') {
-      Alert.alert('없는 채팅방입니다.')
+      Alert.alert(t("ChatRoom.noChatRoom"))
       setIsRoomActive(false)
     }
     console.log(id, '아이디 확인')
@@ -81,7 +83,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       const response = await authApi.post('/report/user', { roomId: selectedChatUser.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
       if (response.status == 200) {
         setReportComment('')
-        Alert.alert('신고가 정상적으로 접수되었습니다.')
+        Alert.alert(t("ChatRoom.report"))
       }
     } catch (e) {
       console.log(e)
@@ -108,7 +110,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
             onPress={() => setModalVisible2(false)}
             />
             <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
-              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>신고 사유를 작성해주세요.</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatRoom.reasonReporting")}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex:1}}/>
                 <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
@@ -126,7 +128,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
                   onPress={() => {setModalVisible2(false); reportUser(); }}
                   disabled={!reportEnabled}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>신고하기</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -173,7 +175,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
                     setModalVisible2(true)
                   }}
                 >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: '#EC3232'}}>신고하기</Text>
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: '#EC3232'}}>{t("ChatRoom.toReport")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -200,7 +202,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         {isRoomActive ? (
           <TextInput
             style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
-            placeholder="메시지를 입력해주세요."
+            placeholder={t("ChatRoom.enterMessage")}
             value={message}
             onChangeText={setMessage}
             placeholderTextColor={'#d3d3d3'}
@@ -208,7 +210,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
           />
           ) : (
           <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>
-            대화가 불가능한 상태입니다.
+            {t("ChatRoom.notConversation")}
           </Text>
           )
         }

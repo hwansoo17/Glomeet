@@ -24,6 +24,8 @@ import MatchingIcon from "./assets/MatchingIcon.svg";
 import MeetingIcon from "./assets/MeetingIcon.svg";
 import ChattingIcon from "./assets/ChattingIcon.svg";
 import { useTranslation } from "react-i18next";
+import i18n from './locales/i18n';
+
 export const AppContext = createContext();
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
@@ -159,11 +161,18 @@ const App = () => {
       setInitialRoute("Auth");
     }
   };
+  const loadLocale = async () => {
+    const language = await AsyncStorage.getItem('locale');
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  };
 
   useEffect(() => {
-    checkLoginStatus()
-    requestUserPermissionAos()
-    // LogBox.ignoreAllLogs()
+    loadLocale();
+    checkLoginStatus();
+    requestUserPermissionAos();
+    LogBox.ignoreAllLogs()
   }, []);
   
   useEffect(() => {

@@ -5,16 +5,19 @@ import Logo from '../../assets/Glomeet_logo.svg';
 import LineInput from "../../customComponents/LineInput";
 import InputBox from "../../customComponents/InputBox";
 import MainButton from "../../customComponents/MainButton";
+import { useTranslation } from "react-i18next";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
 //const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
 const Register1 = ({navigation}) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
-  const [emailValid, setEmailValid] = useState(false);
-  const [randomCode, setRandomCode] = useState('');
+  const [emailValid, setEmailValid] = useState(false);;
   const [authCode, setAuthCode] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);  
-  const [isCheckButtonActive, setCheckButtonActive] = useState(false);  
+  const [isCheckButtonActive, setCheckButtonActive] = useState(false); 
+  const [isSending, setIsSending] = useState(false);
+  const [sendComplete, setSendComplete] = useState(false);
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -22,9 +25,6 @@ const Register1 = ({navigation}) => {
       setButtonActive(false);
     }
   };
-  const createRandomCode = () => {
-    return String(Math.floor(Math.random() * 1000000)).padStart(6, '0')  
-  }
 
   useEffect(() => {
     changeButtonStatus();
@@ -45,9 +45,10 @@ const Register1 = ({navigation}) => {
   const AuthCodeSend = async () => {
     console.log(email)
     if (!emailValid) {
-      Alert.alert('이메일 형식이 올바르지 않습니다.');
+      Alert.alert(t("register.emailinvalid"));
       return;
-    } 
+    }
+    setIsSending(true); // 전송 시작 시 비활성화
     try {
       const response = await api.post('/auth/emailCheck', {email})
       console.log(response.status);
@@ -57,7 +58,8 @@ const Register1 = ({navigation}) => {
             const response = await api.post('/mail/auth', {email});
             if (response.status == 200) {
               console.log(response.status);
-              Alert.alert('인증번호가 전송되었습니다.');
+              Alert.alert(t("register.sentcode"));
+              setSendComplete(true)
             };
           } catch (error) {
             if (error.response.status == 400) {
@@ -66,16 +68,17 @@ const Register1 = ({navigation}) => {
             Alert.alert(error.response.data.message);
             } else {
               console.log(error);
-              Alert.alert('인증번호 전송에 실패하였습니다.');
+              Alert.alert(t("register.sentcodefailed"));
             };
           };
         };
     } catch (error) {
       if (error.response.status == 409) {
-      Alert.alert('이미 가입된 이메일입니다.');
+      Alert.alert(t("register.alreadyregistered"));
       console.log(error);
       };
     };
+    setIsSending(false); // 요청 완료 후 활성화
   };
   const checkAuthCode = async() => {
     try {
@@ -88,7 +91,7 @@ const Register1 = ({navigation}) => {
     } catch (error) {
       if (error.response.status == 400) {
         console.log(error.response.status);
-        Alert.alert('인증번호가 일치하지 않습니다.');
+        Alert.alert(t("register.verificationfailed"));
       };
     };
   };
@@ -100,18 +103,20 @@ const Register1 = ({navigation}) => {
         <View style={{height: 10}}/>
         <View style={{ flexDirection: 'row'}}>
           <View style={{ flex: 10 }}>
-            <LineInput 
+            <LineInput
+              style={[!isSending && !sendComplete ? {} : {color:"#868686"}]}
               value={email}
               onChangeText={setEmail}
-              placeholder="아주대 이메일 주소를 입력해주세요."
+              placeholder={t("register.emailinput")}
+              editable={!isSending && !sendComplete}
             />
           </View>
           <View style={{ flex: 0.5}}/>
           <View style={{ flex: 5 }}>
             <MainButton 
-              title = '인증번호 받기'
+              title = {t("register.sendcode")}
               onPress = {AuthCodeSend}
-              disabled ={!isButtonActive}
+              disabled ={!isButtonActive || isSending}
               style = {{borderRadius:5}}
               textStyle={{fontSize:15}}
             />
@@ -124,13 +129,13 @@ const Register1 = ({navigation}) => {
             <LineInput 
               value={authCode}
               onChangeText={setAuthCode}
-              placeholder="인증번호를 입력해주세요."
+              placeholder={t("register.entercode")}
             />
           </View>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flex: 5}}>
           <MainButton 
-              title = '인증번호 확인'
+              title = {t("register.submitcode")}
               onPress = {checkAuthCode}
               disabled ={!isCheckButtonActive}
               style = {{borderRadius:5}}
@@ -141,9 +146,7 @@ const Register1 = ({navigation}) => {
       </View>
       <View style={{ flex: 1}} /> 
     </View>
-    <TouchableOpacity onPress={() => navigation.navigate('Register2', { email: email })}>
-            <Text>등록화면</Text>
-    </TouchableOpacity>
+    {/* <TouchableOpacity onPress={() => navigation.navigate('Register2',{email:email})}><Text>asdasd</Text></TouchableOpacity> */}
   </View>
 
 

@@ -31,7 +31,11 @@
     "sendmessage": ", send a message",
     "info": "Recent match details displayed for a day!",
     "exitroom": "Already Exited Chat Room.",
-    "matchingcancelled": "Matching cancelled."
+    "matchingcancelled": "Matching cancelled.",
+    "partnerPersonality": "Select the personality traits\nyou prefer in a partner!",
+    "notice": "We'll do our best to find a match that fits the personality traits you've selected!",
+    "matchingStart": "MATCHING START"
+
   },
   "nav": {
     "home": "Home",
@@ -42,8 +46,13 @@
   "meeting": {
     "category": "Category",
     "current": "Currently",
-    "signingup": "people are signing up",
-    "registermeeting": "Register Meeting"
+    "participating": "people are participating",
+    "participating2": "people participating",
+    "registermeeting": "Register Meeting",
+    "JoinMeeting": "Join Meeting",
+    "chatJoin": " has joined the meeting.",
+    "이미 가입된 미팅입니다": "Meeting is already joined",
+    "제한 인원을 초과했어요": "The limit of participants has been exceeded"
     
   },
   "category": {
@@ -60,7 +69,35 @@
     "passwordinput": "Enter your password",
     "login": "Login",
     "signup": "Sign Up",
-    "forgotpassword": "Forgot your password?"
+    "forgotpassword": "Forgot your password?",
+    "loginfailed": "The email or password does not match."
+  },
+  "register": {
+    "emailinput": "Enter your Ajou email.",
+    "emailinvalid": "Invalid email format.",
+    "sendcode": "Send code",
+    "sentcode": "Verification code sent.",
+    "sentcodefailed": "Verification code sending failed.",
+    "alreadyregistered": "Email already registered.",
+    "notRegistered": "Email not registered",
+    "verificationfailed": "Verification code does not match.",
+    "entercode": "Enter the verification code.",
+    "submitcode": "Submit code",
+    "nickNameinput": "Enter nickname to use.",
+    "duplicateCheck": "Check for duplicates",
+    "passwordinput": "Enter password to use.",
+    "passwordcheckinput": "Confirm password",
+    "passwordCheckFailed": "Passwords do not match.",
+    "signup": "Sign Up",
+    "signupComplete": "Registration complete.",
+    "signupfailed": "Registration failed.",
+    "nicknameAvailable": "Nickname available.",
+    "nicknameUnavailable": "Nickname already in use.",
+    "nicknameCheckFailed": "Nickname check failed",
+    "newPassword": "Enter the new password to use.",
+    "passwordChange": "Change Password",
+    "passwordChangeComplete": "Password change complete.",
+    "passwordChangeFailed": "Password change failed."
   },
   "onboarding": {
     "title1": "Which\ncontinent are you from?",
@@ -86,6 +123,42 @@
     "외향적": "Extroverted",
     "buttontext": "NEXT",
     "start": "START"
-  }
+  },
+  "meetingCreate": {
+    "createMeeting": "Creat meeting",
+    "meetingName": "Meeting Name",
+    "NameContent": "Enter meeting name",
+    "meetingDescription": "Meeting Description",
+    "DescriptionContent": "Enter meeting description",
+    "participants": "Number of Participants",
+    "selectKeywords": "Select Keywords",
+    "meetingCreated":"The meeting has been created",
+    "newMeetingCreated": "The new meeting has been created."
+  },
   
+  "ChatRoom":{
+    "noChatRoom": "Non existent chat room.",
+    "report": "The report has been successfully submitted.",
+    "toReport" : "To report",
+    "notConversation": "Conversation is not possible.",
+    "enterMessage": "Please enter a message.",
+    "reasonReporting":"Please state the reason for the report.",
+    "JOIN": " has entered the room.",
+    "CREATE": "A new meeting has been created.",
+    "LEAVE": " has left the chat room.",
+    "MATCHED": "The match has been made."
+  },
+  "ChatList": {
+    "leftChatRoom": "has left the chatroom.",
+    "leaveChatRoom?": "Would you like to leave the chatroom?",
+    "cancel": "Cancel",
+    "leave": "Leave",
+    "leaveChatRoom": "Leave the chatroom"
+    
+  },
+  "time": {
+    "AM": "AM",
+    "PM": "PM"
+  }
+
 }

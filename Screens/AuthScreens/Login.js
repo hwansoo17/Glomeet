@@ -14,6 +14,7 @@ const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const webSocketClient = useWebSocket();
+  const [language, setLanguage] = useState(i18n.language);
   const login = async () => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -49,7 +50,11 @@ const LoginScreen = ({navigation}) => {
       }
     }
   };
-
+  const setLocale = async(language) => {
+    await AsyncStorage.setItem('locale', language);
+    setLanguage(language)
+    i18n.changeLanguage(language);
+  }
   return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={{flex:1}}>
@@ -99,14 +104,23 @@ const LoginScreen = ({navigation}) => {
                 onPress={() => navigation.navigate('PasswordReset1')}>
                 <Text style={styles.linkText}>{t("login.forgotpassword")}</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.replace('Root')}>
-                <Text>홈스크린</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('OnBoard')}>
-                <Text>온보딩</Text>
-              </TouchableOpacity>
+              <View style={{height: 10}}/>
+              <View style={{height: 10}}/>
+              <View style={{flexDirection: 'row', justifyContent:'center'}}>
+                <TouchableOpacity
+                style={[language == 'ko' ? styles.selectedLanguageBox : styles.languageBox]}
+                onPress={() => setLocale('ko')}
+                >
+                  <Text style={[language == 'ko' ? styles.selectedLanguageText : styles.languageText]}>한국어</Text>
+                </TouchableOpacity>
+                <View style={{width: 20}}/>
+                <TouchableOpacity
+                style={[language == 'en' ? styles.selectedLanguageBox : styles.languageBox]}
+                onPress={() => setLocale('en')}
+                >
+                  <Text style={[language == 'en' ? styles.selectedLanguageText : styles.languageText]}>English</Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={{flex:1}}/>
           </View>
@@ -151,6 +165,37 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  selectLanguage: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
+    color: '#000',
+  },
+  languageBox: {
+    backgroundColor: '#fff', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  selectedLanguageBox: {
+    backgroundColor: '#5782F1', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  languageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#5782F1'
+  },
+  selectedLanguageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'
+  }
 });
 
 export default LoginScreen;

@@ -77,7 +77,7 @@ const MeetingMain = ({navigation}) => {
               <Text style={{fontSize:16, fontFamily: 'Pretendard-Regular', marginRight:5, color: '#09111F'}} numberOfLines={1}>{item.title}</Text>
               <Text style={{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#08C754', backgroundColor: '#D7F6E4', paddingHorizontal:5, borderRadius: 4}}>{t(`category.${item.category}`)}</Text>
             </View>
-            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants}{t("meeting.signingup")}</Text>
+            <Text style={{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}} numberOfLines={1}>{t("meeting.current")} {item.participants} {t("meeting.participating")}</Text>
           </View>
         </View>
       </TouchableOpacity>

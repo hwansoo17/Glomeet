@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
-const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = false, placeholderTextColor, maxLength, multiline}) => {
+const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = false, editable, maxLength, multiline}) => {
   return (
     <TextInput
       style={[styles.input, style]} 
@@ -12,6 +12,7 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
       placeholderTextColor={"#868686"}
       maxLength={maxLength}
       multiline={multiline}
+      editable={editable}
     />
   );
 };

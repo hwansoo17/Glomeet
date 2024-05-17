@@ -4,23 +4,27 @@ import { api } from '../../api';
 import LineInput from "../../customComponents/LineInput";
 import InputBox from "../../customComponents/InputBox";
 import MainButton from "../../customComponents/MainButton";
+import { useTranslation } from "react-i18next";
 const Register2 = ({route, navigation}) => {
+  const {t} = useTranslation()
   const {email} = route.params;
   const [nickName, setNickName] = useState('');
+  const [serverNickName, setServerNickName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isButtonActive, setButtonactive] = useState(false);
   const [isDuplicateButtonActive, setDuplicateButtonActive] = useState(false); // 중복확인 버튼 활성화
-  const doubleCheckName = async () => {
+  const doubleCheckName = async (nickName) => {
     try {
       const response = await api.post('/auth/nickNameCheck', {nickName : nickName});
       console.log(response.status);
       if (response.status == 200) {
-        Alert.alert('사용 가능한 닉네임입니다.');
+        Alert.alert(t("register.nicknameAvailable"));
+        setServerNickName(nickName)
       } 
     } catch (error) {
       if (error.response.status == 409) {
-        Alert.alert('이미 사용중인 닉네임입니다.');
+        Alert.alert(t("register.nicknameUnavailable"));
       console.log(error);
       };
     };
@@ -45,22 +49,24 @@ const Register2 = ({route, navigation}) => {
   useEffect(() => {
     changeDupButtonStatus();
   }, [nickName]); // 중복확인 버튼을 닉네임 값이 바뀌었을 때 활성화
-
+  useEffect(() => {
+    console.log(serverNickName);
+  },[serverNickName])
   const signUp = async () => {
     if (password === passwordCheck) {
       try {
-        const response = await api.post('/auth/signUp', {email, nickName, password});
+        const response = await api.post('/auth/signUp', {email, serverNickName, password});
         if (response.status == 200) {
-          Alert.alert('회원가입이 완료되었습니다.');
+          Alert.alert(t("register.signupComplete"));
           navigation.navigate('Login');
         }
       } catch (error) {
         if (error.response.status == 409) {
-          Alert.alert('회원가입에 실패하였습니다.');
+          Alert.alert(t("register.signupfailed"));
         } 
       }
     } else {
-      Alert.alert('비밀번호가 일치하지 않습니다.');    
+      Alert.alert(t("register.passwordCheckFailed"));    
     };
   };
 
@@ -71,41 +77,42 @@ return (
       <View style={{flexDirection: 'row'}}>
         <View style={{flex:1}}/>
         <View style={{flex:10}}>
-        <View style={{ flexDirection: 'row'}}>
-          <View style={{ flex: 7 }}>  
-            <LineInput 
-              value={nickName}
-              onChangeText={setNickName}
-              placeholder="사용할 닉네임을 입력해주세요."
-            />
+          <View style={{ flexDirection: 'row'}}>
+            <View style={{ flex: 7 }}>  
+                <LineInput 
+                  value={nickName}
+                  onChangeText={setNickName}
+                  placeholder={t("register.nickNameinput")}
+                />
             </View>
             <View style={{flex:0.5}}/>  
-          <View style={{ flex: 3}}>
-          <MainButton
-            title={'중복확인'}
-            onPress={doubleCheckName}
-            style={{borderRadius: 5}}
-            textStyle={{fontSize: 16}}
-            disabled={!isDuplicateButtonActive}
-          />
-        </View> 
-        </View> 
+            <View style={{ flex: 3}}>
+              <MainButton
+                title={t("register.duplicateCheck")}
+                onPress={() => doubleCheckName(nickName)}
+                style={{borderRadius: 5}}
+                textStyle={{fontSize: 16}}
+                disabled={!isDuplicateButtonActive}
+              />
+            </View> 
+          </View>
+          <Text style={{fontFamily: "pretendard-Medium", color:"#868686",fontSize:14, paddingVertical:10}}>{serverNickName}</Text>
           <View style={{height: 10}}/>
           <LineInput 
               value={password}
               onChangeText={setPassword}
               secureTextEntry={true}
-              placeholder= '사용할 비밀번호를 입력해주세요.'
+              placeholder= {t("register.passwordinput")}
             />
           <LineInput 
               value={passwordCheck}
               onChangeText={setPasswordCheck}
               secureTextEntry={true}
-              placeholder= '비밀번호 확인'
+              placeholder= {t("register.passwordcheckinput")}
             /> 
           <View style={{height: 20}}/>
           <MainButton
-            title={'회원가입'}
+            title={t("register.signup")}
             onPress={signUp}
             disabled={!isButtonActive}
             />

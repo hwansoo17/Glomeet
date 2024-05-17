@@ -31,7 +31,7 @@ const OnBoarding3 = ({navigation}) => {
       }; 
     } catch (error) {
         console.log(error);
-        navigation.navigate('OnBoarding4') //주석처리해야됌
+        // navigation.navigate('OnBoarding4') //주석처리해야됌
     }
   }  
 
