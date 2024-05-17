@@ -5,7 +5,9 @@ import MainButton from '../../customComponents/MainButton';
 import SelectableList from "./SelectableList";
 import TitleSubtitleComponent from "./TitleSubtitleComponent";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 const OnBoarding1 = ({ navigation }) => {
+  const { t } = useTranslation();
   const data = ['한국', '아시아', '유럽', '북아메리카', '남아메리카', '오세아니아', '아프리카'];
   const [selectedItem, setSelectedItem] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);
@@ -23,8 +25,8 @@ const OnBoarding1 = ({ navigation }) => {
     navigation.navigate('OnBoarding2');
   };
 
-  const title =  ['당신은','어느 대륙 사람인가요']
-  const subtitle = ['Choose one option for now.', 'You can explore others later.']
+  const title = t("onboarding.title1")
+  const subtitle = t("onboarding.subtitle")
   
   return (
     <SafeAreaView style={{flex:1, backgroundColor: '#fff', flexDirection: 'row'}}>
@@ -32,12 +34,12 @@ const OnBoarding1 = ({ navigation }) => {
       <View style={{ flex: 8 }}>
         <View style={{flex:1}}/>
         <View style={{flex:14}}>
-          <TitleSubtitleComponent titles={title} subtitles={subtitle}/>
+          <TitleSubtitleComponent title={title} subtitle={subtitle}/>
           <View style={{flex:2}}/>
           <SelectableList data={data} selectItem={selectItem} selectedItem={selectedItem}/>
           <View style={{flex:2}}/>
         </View>
-        <MainButton title='다음으로 넘어가기' onPress={saveContinent} 
+        <MainButton title={t("onboarding.buttontext")} onPress={saveContinent} 
             disabled={!isButtonActive} 
         />
         <View style={{flex:1}}/>

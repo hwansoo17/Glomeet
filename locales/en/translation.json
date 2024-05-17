@@ -1,0 +1,164 @@
+{
+  "homemain": {
+    "trendmeeting": "Trends",
+    "mypage": {
+      "changeProfileImage": "Change profile image",
+      "logout": "Logout",
+      "apply": "Apply"},
+    "point": "POINT",
+    "challange": "Challenge\nand get points!",
+    "mymeeting": "My meetings",
+    "gochallange": "Going for a challenge",
+    "comingsoon" : "Coming soon.",
+    "ea": "EA"
+  },
+  "matching":{
+    "start":"Start",
+    "today":" today!",
+    "matching":"Matching",
+    "inprogress":"in progress",
+    "iscomplete":" is complete!",
+    "subtitle": "How about making some new friends today?",
+    "subtitle2":"Just a moment, please!",
+    "subtitle3":"Send a message now!",
+    "point": "Available Points",
+    "bannertitle": "Guidelines for Healthy Culture",
+    "bannercontent": "Match with friends\nwho share similar hobbies!",
+    "startmatching": "Start Matching",
+    "cancelmatching": "Cancel Matching",
+    "startadditionalmatching": "Start Additional Matching",
+    "to": "To ",
+    "sendmessage": ", send a message",
+    "info": "Recent match details displayed for a day!",
+    "exitroom": "Already Exited Chat Room.",
+    "matchingcancelled": "Matching cancelled.",
+    "partnerPersonality": "Select the personality traits\nyou prefer in a partner!",
+    "notice": "We'll do our best to find a match that fits the personality traits you've selected!",
+    "matchingStart": "MATCHING START"
+
+  },
+  "nav": {
+    "home": "Home",
+    "matching": "Matching",
+    "chatting": "Chatting",
+    "meeting": "Meeting"
+  },
+  "meeting": {
+    "category": "Category",
+    "current": "Currently",
+    "participating": "people are participating",
+    "participating2": "people participating",
+    "registermeeting": "Register Meeting",
+    "JoinMeeting": "Join Meeting",
+    "chatJoin": " has joined the meeting.",
+    "이미 가입된 미팅입니다": "Meeting is already joined",
+    "제한 인원을 초과했어요": "The limit of participants has been exceeded"
+    
+  },
+  "category": {
+    "ALL": "ALL",
+    "운동": "Sports",
+    "여행": "Travel",
+    "게임": "Game", 
+    "문화": "Culture",
+    "음식": "Food",
+    "언어": "Language"
+  },
+  "login": {
+    "emailinput": "Enter your email",
+    "passwordinput": "Enter your password",
+    "login": "Login",
+    "signup": "Sign Up",
+    "forgotpassword": "Forgot your password?",
+    "loginfailed": "The email or password does not match."
+  },
+  "register": {
+    "emailinput": "Enter your Ajou email.",
+    "emailinvalid": "Invalid email format.",
+    "sendcode": "Send code",
+    "sentcode": "Verification code sent.",
+    "sentcodefailed": "Verification code sending failed.",
+    "alreadyregistered": "Email already registered.",
+    "notRegistered": "Email not registered",
+    "verificationfailed": "Verification code does not match.",
+    "entercode": "Enter the verification code.",
+    "submitcode": "Submit code",
+    "nickNameinput": "Enter nickname to use.",
+    "duplicateCheck": "Check for duplicates",
+    "passwordinput": "Enter password to use.",
+    "passwordcheckinput": "Confirm password",
+    "passwordCheckFailed": "Passwords do not match.",
+    "signup": "Sign Up",
+    "signupComplete": "Registration complete.",
+    "signupfailed": "Registration failed.",
+    "nicknameAvailable": "Nickname available.",
+    "nicknameUnavailable": "Nickname already in use.",
+    "nicknameCheckFailed": "Nickname check failed",
+    "newPassword": "Enter the new password to use.",
+    "passwordChange": "Change Password",
+    "passwordChangeComplete": "Password change complete.",
+    "passwordChangeFailed": "Password change failed."
+  },
+  "onboarding": {
+    "title1": "Which\ncontinent are you from?",
+    "title2": "What are\nyour interests?",
+    "title3": "What is\nyour personality?",
+    "title4": "Now you can go meet your friends!",
+    "subtitle": "Please select one of the options below.\nThen press the 'Next' button to proceed.",
+    "subtitle2": "The Glomit app creates a wholesome and healthy culture of foreign exchange.",
+    "한국": "Korea",
+    "아시아": "Asia",
+    "유럽": "Europe",
+    "북아메리카": "North America",
+    "남아메리카": "South America",
+    "오세아니아": "Oceania",
+    "아프리카": "Africa",
+    "운동": "Sports",
+    "여행": "Travel",
+    "게임": "Game",
+    "문화": "Culture",
+    "음식": "Food",
+    "언어": "Language",
+    "내향적": "Introverted",
+    "외향적": "Extroverted",
+    "buttontext": "NEXT",
+    "start": "START"
+  },
+  "meetingCreate": {
+    "createMeeting": "Creat meeting",
+    "meetingName": "Meeting Name",
+    "NameContent": "Enter meeting name",
+    "meetingDescription": "Meeting Description",
+    "DescriptionContent": "Enter meeting description",
+    "participants": "Number of Participants",
+    "selectKeywords": "Select Keywords",
+    "meetingCreated":"The meeting has been created",
+    "newMeetingCreated": "The new meeting has been created."
+  },
+  
+  "ChatRoom":{
+    "noChatRoom": "Non existent chat room.",
+    "report": "The report has been successfully submitted.",
+    "toReport" : "To report",
+    "notConversation": "Conversation is not possible.",
+    "enterMessage": "Please enter a message.",
+    "reasonReporting":"Please state the reason for the report.",
+    "JOIN": " has entered the room.",
+    "CREATE": "A new meeting has been created.",
+    "LEAVE": " has left the chat room.",
+    "MATCHED": "The match has been made."
+  },
+  "ChatList": {
+    "leftChatRoom": "has left the chatroom.",
+    "leaveChatRoom?": "Would you like to leave the chatroom?",
+    "cancel": "Cancel",
+    "leave": "Leave",
+    "leaveChatRoom": "Leave the chatroom"
+    
+  },
+  "time": {
+    "AM": "AM",
+    "PM": "PM"
+  }
+
+}

@@ -7,10 +7,14 @@ import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
 import MainButton from '../../customComponents/MainButton';
 import LineInput from '../../customComponents/LineInput';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 const LoginScreen = ({navigation}) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const webSocketClient = useWebSocket();
+  const [language, setLanguage] = useState(i18n.language);
   const login = async () => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -46,7 +50,11 @@ const LoginScreen = ({navigation}) => {
       }
     }
   };
-
+  const setLocale = async(language) => {
+    await AsyncStorage.setItem('locale', language);
+    setLanguage(language)
+    i18n.changeLanguage(language);
+  }
   return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={{flex:1}}>
@@ -55,45 +63,64 @@ const LoginScreen = ({navigation}) => {
             <View style={{flex:8}}>
               <View style={{height: 10}}/>
               <View style={{alignItems: 'center'}}>
-                <Logo width={120} height={120}/>
-                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}><Text style={{fontFamily: 'GmarketSansTTFBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스 <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>글로밋</Text></Text>  
+                <Logo width={120} height={120} color="#5782F1"/>
+                {i18n.language === 'ko' ? (
+                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 18, textAlign: 'center', lineHeight: 24, color: '#000'}}>
+                  <Text style={{fontFamily: 'GmarketSansTTFBold'}}>유학생</Text>들을 위한{'\n'}취미기반 매칭서비스{' '}
+                  <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>글로밋</Text>
+                </Text>
+              ) : (
+                <Text style={{fontFamily: 'GmarketSansTTFMedium', fontSize: 16, textAlign: 'center', lineHeight: 24, color: '#000'}}>
+                  Matching Service for{'\n'}<Text style={{fontFamily: 'GmarketSansTTFBold'}}>International Students{' '}</Text>
+                  <Text style={{fontFamily: 'GmarketSansTTFBold', color: '#5782F1'}}>Glomeet</Text>
+                </Text>
+              )}
               </View>
               <View style={{height: 20}}/>
               <LineInput 
-                placeholder="이메일을 입력하세요"
+                placeholder={t("login.emailinput")}
                 value={email}
                 secureTextEntry ={false}
                 onChangeText={setEmail}
               />
               <View style={{height: 10}}/>
               <LineInput 
-                placeholder="비밀번호를 입력하세요"
+                placeholder={t("login.passwordinput")}
                 value={password}
                 secureTextEntry ={true}
                 onChangeText={setPassword}
               />
               <View style={{height: 20}}/>
-              <MainButton onPress={login} title={'로그인'}/>
+              <MainButton onPress={login} title={t("login.login")}/>
               <View style={{height: 20}}/>
               <MainButton
                 style={{backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1.2}}
                 textStyle={{color: '#5782F1'}}
-                title={'회원가입'}
+                title={t("login.signup")}
                 onPress={() => navigation.navigate('Register1')}/>
               <View style={{height: 10}}/>
               <TouchableOpacity
                 style={{padding:10}}
                 onPress={() => navigation.navigate('PasswordReset1')}>
-                <Text style={styles.linkText}>비밀번호를 잊으셨나요?</Text>
+                <Text style={styles.linkText}>{t("login.forgotpassword")}</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.replace('Root')}>
-                <Text>홈스크린</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('OnBoard')}>
-                <Text>온보딩</Text>
-              </TouchableOpacity>
+              <View style={{height: 10}}/>
+              <View style={{height: 10}}/>
+              <View style={{flexDirection: 'row', justifyContent:'center'}}>
+                <TouchableOpacity
+                style={[language == 'ko' ? styles.selectedLanguageBox : styles.languageBox]}
+                onPress={() => setLocale('ko')}
+                >
+                  <Text style={[language == 'ko' ? styles.selectedLanguageText : styles.languageText]}>한국어</Text>
+                </TouchableOpacity>
+                <View style={{width: 20}}/>
+                <TouchableOpacity
+                style={[language == 'en' ? styles.selectedLanguageBox : styles.languageBox]}
+                onPress={() => setLocale('en')}
+                >
+                  <Text style={[language == 'en' ? styles.selectedLanguageText : styles.languageText]}>English</Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={{flex:1}}/>
           </View>
@@ -138,6 +165,37 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  selectLanguage: {
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 14,
+    color: '#000',
+  },
+  languageBox: {
+    backgroundColor: '#fff', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  selectedLanguageBox: {
+    backgroundColor: '#5782F1', 
+    width: 70, 
+    paddingVertical:6, 
+    borderRadius:10, 
+    justifyContent:"center", 
+    borderColor: "#5782F1", 
+    borderWidth:2, 
+    alignItems: "center"
+  },
+  languageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#5782F1'
+  },
+  selectedLanguageText: {
+    fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'
+  }
 });
 
 export default LoginScreen;

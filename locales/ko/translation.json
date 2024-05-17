@@ -1,0 +1,162 @@
+{
+  "homemain": {
+    "trendmeeting": "지금 뜨는 모임",
+    "mypage": {
+      "changeProfileImage": "프로필 이미지 변경",
+      "logout": "로그아웃",
+      "apply": "적용하기"},
+    "point": "포인트내역",
+    "challange": "챌린지하고\n포인트를 획득하세요!",
+    "mymeeting": "참여중인 모임",
+    "gochallange": "챌린지 하러가기",
+    "comingsoon" : "준비중 입니다.",
+    "ea": "개"
+  },
+  "matching":{
+    "start":"오늘의",
+    "today":"을 시작해보세요!",
+    "matching":"매칭",
+    "inprogress":"진행 중",
+    "iscomplete":"이 완료되었어요!",
+    "subtitle": "오늘은 또 어떤 새로운 친구를 만날까?",
+    "subtitle2":"조금만 기다려주세요!",
+    "subtitle3":"이제 메시지를 보내보세요!",
+    "point": "보유 포인트",
+    "bannertitle": "건전한 문화 안내",
+    "bannercontent": "비슷한 취미를 가진\n친구와 매칭돼요!",
+    "startmatching": "매칭 시작하기",
+    "cancelmatching": "매칭 취소하기",
+    "startadditionalmatching": "추가 매칭하기",
+    "to": "",
+    "sendmessage": "에게 메시지 보내기",
+    "info": "가장 최근에 매칭한 상대방 정보는 하루 동안 표시돼요!",
+    "exitroom": "나간 채팅방입니다.",
+    "matchingcancelled": "매칭을 취소했어요.",
+    "partnerPersonality": "원하는 성향을 선택해주세요!",
+    "notice": "선택하신 성향의 상대방을 최대한 찾아볼게요!",
+    "matchingStart": "매칭 시작"
+
+  },
+  "nav": {
+    "home": "홈",
+    "matching": "매칭",
+    "chatting": "채팅",
+    "meeting": "미팅"
+  },
+  "meeting": {
+    "category": "카테고리",
+    "current": "현재",
+    "participating": "명이 참여중인 모임",
+    "participating2": "명 참여중",
+    "registermeeting": "모임 등록하기",
+    "JoinMeeting": "모임 참여하기",
+    "chatJoin": "님이 입장하셨습니다.",
+    "이미 가입된 미팅입니다": "이미 가입된 미팅입니다",
+    "제한 인원을 초과했어요": "제한 인원을 초과했어요"
+  },
+  "category": {
+    "ALL": "ALL",
+    "운동": "운동",
+    "여행": "여행",
+    "게임": "게임", 
+    "문화": "문화",
+    "음식": "음식",
+    "언어": "언어"
+  },
+  "login": {
+    "emailinput": "이메일을 입력하세요",
+    "passwordinput": "비밀번호를 입력하세요",
+    "login": "로그인",
+    "signup": "회원가입",
+    "forgotpassword": "비밀번호를 잊으셨나요?",
+    "loginfailed": "이메일 혹은 비밀번호가 일치하지 않습니다."
+  },
+  "register":{
+    "emailinput": "아주대 이메일 주소를 입력해주세요.",
+    "emailinvalid": "이메일 형식이 올바르지 않습니다.",
+    "sendcode": "인증번호 받기",
+    "sentcode": "인증번호가 전송되었습니다.",
+    "sentcodefailed": "인증번호 전송에 실패하였습니다",
+    "alreadyregistered": "이미 가입된 이메일입니다.",
+    "notRegistered": "가입되지 않은 이메일입니다.",
+    "verificationfailed": "인증번호가 일치하지 않습니다.",
+    "entercode":  "인증번호를 입력해주세요.",
+    "submitcode": "인증번호 확인",
+    "nickNameinput": "사용할 닉네임을 입력해주세요.",
+    "duplicateCheck": "중복 확인",
+    "passwordinput": "사용할 비밀번호를 입력해주세요.",
+    "passwordcheckinput": "비밀번호 확인",
+    "passwordCheckFailed": "비밀번호가 일치하지 않습니다.",
+    "signup": "회원가입",
+    "signupComplete": "회원가입이 완료되었습니다.",
+    "signupfailed": "회원가입에 실패하였습니다.",
+    "nicknameAvailable": "사용 가능한 닉네임입니다",
+    "nicknameUnavailable": "이미 사용중인 닉네임입니다",
+    "nicknameCheckFailed": "닉네임 중복체크에 실패하였습니다",
+    "newPassword": "새로 사용할 비밀번호를 입력해주세요.",
+    "passwordChange": "비밀번호 변경",
+    "passwordChangeComplete": "비밀번호 변경이 완료되었습니다.",
+    "passwordChangeFailed": "비밀번호 변경에 실패하였습니다."
+
+  },
+  "onboarding": {
+    "title1": "당신은\n어느 대륙 사람인가요",
+    "title2": "당신의\n관심사는 무엇인가요",
+    "title3": "당신의\n성향은 무엇인가요",
+    "title4": "이제 친구를 만나러 갈 수 있어요!",
+    "subtitle":"아래의 선택지 중 하나를 선택해주세요.\n선택 후 다음으로 넘어가기 버튼을 눌러주세요.",
+    "subtitle2": "글로밋 앱은 건전하고 건강한 외국인 교류 문화를\n만들어갑니다.",
+    "한국": "한국",
+    "아시아": "아시아",
+    "유럽": "유럽",
+    "북아메리카": "북아메리카",
+    "남아메리카": "남아메리카",
+    "오세아니아": "오세아니아",
+    "아프리카": "아프리카",
+    "운동": "운동",
+    "여행": "여행",
+    "게임": "게임", 
+    "문화": "문화",
+    "음식": "음식",
+    "언어": "언어",
+    "내향적": "내향적",
+    "외향적": "외향적",
+    "buttontext": "다음으로 넘어가기",
+    "start": "시작하기"
+  },
+  "meetingCreate": {
+    "createMeeting": "모임 생성하기",
+    "meetingName": "모임 이름",
+    "NameContent": "모임 이름을 입력하세요",
+    "meetingDescription": "모임 소개",
+    "DescriptionContent": "모임 설명을 입력하세요",
+    "participants": "참여 인원 수",
+    "selectKeywords": "키워드 선택",
+    "meetingCreated":"모임이 생성되었습니다.",
+    "newMeetingCreated": "새 모임이 생성되었습니다."
+  },
+  
+  "ChatRoom":{
+    "noChatRoom": "없는 채팅방입니다.",
+    "report": "신고가 정상적으로 접수되었습니다.",
+    "toReport": "신고하기",
+    "notConversation":"대화가 불가능한 상태입니다.",
+    "enterMessage": "메세지를 입력해 주세요.",
+    "reasonReporting":"신고 사유를 작성해주세요.",
+    "JOIN": "님이 입장하셨습니다.",
+    "CREATE": "새 모임이 생성되었습니다.",
+    "LEAVE": "님이 채팅방을 나갔습니다.",
+    "MATCHED": "매칭이 성사되었습니다."
+  },
+  "ChatList": {
+    "leftChatRoom": "님이 채팅방을 나갔습니다.",
+    "leaveChatRoom?": "채팅방을 나가시겠습니까?",
+    "leave": "나가기",
+    "leaveChatRoom": "채팅방 나가기",
+    "cancel": "취소"
+  },
+  "time": {
+    "AM": "오전",
+    "PM": "오후"
+  }
+}

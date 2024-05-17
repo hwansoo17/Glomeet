@@ -1,30 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { formatDate } from './formatDate';
-
-const MessageListItem = ({ item, userEmail }) => {
+import { useTranslation } from 'react-i18next';
+const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser }) => {
+  const {t} = useTranslation()
   const screenWidth = Dimensions.get('window').width;
   const isMyMessage = item.senderEmail === userEmail;
-  const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE';
+  const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE'|| item.type === 'LEAVE' || item.type === 'MATCHED';
 
     if (isSystemMessage) {
       return (
         <View style={styles.systemMessageContainer}>
-          <Text style={styles.systemMessageText}>{item.message}</Text>
+          <Text style={styles.systemMessageText}>{item.message}{t(`ChatRoom.${item.type}`)}</Text>
         </View>
       );
     }
   return (
     <View style={[styles.messageRow, { justifyContent: isMyMessage ? 'flex-end' : 'flex-start' }]}>
       {!isMyMessage && 
-      <View style={styles.avatar}>
+      <TouchableOpacity 
+        onPress={() => {
+          setModalVisible(true)
+          setSelectedChatUser(item)}}
+        style={styles.avatar}
+      >
         <Image src={item.imageAddress}
           style={{width:48, height:48, borderRadius: 24,}}/>
-      </View>}
+      </TouchableOpacity>}
       {isMyMessage &&
         <View style={{alignSelf: 'flex-end', marginRight:5}}>
-          <Text style={{alignSelf: 'flex-end'}}>{item.readCount}</Text>
-          <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
+          {/* <Text style={{alignSelf: 'flex-end', fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
+          <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
         </View>
       }
       <View style={styles.messageContent}>
@@ -40,8 +46,8 @@ const MessageListItem = ({ item, userEmail }) => {
       </View>
       {!isMyMessage &&
       <View style={{alignSelf: 'flex-end', marginLeft:5}}>
-        <Text style={{fontFamily:"Pretendard-Light"}}>{item.readCount}</Text>
-        <Text style={{fontFamily:"Pretendard-Light", fontSize:12}}>{formatDate(item.sendAt)}</Text>
+        {/* <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{item.readCount}</Text> */}
+        <Text style={{fontFamily:"Pretendard-Light", fontSize:12, color:'#a1a1a1'}}>{formatDate(item.sendAt)}</Text>
       </View>}
       
     </View>
@@ -92,6 +98,7 @@ const styles = StyleSheet.create({
     // 기타 스타일
   },
   senderNickName: {
+    color: "#000",
     fontFamily: "Pretendard-SemiBold",
     fontSize: 16,
   },

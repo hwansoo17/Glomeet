@@ -1,7 +1,9 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const SelectableList = ({ data, selectItem, selectedItem, renderItemStyle }) => {
+  const {t} = useTranslation()
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={[ 
@@ -11,7 +13,7 @@ const SelectableList = ({ data, selectItem, selectedItem, renderItemStyle }) => 
       ]}
       onPress={() => selectItem(item)}
     >
-      <Text style={[styles.textstyle, selectedItem === item && styles.activeTextStyle]}>{item}</Text>
+      <Text style={[styles.textstyle, selectedItem === item && styles.activeTextStyle]}>{t(`onboarding.${item}`)}</Text>
     </TouchableOpacity>
   );
 

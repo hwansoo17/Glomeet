@@ -1,15 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const TitleSubtitleComponent = ({ titles, subtitles }) => (
+const TitleSubtitleComponent = ({ title, subtitle }) => (
   <View>
-    {titles.map((title, index) => (
-      <Text key={index} style={styles.title}>{title}</Text>
-    ))}
+    <Text style={styles.title}>{title}</Text>
     <View style={styles.titleMargin}/>
-    {subtitles.map((subtitle, index) => (
-      <Text key={index} style={styles.subtitle}>{subtitle}</Text>
-    ))}
+    <Text style={styles.subtitle}>{subtitle}</Text>
   </View>
 );
 
@@ -25,8 +21,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: 'Pretendard-Regular',
-    fontSize: 16,
-    color: '#181619',
+    fontSize: 14,
+    color: '#898989',
     textAlign: 'center',
   },
 });

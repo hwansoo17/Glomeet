@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { formatDate } from "./formatDate";
 
-const ChatListItem = ({ item, goChatRoom }) => {
+const ChatListItem = ({ item, goChatRoom, setModalVisible, setSelectedChatRoom }) => {
   return(
     <TouchableOpacity 
       style= {{backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E4E5E6', height: 80, alignItems:'center', flexDirection: "row", padding: 10}}
-      onPress={() => goChatRoom(item)}>
+      onPress={() => goChatRoom(item)}
+      onLongPress={() => {setModalVisible(true) 
+                          setSelectedChatRoom(item)}}>
         <View style={{ backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
           <Image src={item.imageAddress}
             style={{width:48, height:48, borderRadius: 24}}/>

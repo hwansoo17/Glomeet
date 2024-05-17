@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { api } from '../../api';
-import InputBox from "../../customComponents/InputBox";
+import LineInput from "../../customComponents/LineInput";
 import MainButton from "../../customComponents/MainButton";
+import { useTranslation } from "react-i18next";
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 const PasswordReset1 = ({navigation}) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [emailValid, setEmailValid] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [isButtonActive, setButtonActive] = useState(false);  
   const [isCheckButtonActive, setCheckButtonActive] = useState(false);  
+  const [isSending, setIsSending] = useState(false);
+  const [sendComplete, setSendComplete] = useState(false);
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -17,10 +21,6 @@ const PasswordReset1 = ({navigation}) => {
       setButtonActive(false);
     }
   };
-  const createRandomCode = () => {
-    return String(Math.floor(Math.random() * 1000000)).padStart(6, '0')  
-  }
-
   useEffect(() => {
     changeButtonStatus();
     setEmailValid(emailRegEx.test(email));
@@ -40,9 +40,10 @@ const PasswordReset1 = ({navigation}) => {
   const AuthCodeSend = async () => {
     console.log(email)
     if (!emailValid) {
-      Alert.alert('이메일 형식이 올바르지 않습니다.');
+      Alert.alert(t("register.emailinvalid"));
       return;
-    } 
+    }
+    setIsSending(true);
     try {
       const response = await api.post('/auth/emailRegisteredCheck', {email: email})
       console.log(response.status);
@@ -50,7 +51,8 @@ const PasswordReset1 = ({navigation}) => {
           try {
             const response = await api.post('/mail/auth', {email});
             if (response.status == 200) {
-              Alert.alert('인증번호가 전송되었습니다.');
+              Alert.alert(t("register.sentcode"));
+              setSendComplete(true)
             };
           } catch (error) {
             if (error.response.status == 400) {
@@ -59,16 +61,17 @@ const PasswordReset1 = ({navigation}) => {
             Alert.alert(error.response.data.message);
             } else {
               console.log(error);
-              Alert.alert('인증번호 전송에 실패하였습니다.');
+              Alert.alert(t("register.sentcodefailed"));
             };
           };
         };
     } catch (error) {
       if (error.response.status == 401) {
-      Alert.alert('가입되지 않은 이메일입니다.');
+      Alert.alert(t("register.notRegistered"));
       console.log(error);
       };
     };
+    setIsSending(false);
   };
   const checkAuthCode = async() => {
     try {
@@ -81,7 +84,7 @@ const PasswordReset1 = ({navigation}) => {
     } catch (error) {
       if (error.response.status == 400) {
         console.log(error.response.status);
-        Alert.alert('인증번호가 일치하지 않습니다.');
+        Alert.alert(t("register.verificationfailed"));
       };
     };
   };
@@ -93,19 +96,20 @@ const PasswordReset1 = ({navigation}) => {
           <View style={{height: 10}}/>
           <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 10 }}>
-              <InputBox 
+              <LineInput 
+                style={[!isSending && !sendComplete ? {} : {color:"#868686"}]}
                 value={email}
                 onChangeText={setEmail}
-                style={styles.input}
-                placeholder="아주이메일 주소 입력"
+                placeholder={t("register.emailinput")}
+                editable={!isSending && !sendComplete}
               />
             </View>
             <View style={{ flex: 0.5}}/>
             <View style={{ flex: 5 }}>
               <MainButton 
-                title = '인증번호 받기'
+                title = {t("register.sendcode")}
                 onPress = {AuthCodeSend}
-                disabled ={!isButtonActive}
+                disabled ={!isButtonActive || isSending}
                 style = {{borderRadius:5}}
                 textStyle={{fontSize:15}}
               />
@@ -115,17 +119,16 @@ const PasswordReset1 = ({navigation}) => {
 
           <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 10 }}>
-              <InputBox 
+              <LineInput 
                 value={authCode}
                 onChangeText={setAuthCode}
-                style={styles.input}
-                placeholder="인증번호 입력"
+                placeholder={t("register.entercode")}
               />
             </View>
             <View style={{ flex: 0.5 }}/>
             <View style={{ flex: 5}}>
             <MainButton 
-                title = '인증번호 확인'
+                title = {t("register.submitcode")}
                 onPress = {checkAuthCode}
                 disabled ={!isCheckButtonActive}
                 style = {{borderRadius:5}}
@@ -136,9 +139,6 @@ const PasswordReset1 = ({navigation}) => {
         </View>
         <View style={{ flex: 1 }} />
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('PasswordReset2', { email: email })}>
-            <Text>리셋2</Text>
-    </TouchableOpacity>
     </View>
   );
 };
