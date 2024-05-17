@@ -218,7 +218,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       <View style={{ flex: 1 }} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // 키보드 오프셋을 적절하게 설정합니다. 
+        keyboardVerticalOffset={Platform.OS === "ios" ? 93 : 0} // 키보드 오프셋을 적절하게 설정합니다. 
       >
         <View style={{ flexDirection: "row", alignItems: "center"}}>
           <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>

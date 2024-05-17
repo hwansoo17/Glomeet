@@ -93,7 +93,7 @@ const MeetingMain = ({navigation}) => {
   )
   return (
 		<View style={{flex:1, backgroundColor: 'white'}}>
-      <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
+      {/* <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
       <View>
         <FlatList
           data={category}
@@ -104,7 +104,7 @@ const MeetingMain = ({navigation}) => {
           ItemSeparatorComponent={<View style={{width:5}}/>}
           showsHorizontalScrollIndicator={false}
         />
-      </View>
+      </View> */}
       {/* <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
         {category.map((category) => (
           <TouchableOpacity
@@ -118,6 +118,21 @@ const MeetingMain = ({navigation}) => {
       </View> */}
       <View>
       <FlatList
+        ListHeaderComponent={
+        <View>
+          <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
+          <View>
+            <FlatList
+              data={category}
+              renderItem={renderCategory}
+              horizontal
+              ListHeaderComponent={<View style={{width:10}}/>}
+              ListFooterComponent={<View style={{width:10}}/>}
+              ItemSeparatorComponent={<View style={{width:5}}/>}
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+        </View>}
         data={filteredMeetingData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
