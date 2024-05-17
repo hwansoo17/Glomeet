@@ -34,17 +34,17 @@ const HomeMain = ({navigation}) => {
       console.log(error);
     };
   }
-  const getPoint = async() => {
-    try {
-      const response = await authApi.get('/point/sum')
-      if (response.status == 200) {
-        setPoint(response.data.point)
-        console.log(response.data)
-      };
-    } catch (error) {
-      console.log(error,'너야?');
-    };
-  }
+  // const getPoint = async() => {
+  //   try {
+  //     const response = await authApi.get('/point/sum')
+  //     if (response.status == 200) {
+  //       setPoint(response.data.point)
+  //       console.log(response.data)
+  //     };
+  //   } catch (error) {
+  //     console.log(error,'너야?');
+  //   };
+  // }
   const getMyMeetingCount = async() => {
     try {
       const response = await authApi.get('/meeting/count')
@@ -138,22 +138,22 @@ const HomeMain = ({navigation}) => {
           />
       </View>
       <View style={{flex:1}}/>
-      <View style={{height:80, margin:10, elevation:10, backgroundColor:'#fff', borderRadius:10, flexDirection: 'row'}}>
-      <TouchableOpacity 
-        style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
-        onPress={() => {Alert.alert(t("homemain.comingsoon"))}}
-      >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.point")}</Text>
-      </TouchableOpacity>
-      <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          
-      <TouchableOpacity 
-        style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
-        onPress={()=>goMeetingChatList()}
-      >
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}{t("homemain.ea")}</Text>
-        <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.mymeeting")}</Text>
-      </TouchableOpacity>
+      <View style={{height:80, margin:10, elevation:10, backgroundColor:'#fff', borderRadius:10, flexDirection: 'row', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
+        <TouchableOpacity 
+          style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
+          onPress={() => {Alert.alert(t("homemain.comingsoon"))}}
+        >
+          <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
+          <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.point")}</Text>
+        </TouchableOpacity>
+        <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          
+        <TouchableOpacity 
+          style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
+          onPress={()=>goMeetingChatList()}
+        >
+          <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}{t("homemain.ea")}</Text>
+          <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.mymeeting")}</Text>
+        </TouchableOpacity>
       </View>
       <View style={{flex:1}}/>
       <Text style={{fontFamily: 'Pretendard-SemiBold', fontSize: 20, color: '#000',margin:10}}>

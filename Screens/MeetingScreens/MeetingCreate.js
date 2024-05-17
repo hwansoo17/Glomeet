@@ -1,12 +1,10 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import {SafeAreaView, View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet, ImageBackground, FlatList} from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet, ImageBackground, FlatList} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formDataApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
-import EventEmitter from "react-native-eventemitter";
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import CameraIcon from '../../assets/cameraIcon.svg';
-import MainButton from "../../customComponents/MainButton";
 import LineInput from "../../customComponents/LineInput";
 import ScrollPicker from "react-native-wheel-scrollview-picker";
 import ImageResizer from '@bam.tech/react-native-image-resizer';
@@ -34,8 +32,8 @@ const MeetingCreate = ({navigation}) => {
   const resizeImage = async (image) => {
     const resizedImage = await ImageResizer.createResizedImage(
       image.uri,
-      1000, 
-      1000, 
+      1200, 
+      1200, 
       'JPEG', 
       100
       );
@@ -49,8 +47,8 @@ const MeetingCreate = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const originalImage = response.assets[0]
-        console.log('Original image: ', originalImage)
+        // const originalImage = response.assets[0]
+        // console.log('Original image: ', originalImage)
         const imageFile = await resizeImage(response.assets[0])
         console.log('Resized image: ', imageFile)
         const source = { uri: response.assets[0].uri };
@@ -61,7 +59,8 @@ const MeetingCreate = ({navigation}) => {
   };
 
   const createMeeting = async() => {
-    console.log(imageFile, capacity, title, description, category)
+    setIsCreateEnabled(false)
+    console.log(imageFile, capacity, title, description, category)    
     try{
       const nickName = await AsyncStorage.getItem('nickName')
       const email = await AsyncStorage.getItem('email')
@@ -93,9 +92,11 @@ const MeetingCreate = ({navigation}) => {
       console.log(error.response, '무슨 오류일까')
       if (error.response.status == 401) {
         console.log(error, '왜 오류?')
+        setIsCreateEnabled(true)
       };
       if (error.response.status == 400) {
        console.log(error, '무슨 오류')
+       setIsCreateEnabled(true)
       }
     };
   };
@@ -121,7 +122,7 @@ const MeetingCreate = ({navigation}) => {
   const renderCategory = ({ item }) => (
     <TouchableOpacity
       onPress={() => setCategory(item)}
-      style={[{backgroundColor: '#D1DCFB', paddingHorizontal:16, paddingVertical:6, borderRadius:10}, category == item && {backgroundColor: '#5782F1'}]}
+      style={[{backgroundColor: '#D1DCFB', paddingHorizontal:20, paddingVertical:7, borderRadius:10}, category == item && {backgroundColor: '#5782F1'}]}
     >
       <Text style={[{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, category == item && { color: '#ffffff'}]}>{t(`category.${item}`)}</Text>
     </TouchableOpacity>
@@ -142,7 +143,7 @@ const MeetingCreate = ({navigation}) => {
   return (
     <View style={{flex:1, backgroundColor: '#fff'}}>
       <ScrollView>
-            <View style={{padding:10}}>
+            <View style={{padding:20}}>
               <View style={{height:20}}/>
               <TouchableOpacity 
                 style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}
@@ -187,32 +188,34 @@ const MeetingCreate = ({navigation}) => {
               <View style={{height:30}}/>  
               <Text style={styles.title}>{t("meetingCreate.participants")}</Text>
               <View style={{height:5}}/>
-              <ScrollPicker
-                dataSource={dataSource}
-                selectedIndex={1}
-                onValueChange={setCapacity}
-                wrapperHeight={100}
-                wrapperBackground="#FFFFFF"
-                itemHeight={40}
-                highlightColor="#F0EFF2"
-                highlightBorderWidth={1.2}
-                activeItemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Medium', color:'#25282B'}}
-                itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
-              />
-              <View style={{height:20}}/>
+              <View style={{paddingHorizontal: 80}}>
+                <ScrollPicker
+                  dataSource={dataSource}
+                  selectedIndex={1}
+                  onValueChange={setCapacity}
+                  wrapperHeight={120}
+                  wrapperBackground="#FFFFFF"
+                  itemHeight={40}
+                  highlightColor="#F0EFF2"
+                  highlightBorderWidth={1.2}
+                  activeItemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Medium', color:'#25282B'}}
+                  itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
+                />
+              </View>
+              <View style={{height:40}}/>
               <Text style={styles.title}>{t("meetingCreate.selectKeywords")}</Text>
               </View>
-              <View style={{paddingLeft:10}}>
+              <View>
                 <FlatList
                   data={keyword}
                   renderItem={renderCategory}
                   horizontal
-
+                  ListHeaderComponent={<View style={{width:20}}/>}
                   ListFooterComponent={<View style={{width:10}}/>}
-                  ItemSeparatorComponent={<View style={{width:5}}/>}
+                  ItemSeparatorComponent={<View style={{width:10}}/>}
                   showsHorizontalScrollIndicator={false}
                 />
-              <View style={{height:50}}/>
+              <View style={{height:100}}/>
             </View>
       </ScrollView>
     </View>

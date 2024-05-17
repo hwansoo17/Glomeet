@@ -26,12 +26,24 @@ import ChattingIcon from "./assets/ChattingIcon.svg";
 import { useTranslation } from "react-i18next";
 import i18n from './locales/i18n';
 
+// console.log = () => {};
+// console.warn = () => {};
+// console.error = () => {};
+
+if (process.env.NODE_ENV === "production") {
+	console = window.console || {};
+    console.log = function no_console() {};
+    console.warn = function no_console() {};
+    console.error = function () {};
+  }
+
 export const AppContext = createContext();
 // messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   console.log("[백그라운드에서 수신한 메시지]", remoteMessage);
 //   //await pushNoti.displayNoti(remoteMessage.data.title, remoteMessage.data.body);
 //   EventEmitter.emit("backgroundMessage", remoteMessage);
 // });
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

@@ -13,6 +13,7 @@ const LineInput = ({ value, onChangeText, placeholder, style, secureTextEntry = 
       maxLength={maxLength}
       multiline={multiline}
       editable={editable}
+      autoCapitalize={'none'}
     />
   );
 };

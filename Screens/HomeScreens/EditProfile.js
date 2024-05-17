@@ -9,6 +9,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import CameraIcon from '../../assets/cameraIcon.svg';
 import { useTranslation } from "react-i18next";
 import i18n from '../../locales/i18n'
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const EditProfile = ({navigation, route}) => {
   const { t } = useTranslation();
@@ -18,6 +19,17 @@ const EditProfile = ({navigation, route}) => {
   const [disabled, setDisabled] = useState(true);
   const userProfile = route.params.userProfile;
 
+  const resizeImage = async(image) => {
+    const resizedImage = await ImageResizer.createResizedImage(
+      image.uri,
+      1200, 
+      1200, 
+      'JPEG', 
+      100
+      );
+    console.log(resizedImage, '이미지 리사이즈')
+    return resizedImage;
+  }
   
   useEffect(() => {
     console.log(userProfile);
@@ -41,14 +53,16 @@ const EditProfile = ({navigation, route}) => {
      console.error(error.response.status);
     };
   };
-  const selectImage = () => {
-    launchImageLibrary({mediaType: 'photo'}, (response) => {
+  const selectImage = async() => {
+    launchImageLibrary({mediaType: 'photo'}, async(response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const imageFile = response.assets[0];
+        // const originalImage = response.assets[0]
+        // console.log('Original image: ', originalImage)
+        const imageFile = await resizeImage(response.assets[0])
         const source = { uri: response.assets[0].uri };
         setImageUri(source.uri);
         setImageFile(imageFile);
@@ -57,13 +71,14 @@ const EditProfile = ({navigation, route}) => {
     });
   };
   const profileImageUpload = async() => {
+    setDisabled(true)
     try{
       const formData = new FormData();
 
       formData.append('image', {
         uri: imageFile.uri,
-        type: imageFile.type,
-        name: imageFile.fileName
+        type: "image/jpeg",
+        name: imageFile.name
       });
       const response = await formDataApi.post('/upload/profile/image', formData)
       if (response.status == 200) {

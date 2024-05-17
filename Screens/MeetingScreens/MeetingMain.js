@@ -86,7 +86,7 @@ const MeetingMain = ({navigation}) => {
   const renderCategory = ({ item }) => (
   <TouchableOpacity
     onPress={() => setSelectedCategory(item)}
-    style={[{backgroundColor: '#D1DCFB', paddingHorizontal:16, paddingVertical:6, borderRadius:10}, selectedCategory == item && {backgroundColor: '#5782F1'}]}
+    style={[{backgroundColor: '#D1DCFB', paddingHorizontal:20, paddingVertical:7, borderRadius:10}, selectedCategory == item && {backgroundColor: '#5782F1'}]}
   >
     <Text style={[{fontSize:14, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory == item && { color: '#ffffff'}]}>{t(`category.${item}`)}</Text>
   </TouchableOpacity>
@@ -128,7 +128,7 @@ const MeetingMain = ({navigation}) => {
               horizontal
               ListHeaderComponent={<View style={{width:10}}/>}
               ListFooterComponent={<View style={{width:10}}/>}
-              ItemSeparatorComponent={<View style={{width:5}}/>}
+              ItemSeparatorComponent={<View style={{width:10}}/>}
               showsHorizontalScrollIndicator={false}
             />
           </View>

@@ -131,7 +131,7 @@ const MatchingMainScreen = ({navigation}) => {
             <View style={{backgroundColor: 'white', height:300, alignItems:'center', justifyContent:'center'}}>
                 <Image source={character} style={{width:300, height:200}}/>
                 <View style={{flex:1}}/>
-                <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center'}}>
+                <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
                   <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>0P</Text>
                   <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("matching.point")}</Text>
                 </View>
@@ -153,7 +153,7 @@ const MatchingMainScreen = ({navigation}) => {
               <Text style={styles.matchingSubtitle}>{t("matching.subtitle2")}</Text>
             </View>
             <View style={{flex:1}}/>
-            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
+            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
               <MatchingLoading/>
             </View>
             <View style={{flex:2}}/>
@@ -174,7 +174,7 @@ const MatchingMainScreen = ({navigation}) => {
               <Text style={styles.matchingSubtitle}>{t("matching.subtitle3")} 👀</Text>
             </View>
             <View style={{flex:1}}/>
-            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center'}}>
+            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
               <View style={{flex:2}}/>
               <View style={{ width:120, height:120, borderRadius: 60, overflow: 'hidden', backgroundColor: 'grey'}}>
                 <Image src={partnerProfileImage} style={{ width:120, height:120}}/>
@@ -192,7 +192,7 @@ const MatchingMainScreen = ({navigation}) => {
               <View style={{flex:1.5}}/>
               <TouchableOpacity 
               onPress={goChatRoom}
-              style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center'}}>
+              style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
                 <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#635C5C', marginLeft:15}}>{t("matching.to")}{partnerNickName}{t("matching.sendmessage")}</Text>
               </TouchableOpacity>
               <View style={{flex:2}}/>

@@ -40,7 +40,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
       Alert.alert(t("ChatRoom.noChatRoom"))
       setIsRoomActive(false)
     }
-    if (roomStatus == 'ACTIVE') {
+    if (roomStatus == 'ACTIVE' || roomStatus == null) {
       checkChatRoomStatus(id)
     }
     console.log(id, '아이디 확인')

@@ -25,7 +25,19 @@ const MeetingChatList = ({ navigation }) => {
       const response = await authApi.delete(`/meeting/leave/${chat.id}`)
       if (response.status === 200) {
         console.log(': 매칭채팅방 나가기')
-        getChatList()
+        navigation.reset({
+          index: 0, 
+          routes: [{
+              name: 'Chatting', 
+              state: {
+                routes: [
+                  { name: 'ChattingMain',
+                    state: {routes: [{name: '모임'}]} }, 
+                ],
+              },
+            },
+          ],
+        })
         setModalVisible(false)
         publish("/pub/chat/"+ chat.id, "application/json", email, nickName, chat.id, nickName, "LEAVE")
       }

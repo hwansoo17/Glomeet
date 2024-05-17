@@ -13,7 +13,7 @@ const MeetingDetail = ({route, navigation}) => {
   const {publish} = useWebSocket()
   const { t } = useTranslation();
   const meetingJoin = async() => {
-    console.log(detail.id);
+    console.log(detail);
     const email = await AsyncStorage.getItem('email')
     const nickName = await AsyncStorage.getItem('nickName');
     try {
