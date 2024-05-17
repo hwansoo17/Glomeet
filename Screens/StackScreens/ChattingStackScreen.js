@@ -16,7 +16,13 @@ const ChattingStackScreen = ({navigation, route}) => {
         }
     }, [navigation, route]);
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerBackImageSource: require('../../assets/backIcon.png'),
+                headerBackTitleVisible: false,
+                headerTitleAlign: 'center',
+            }}
+        >
             <Stack.Screen 
             name="ChattingMain" 
             component={ChattingMain}/>

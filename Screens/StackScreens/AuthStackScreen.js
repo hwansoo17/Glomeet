@@ -11,7 +11,13 @@ const Stack = createNativeStackNavigator();
 
 const AuthStackScreen = () => {
   return (
-    <Stack.Navigator initialRouteName='Login'>
+    <Stack.Navigator 
+      screenOptions={{
+        headerBackImageSource: require('../../assets/backIcon.png'),
+        headerBackTitleVisible: false,
+        headerTitleAlign: 'center',
+      }}
+      initialRouteName='Login'>
       <Stack.Screen 
         name="Login" 
         component={Login}

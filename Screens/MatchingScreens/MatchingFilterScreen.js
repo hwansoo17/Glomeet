@@ -33,6 +33,11 @@ const MatchingFilterScreen = ({navigation}) => {
                 EventEmitter.emit("matchingInProgress", "matchingInProgress")
             }
         } catch (error) {
+            Alert.alert("기본정보를 먼저 입력후\n매칭을 시작해주세요!")
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'OnBoard' }]
+            });
             // if (error.response.status == 400) {
             //     Alert.alert("이미 매칭이 진행중이에요.")
             // }    

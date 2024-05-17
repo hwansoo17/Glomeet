@@ -21,6 +21,7 @@ const MeetingStackScreen = ({navigation, route}) => {
     return (
         <Stack.Navigator
             screenOptions={{
+                headerBackImageSource: require('../../assets/backIcon.png'),
                 headerBackTitleVisible: false,
                 headerTitle: () => (
                     <SmallLogo/>

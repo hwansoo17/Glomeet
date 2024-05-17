@@ -10,8 +10,7 @@ const HomeStackScreen = () => {
     return (
         <Stack.Navigator initialRouteName='HomeMain'
             screenOptions={{
-                // headerBackImage: () => (
-                // ),
+                headerBackImageSource: require('../../assets/backIcon.png'),
                 headerBackTitleVisible: false,
                 headerTitle: () => (
                     <SmallLogo/>
