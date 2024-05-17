@@ -191,7 +191,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       </Modal>
       <FlatList
         data={messages}
-        renderItem={({item}) => <MessageListItem item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
+        renderItem={({item}) => <MessageListItem t={t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
         keyExtractor={(item, index) => index.toString()}
         inverted 
         onEndReached={loadMoreMessage}

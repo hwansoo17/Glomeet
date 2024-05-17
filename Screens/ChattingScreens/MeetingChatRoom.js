@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const id =  route.params.chat.id;
   const unRead = route.params.chat.unRead;
   const title = route.params.chat.title;
@@ -207,7 +207,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
       </Modal>
       <FlatList
         data={messages}
-        renderItem={({item}) => <MessageListItem item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
+        renderItem={({item}) => <MessageListItem t = {t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser} />}
         keyExtractor={(item, index) => index.toString()}
         inverted 
         onEndReached={loadMoreMessage}

@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { formatDate } from './formatDate';
-import { useTranslation } from 'react-i18next';
-const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser }) => {
-  const {t} = useTranslation()
+const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser, t }) => {
+  const ta = t
   const screenWidth = Dimensions.get('window').width;
   const isMyMessage = item.senderEmail === userEmail;
   const isSystemMessage = item.type === 'JOIN' || item.type === 'CREATE'|| item.type === 'LEAVE' || item.type === 'MATCHED';
@@ -11,7 +10,7 @@ const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser
     if (isSystemMessage) {
       return (
         <View style={styles.systemMessageContainer}>
-          <Text style={styles.systemMessageText}>{item.message}{t(`ChatRoom.${item.type}`)}</Text>
+          <Text style={styles.systemMessageText}>{item.message}{ta(`ChatRoom.${item.type}`)}</Text>
         </View>
       );
     }
