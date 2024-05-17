@@ -124,7 +124,6 @@ const LoginScreen = ({navigation}) => {
             </View>
             <View style={{flex:1}}/>
           </View>
-          <TouchableOpacity onPress={()=> navigation.navigate("OnBoard")}><Text>asdad</Text></TouchableOpacity>
         </ScrollView>
     </SafeAreaView>
   )

@@ -55,14 +55,16 @@ const Register2 = ({route, navigation}) => {
   const signUp = async () => {
     if (password === passwordCheck) {
       try {
-        const response = await api.post('/auth/signUp', {email, serverNickName, password});
+        const response = await api.post('/auth/signUp', {email: email, nickName: serverNickName, password: password});
         if (response.status == 200) {
           Alert.alert(t("register.signupComplete"));
           navigation.navigate('Login');
         }
       } catch (error) {
+        console.log(error);
         if (error.response.status == 409) {
           Alert.alert(t("register.signupfailed"));
+          
         } 
       }
     } else {

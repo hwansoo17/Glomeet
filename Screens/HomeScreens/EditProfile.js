@@ -94,7 +94,7 @@ const EditProfile = ({navigation, route}) => {
         </TouchableOpacity>
       ),
     });
-  }, [disabled, t]);
+  }, [disabled, t, imageFile]);
   return (
     <View style={{flex:1, backgroundColor:'#fff', padding:10}}>
       <View style={{flex:2}}/>

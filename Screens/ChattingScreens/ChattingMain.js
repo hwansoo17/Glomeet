@@ -24,8 +24,8 @@ const ChattingMain = ({navigation}) => {
         screenOptions={{
             tabBarLabelStyle: { fontSize: 16, fontFamily: 'Pretendard-SemiBold' }}}
         >
-            <topTab.Screen name={t("nav.matching")} component={MatchingChatList}/>
-            <topTab.Screen name={t("nav.meeting")} component={MeetingChatList}/>     
+            <topTab.Screen name="매칭" component={MatchingChatList} options={{ tabBarLabel: t("nav.matching")}}/>
+            <topTab.Screen name="모임" component={MeetingChatList} options={{ tabBarLabel: t("nav.meeting")}}/>     
         </topTab.Navigator>
     )
     };

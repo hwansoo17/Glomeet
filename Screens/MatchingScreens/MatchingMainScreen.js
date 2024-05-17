@@ -184,9 +184,9 @@ const MatchingMainScreen = ({navigation}) => {
               <View style={{flex:0.5}}/>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:2}}/>
-                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {partnerCountry}</Text>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {t(`onboarding.${partnerCountry}`)}</Text>
                 <View style={{flex:1}}/>
-                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {partnerType}</Text>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {t(`onboarding.${partnerType}`)}</Text>
                 <View style={{flex:2}}/>
               </View>
               <View style={{flex:1.5}}/>

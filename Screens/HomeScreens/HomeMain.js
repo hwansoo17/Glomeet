@@ -149,7 +149,7 @@ const HomeMain = ({navigation}) => {
       <View style={{width:2, height:48, backgroundColor:'#eaeaea', alignSelf: 'center'}}/>          
       <TouchableOpacity 
         style={{flex:1, justifyContent: 'center', alignItems: 'center'}}
-        onPress={goMeetingChatList}
+        onPress={()=>goMeetingChatList()}
       >
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:18, color:'#5782F1'}}>{MyMeetingCount}{t("homemain.ea")}</Text>
         <Text style={{fontFamily: 'Pretendard-Bold', fontSize:14, color:'#484848'}}>{t("homemain.mymeeting")}</Text>
