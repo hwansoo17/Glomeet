@@ -26,9 +26,9 @@ import ChattingIcon from "./assets/ChattingIcon.svg";
 import { useTranslation } from "react-i18next";
 import i18n from './locales/i18n';
 
-// console.log = () => {};
-// console.warn = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
 
 if (process.env.NODE_ENV === "production") {
 	console = window.console || {};

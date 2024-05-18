@@ -118,7 +118,7 @@ const Register1 = ({navigation}) => {
               onPress = {AuthCodeSend}
               disabled ={!isButtonActive || isSending}
               style = {{borderRadius:5}}
-              textStyle={{fontSize:15}}
+              textStyle={{fontSize:14}}
             />
           </View>
         </View>
@@ -134,15 +134,16 @@ const Register1 = ({navigation}) => {
           </View>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flex: 5}}>
-          <MainButton 
-              title = {t("register.submitcode")}
-              onPress = {checkAuthCode}
-              disabled ={!isCheckButtonActive}
-              style = {{borderRadius:5}}
-              textStyle={{fontSize:15}}
-            />
+            <MainButton 
+                title = {t("register.submitcode")}
+                onPress = {checkAuthCode}
+                disabled ={!isCheckButtonActive}
+                style = {{borderRadius:5}}
+                textStyle={{fontSize:14}}
+              />
           </View>
         </View> 
+        <TouchableOpacity onPress={()=> navigation.navigate('Register2', {email: "hhhh"})}><Text style={{color:"#000"}}>123</Text></TouchableOpacity>
       </View>
       <View style={{ flex: 1}} /> 
     </View>

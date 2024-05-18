@@ -111,7 +111,7 @@ const PasswordReset1 = ({navigation}) => {
                 onPress = {AuthCodeSend}
                 disabled ={!isButtonActive || isSending}
                 style = {{borderRadius:5}}
-                textStyle={{fontSize:15}}
+                textStyle={{fontSize:14}}
               />
             </View>
           </View>
@@ -132,7 +132,7 @@ const PasswordReset1 = ({navigation}) => {
                 onPress = {checkAuthCode}
                 disabled ={!isCheckButtonActive}
                 style = {{borderRadius:5}}
-                textStyle={{fontSize:15}}
+                textStyle={{fontSize:14}}
               />
             </View>
           </View>
