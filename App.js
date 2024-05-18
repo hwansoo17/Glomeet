@@ -25,6 +25,7 @@ import MeetingIcon from "./assets/MeetingIcon.svg";
 import ChattingIcon from "./assets/ChattingIcon.svg";
 import { useTranslation } from "react-i18next";
 import i18n from './locales/i18n';
+import { View, ActivityIndicator } from "react-native";
 
 // console.log = () => {};
 // console.warn = () => {};
@@ -137,6 +138,7 @@ async function requestUserPermission() {
 }
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState(null);
 
   const requestUserPermissionAos= async() => {
@@ -164,14 +166,18 @@ const App = () => {
         if (response.status == 200) {
         // 토큰이 유효하면 이니셜 라우트를 홈으로 설정(자동 로그인)
         setInitialRoute("Root");
+        console.log(response)
         }
       } catch (error) {
+        console.log(error)
         setInitialRoute("Auth");
       }
     } else {
+      console.log("엑세스토큰없음")
       //엑세스 토큰이 없으면 로그인 화면으로 이동
       setInitialRoute("Auth");
     }
+    setLoading(false);
   };
   const loadLocale = async () => {
     const language = await AsyncStorage.getItem('locale');
@@ -181,11 +187,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    loadLocale();
-    checkLoginStatus();
-    requestUserPermissionAos();
-    LogBox.ignoreAllLogs()
-  }, [initialRoute]);
+    const initializeApp = async () => {
+      await loadLocale();
+      await requestUserPermissionAos();
+      await checkLoginStatus();
+    };
+    initializeApp();
+  }, []);
+
+  useEffect(() => {
+    // LogBox.ignoreAllLogs()
+  }, []);
   
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -198,8 +210,12 @@ const App = () => {
     return unsubscribe;
   }, []);
 
-  if (initialRoute === null) {
-    return null;
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#5782F1" />
+      </View>
+    );
   }
 
   return (
