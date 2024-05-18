@@ -143,11 +143,10 @@ const Register1 = ({navigation}) => {
               />
           </View>
         </View> 
-        <TouchableOpacity onPress={()=> navigation.navigate('Register2', {email: "hhhh"})}><Text style={{color:"#000"}}>123</Text></TouchableOpacity>
+        {/* <TouchableOpacity onPress={()=> navigation.navigate('Register2', {email: "hhhh"})}><Text style={{color:"#000"}}>123</Text></TouchableOpacity> */}
       </View>
       <View style={{ flex: 1}} /> 
     </View>
-    {/* <TouchableOpacity onPress={() => navigation.navigate('Register2',{email:email})}><Text>asdasd</Text></TouchableOpacity> */}
   </View>
 
 

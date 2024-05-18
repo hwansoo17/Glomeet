@@ -68,6 +68,7 @@
     "passwordinput": "비밀번호를 입력하세요",
     "login": "로그인",
     "signup": "회원가입",
+    "passwordreset": "비밀번호 변경",
     "forgotpassword": "비밀번호를 잊으셨나요?",
     "loginfailed": "이메일 혹은 비밀번호가 일치하지 않습니다."
   },

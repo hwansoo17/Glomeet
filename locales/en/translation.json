@@ -69,6 +69,7 @@
     "passwordinput": "Enter your password",
     "login": "Login",
     "signup": "Sign Up",
+    "passwordreset": "Password Reset",
     "forgotpassword": "Forgot your password?",
     "loginfailed": "The email or password does not match."
   },
