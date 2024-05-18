@@ -128,7 +128,7 @@ const MatchingMainScreen = ({navigation}) => {
               <Text style={styles.matchingSubtitle}>{t("matching.subtitle")} 👀</Text>
             </View>
             <View style={{flex:1}}/>
-            <View style={{backgroundColor: 'white', height:300, alignItems:'center', justifyContent:'center'}}>
+            <View style={{backgroundColor: 'white', height:250, alignItems:'center', justifyContent:'center'}}>
                 <Image source={character} style={{width:300, height:200}}/>
                 <View style={{flex:1}}/>
                 <View style={{height:70, width:'50%', borderRadius:10, backgroundColor:'white', elevation:5, alignItems:'center', justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
@@ -153,7 +153,7 @@ const MatchingMainScreen = ({navigation}) => {
               <Text style={styles.matchingSubtitle}>{t("matching.subtitle2")}</Text>
             </View>
             <View style={{flex:1}}/>
-            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
+            <View style={{backgroundColor: 'white', height:250, elevation:5, borderRadius:20, alignItems:'center', justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
               <MatchingLoading/>
             </View>
             <View style={{flex:2}}/>
@@ -174,26 +174,26 @@ const MatchingMainScreen = ({navigation}) => {
               <Text style={styles.matchingSubtitle}>{t("matching.subtitle3")} 👀</Text>
             </View>
             <View style={{flex:1}}/>
-            <View style={{backgroundColor: 'white', height:300, elevation:5, borderRadius:20, alignItems:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
+            <View style={{backgroundColor: 'white', height:250, elevation:5, borderRadius:20, alignItems:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 6}}>
               <View style={{flex:2}}/>
-              <View style={{ width:120, height:120, borderRadius: 60, overflow: 'hidden', backgroundColor: 'grey'}}>
-                <Image src={partnerProfileImage} style={{ width:120, height:120}}/>
+              <View style={{ width:100, height:100, borderRadius: 60, overflow: 'hidden', backgroundColor: 'grey'}}>
+                <Image src={partnerProfileImage} style={{ width:100, height:100}}/>
               </View>
               <View style={{flex:1}}/>
-              <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 30, color: '#5782F1'}}>{partnerNickName}</Text>
+              <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 28, color: '#5782F1'}}>{partnerNickName}</Text>
               <View style={{flex:0.5}}/>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:2}}/>
-                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {t(`onboarding.${partnerCountry}`)}</Text>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 14, color: '#6B7079'}}># {t(`onboarding.${partnerCountry}`)}</Text>
                 <View style={{flex:1}}/>
-                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 16, color: '#6B7079'}}># {t(`onboarding.${partnerType}`)}</Text>
+                <Text style={{fontFamily:"Pretendard-Regular", fontSize: 14, color: '#6B7079'}}># {t(`onboarding.${partnerType}`)}</Text>
                 <View style={{flex:2}}/>
               </View>
               <View style={{flex:1.5}}/>
               <TouchableOpacity 
               onPress={goChatRoom}
-              style={{height: 38, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8}}>
-                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#635C5C', marginLeft:15}}>{t("matching.to")}{partnerNickName}{t("matching.sendmessage")}</Text>
+              style={{height: 36, width:'90%', backgroundColor: 'white', borderRadius: 20, elevation:5, justifyContent:'center', shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 6}}>
+                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 13, color: '#635C5C', marginLeft:15}}>{t("matching.to")}{partnerNickName}{t("matching.sendmessage")}</Text>
               </TouchableOpacity>
               <View style={{flex:2}}/>
             </View>

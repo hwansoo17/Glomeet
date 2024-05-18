@@ -248,7 +248,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       <View style={{ flex: 1 }} />
       {Platform.OS === 'ios' ? (
         <InputAccessoryView style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
           {isRoomActive ? (<TextInput
               style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
               placeholder={t("ChatRoom.enterMessage")}
@@ -268,7 +268,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         </InputAccessoryView>
         ) : (
         <View style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
           {isRoomActive ? (<TextInput
               style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
               placeholder={t("ChatRoom.enterMessage")}
@@ -276,7 +276,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
               onChangeText={setMessage}
               multiline
               placeholderTextColor={'#d3d3d3'}
-              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
+              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3', textAlignVertical:'center'}}>{t("ChatRoom.notConversation")}</Text>)}
           
           </View>
           <TouchableOpacity 

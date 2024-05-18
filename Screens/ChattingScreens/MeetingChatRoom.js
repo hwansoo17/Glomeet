@@ -262,7 +262,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
       <View style={{ flex: 1 }} />
       {Platform.OS === 'ios' ? (
         <InputAccessoryView style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
           {isRoomActive ? (<TextInput
               style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
               placeholder={t("ChatRoom.enterMessage")}
@@ -282,7 +282,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
         </InputAccessoryView>
         ) : (
         <View style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
           {isRoomActive ? (<TextInput
               style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
               placeholder={t("ChatRoom.enterMessage")}
