@@ -19,7 +19,7 @@ const ChatListItem = ({ item, goChatRoom, setModalVisible, setSelectedChatRoom }
         </View>
         <View>
           <View style={{flex:1}}/>
-          <Text style={styles.sendAt}>{formatDate(item.sendAt)}</Text>
+          <Text style={styles.sendAt}>{item.sendAt == null ? "" : formatDate(item.sendAt) }</Text>
           <View style={{flex:2}}/>
           {item.unRead > 0 && (
             <View style={styles.unReadBadge}>

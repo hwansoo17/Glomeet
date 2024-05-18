@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, SafeAreaView, Modal, Image, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, FlatList, SafeAreaView, Modal, Image, Alert, InputAccessoryView, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EventEmitter from "react-native-eventemitter";
 import { useWebSocket } from "../../WebSocketProvider";
@@ -128,6 +128,33 @@ const MatchingChatRoom = ({ route, navigation }) => {
             style={{flex:1}}
             onPress={() => setModalVisible2(false)}
             />
+            {Platform.OS === 'ios' ? (
+            <InputAccessoryView style={{ flexDirection: "row"}}>
+              <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
+                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatRoom.reasonReporting")}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex:1}}/>
+                  <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
+                </View>
+                <View style={{ width:"100%", flex:4,borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                  <TextInput
+                    value={reportComment}
+                    multiline
+                    onChangeText={setReportComment}
+                    maxLength={255}/>
+                </View>
+                <View style={{ flexDirection:'row', alignItems:'center'}}>
+                  <View style={{flex:1}}/>
+                  <TouchableOpacity
+                    onPress={() => {setModalVisible2(false); reportUser(); }}
+                    disabled={!reportEnabled}
+                  >
+                    <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </InputAccessoryView>
+            ) : (
             <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
               <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatRoom.reasonReporting")}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -151,6 +178,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
+            )}
             <TouchableOpacity 
             style={{flex:1}}
             onPress={() => setModalVisible2(false)}
@@ -209,6 +237,8 @@ const MatchingChatRoom = ({ route, navigation }) => {
         </View>
       </Modal>
       <FlatList
+        automaticallyAdjustKeyboardInsets={true}
+        keyboardDismissMode="interactive"
         data={messages}
         renderItem={({item}) => <MessageListItem t={t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
         keyExtractor={(item, index) => index.toString()}
@@ -216,35 +246,48 @@ const MatchingChatRoom = ({ route, navigation }) => {
         onEndReached={loadMoreMessage}
         onEndReachedThreshold={0.7}/>
       <View style={{ flex: 1 }} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 93 : 0} // 키보드 오프셋을 적절하게 설정합니다. 
-      >
-        <View style={{ flexDirection: "row", alignItems: "center"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, height:50, justifyContent:'center', paddingHorizontal:5}}>
-          {isRoomActive ? (
-            <TextInput
+      {Platform.OS === 'ios' ? (
+        <InputAccessoryView style={{ flexDirection: "row"}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          {isRoomActive ? (<TextInput
               style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
               placeholder={t("ChatRoom.enterMessage")}
               value={message}
               onChangeText={setMessage}
+              multiline
               placeholderTextColor={'#d3d3d3'}
-              textAlignVertical='center'
-            />
-            ) : (
-            <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>
-              {t("ChatRoom.notConversation")}
-            </Text>
-            )
-          }
+              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
+          
           </View>
           <TouchableOpacity 
-            style={{ backgroundColor:'#5782F1', flex:1, height:50, justifyContent:'center', alignItems: 'center'}}
+            style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
+            disabled={message == ""}
+            onPress={sendMessage}>
+            <SendIcon/>
+          </TouchableOpacity>
+        </InputAccessoryView>
+        ) : (
+        <View style={{ flexDirection: "row"}}>
+          <View style={{ backgroundColor:'#F1F1F1', flex:5, justifyContent:'center', paddingHorizontal:5}}>
+          {isRoomActive ? (<TextInput
+              style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
+              placeholder={t("ChatRoom.enterMessage")}
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              placeholderTextColor={'#d3d3d3'}
+              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
+          
+          </View>
+          <TouchableOpacity 
+            style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
+            disabled={message == ""}
             onPress={sendMessage}>
             <SendIcon/>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+        )
+      }
     </SafeAreaView>
   );
 };

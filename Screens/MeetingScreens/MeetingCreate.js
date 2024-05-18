@@ -84,7 +84,7 @@ const MeetingCreate = ({navigation}) => {
     if (response.status == 200) {
       console.log(response.data)
       console.log('@@@@')
-      goChatRoom(response.data)
+      goChatRoom(response.data.id, title)
       Alert.alert(t("meetingCreate.meetingCreated"))
       publish("/pub/chat/"+ response.data.id, "application/json", email, nickName, response.data.id, "", "CREATE")
     }
@@ -100,7 +100,7 @@ const MeetingCreate = ({navigation}) => {
       }
     };
   };
-  const goChatRoom = (chat) => {
+  const goChatRoom = (id, title) => {
     navigation.reset({
         index: 0, 
         routes: [{
@@ -111,7 +111,7 @@ const MeetingCreate = ({navigation}) => {
                   state: {routes: [{name: '모임'}]} }, 
                 {
                   name: 'MeetingChatRoom',
-                  params: { chat }, 
+                  params: { chat: {id, title} }, 
                 },
               ],
             },
@@ -142,81 +142,84 @@ const MeetingCreate = ({navigation}) => {
 
   return (
     <View style={{flex:1, backgroundColor: '#fff'}}>
-      <ScrollView>
-            <View style={{padding:20}}>
-              <View style={{height:20}}/>
-              <TouchableOpacity 
-                style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}
-                onPress={selectImage}> 
-                {imageUri ? (
-                <ImageBackground source={{ uri: imageUri }} style={{ width: 180, height: 180, borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center' }}>
-                  <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
-                    <CameraIcon/>
-                  </View>
-                </ImageBackground>
-                ) : (
-                <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
-                  <CameraIcon/>
-                </View>
-                )}
-              </TouchableOpacity>
-              <View style={{height:30}}/>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={styles.title}>{t("meetingCreate.meetingName")}</Text>
-                <View style={{flex:1}}/>
-                <Text style={styles.contentsLength}>{title.length}/20</Text>
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        keyboardDismissMode="interactive"
+      >
+        <View style={{padding:20}}>
+          <View style={{height:20}}/>
+          <TouchableOpacity 
+            style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}
+            onPress={selectImage}> 
+            {imageUri ? (
+            <ImageBackground source={{ uri: imageUri }} style={{ width: 180, height: 180, borderRadius: 10, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center' }}>
+              <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
+                <CameraIcon/>
               </View>
-              <LineInput
-                value={title}
-                onChangeText={setTitle}
-                placeholder={t("meetingCreate.NameContent")}
-                placeholderTextColor={'#D3D3D3'}
-                maxLength={20}/>
-                <View style={{height:30}}/>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={styles.title}>{t("meetingCreate.meetingDescription")}</Text>
-                <View style={{flex:1}}/>
-                <Text style={styles.contentsLength}>{description.length}/80</Text>
-              </View>
-              <LineInput
-                value={description}
-                onChangeText={setDescription}
-                placeholder={t("meetingCreate.DescriptionContent")}
-                placeholderTextColor={'#D3D3D3'}
-                maxLength={80}
-                multiline={true}/>
-              <View style={{height:30}}/>  
-              <Text style={styles.title}>{t("meetingCreate.participants")}</Text>
-              <View style={{height:5}}/>
-              <View style={{paddingHorizontal: 80}}>
-                <ScrollPicker
-                  dataSource={dataSource}
-                  selectedIndex={1}
-                  onValueChange={setCapacity}
-                  wrapperHeight={120}
-                  wrapperBackground="#FFFFFF"
-                  itemHeight={40}
-                  highlightColor="#F0EFF2"
-                  highlightBorderWidth={1.2}
-                  activeItemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Medium', color:'#25282B'}}
-                  itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
-                />
-              </View>
-              <View style={{height:40}}/>
-              <Text style={styles.title}>{t("meetingCreate.selectKeywords")}</Text>
-              </View>
-              <View>
-                <FlatList
-                  data={keyword}
-                  renderItem={renderCategory}
-                  horizontal
-                  ListHeaderComponent={<View style={{width:20}}/>}
-                  ListFooterComponent={<View style={{width:10}}/>}
-                  ItemSeparatorComponent={<View style={{width:10}}/>}
-                  showsHorizontalScrollIndicator={false}
-                />
-              <View style={{height:100}}/>
+            </ImageBackground>
+            ) : (
+            <View style={{height:30, width:30, borderRadius:15, backgroundColor: '#5782F1', margin:10 }}>
+              <CameraIcon/>
             </View>
+            )}
+          </TouchableOpacity>
+          <View style={{height:30}}/>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.title}>{t("meetingCreate.meetingName")}</Text>
+            <View style={{flex:1}}/>
+            <Text style={styles.contentsLength}>{title.length}/20</Text>
+          </View>
+          <LineInput
+            value={title}
+            onChangeText={setTitle}
+            placeholder={t("meetingCreate.NameContent")}
+            placeholderTextColor={'#D3D3D3'}
+            maxLength={20}/>
+            <View style={{height:30}}/>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.title}>{t("meetingCreate.meetingDescription")}</Text>
+            <View style={{flex:1}}/>
+            <Text style={styles.contentsLength}>{description.length}/80</Text>
+          </View>
+          <LineInput
+            value={description}
+            onChangeText={setDescription}
+            placeholder={t("meetingCreate.DescriptionContent")}
+            placeholderTextColor={'#D3D3D3'}
+            maxLength={80}
+            multiline={true}/>
+          <View style={{height:30}}/>  
+          <Text style={styles.title}>{t("meetingCreate.participants")}</Text>
+          <View style={{height:5}}/>
+          <View style={{paddingHorizontal: 80}}>
+            <ScrollPicker
+              dataSource={dataSource}
+              selectedIndex={1}
+              onValueChange={setCapacity}
+              wrapperHeight={120}
+              wrapperBackground="#FFFFFF"
+              itemHeight={40}
+              highlightColor="#F0EFF2"
+              highlightBorderWidth={1.2}
+              activeItemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Medium', color:'#25282B'}}
+              itemTextStyle={{fontSize:18, fontFamily: 'Pretendard-Light', color:'#D3D3D3'}}
+            />
+          </View>
+          <View style={{height:40}}/>
+          <Text style={styles.title}>{t("meetingCreate.selectKeywords")}</Text>
+          </View>
+          <View>
+            <FlatList
+              data={keyword}
+              renderItem={renderCategory}
+              horizontal
+              ListHeaderComponent={<View style={{width:20}}/>}
+              ListFooterComponent={<View style={{width:10}}/>}
+              ItemSeparatorComponent={<View style={{width:10}}/>}
+              showsHorizontalScrollIndicator={false}
+            />
+          <View style={{height:100}}/>
+        </View>
       </ScrollView>
     </View>
   )
