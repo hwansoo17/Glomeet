@@ -65,8 +65,8 @@
     "언어": "Language"
   },
   "login": {
-    "emailinput": "Enter your email",
-    "passwordinput": "Enter your password",
+    "emailinput": "Enter your email.",
+    "passwordinput": "Enter your password.",
     "login": "Login",
     "signup": "Sign Up",
     "passwordreset": "Password Reset",
