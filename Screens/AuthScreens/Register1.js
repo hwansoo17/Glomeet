@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert,StyleSheet,Image,SafeAreaView,ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Linking } from "react-native";
 import { api } from '../../api';
 import Logo from '../../assets/Glomeet_logo.svg';
 import LineInput from "../../customComponents/LineInput";
 import InputBox from "../../customComponents/InputBox";
 import MainButton from "../../customComponents/MainButton";
 import { useTranslation } from "react-i18next";
+import CheckBox  from '../../assets/CheckedBox.svg'
+import i18n from '../../locales/i18n';
 const emailRegEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
 //const emailRegEx = /^[a-zA-Z0-9]+@ajou\.ac\.kr
@@ -18,6 +20,7 @@ const Register1 = ({navigation}) => {
   const [isCheckButtonActive, setCheckButtonActive] = useState(false); 
   const [isSending, setIsSending] = useState(false);
   const [sendComplete, setSendComplete] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const changeButtonStatus = () => {
     if (email != '') {
       setButtonActive(true);
@@ -43,6 +46,10 @@ const Register1 = ({navigation}) => {
   },[authCode]) // 인증번호 확인할 때 활성화 되도록 수정
 
   const AuthCodeSend = async () => {
+    if (!isChecked) {
+      Alert.alert(t("register.terms"));
+      return;
+    }
     console.log(email)
     if (!emailValid) {
       Alert.alert(t("register.emailinvalid"));
@@ -95,12 +102,50 @@ const Register1 = ({navigation}) => {
       };
     };
   };
+  const openTermsOfService = () => {
+    Linking.openURL('https://uttermost-feels-5b2.notion.site/c269556706be42d6866e6d8bc82e95ab?pvs=4');
+  };
+  const openPrivacyPolicy = () => {
+    Linking.openURL('https://uttermost-feels-5b2.notion.site/2d2aae3e105e4871aff1b1abcdadd219?pvs=4');
+  };
+
   return (  
     <View style={styles.container}>
+    
     <View style={{ flexDirection: 'row', flex: 1 }}>
       <View style={{ flex: 1 }} />
       <View style={{ flex: 20 }}>
-        <View style={{height: 10}}/>
+        <View style={{height: 20}}/>
+        {i18n.language === 'ko' ? (
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+          <TouchableOpacity onPress={openTermsOfService}>
+            <Text style={{fontFamily:"Pretendard-SemiBold", textDecorationLine: 'underline', color: "#000"}}>서비스 이용약관</Text>
+          </TouchableOpacity>
+          <Text style={{fontFamily:"Pretendard-Medium", color: "#666"}}> 및 </Text>
+          <TouchableOpacity onPress={openPrivacyPolicy}>
+            <Text style={{fontFamily:"Pretendard-SemiBold", textDecorationLine: 'underline', color: "#000"}}>개인정보 처리방침</Text>
+          </TouchableOpacity>
+          <Text style={{fontFamily:"Pretendard-Medium", color: "#666"}}>에 동의합니다.</Text>
+          <TouchableOpacity style={styles.checkboxContainer} onPress={() => setIsChecked(!isChecked)}>
+            {isChecked ? (<CheckBox/>):(<View style={styles.checkbox}/>) }
+          </TouchableOpacity>
+        </View>
+        ):(
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{fontFamily:"Pretendard-Medium", color: "#666"}}>I agree to the </Text>
+          <TouchableOpacity onPress={openTermsOfService}>
+            <Text style={{fontFamily:"Pretendard-SemiBold", textDecorationLine: 'underline', color: "#000"}}>Terms of Service</Text>
+          </TouchableOpacity>
+          <Text style={{fontFamily:"Pretendard-Medium", color: "#666"}}> and </Text>
+          <TouchableOpacity onPress={openPrivacyPolicy}>
+            <Text style={{fontFamily:"Pretendard-SemiBold", textDecorationLine: 'underline', color: "#000"}}>Privacy Policy.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.checkboxContainer} onPress={() => setIsChecked(!isChecked)}>
+            {isChecked ? (<CheckBox/>):(<View style={styles.checkbox}/>) }
+          </TouchableOpacity>
+        </View>
+        )}
+        <View style={{height: 20}}/>
         <View style={{ flexDirection: 'row'}}>
           <View style={{ flex: 10 }}>
             <LineInput
@@ -168,6 +213,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
+  checkboxContainer: {
+    width: 30,
+    height: 30,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#B0B0B0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,}
 });
 
 export default Register1;

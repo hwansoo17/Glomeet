@@ -74,6 +74,7 @@
     "loginfailed": "The email or password does not match."
   },
   "register": {
+    "terms": "You must agree to the Terms of Service and Privacy Policy.",
     "emailinput": "Enter your Ajou email.",
     "emailinvalid": "Invalid email format.",
     "sendcode": "Send code",

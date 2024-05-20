@@ -27,9 +27,9 @@ import { useTranslation } from "react-i18next";
 import i18n from './locales/i18n';
 import { View, ActivityIndicator } from "react-native";
 
-// console.log = () => {};
-// console.warn = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
 
 if (process.env.NODE_ENV === "production") {
 	console = window.console || {};
@@ -196,7 +196,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // LogBox.ignoreAllLogs()
+    LogBox.ignoreAllLogs()
   }, []);
   
   useEffect(() => {
