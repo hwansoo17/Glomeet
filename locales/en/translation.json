@@ -2,6 +2,8 @@
   "homemain": {
     "trendmeeting": "Trends",
     "mypage": {
+      "account":"Account",
+      "unregister": "Unregister from Glomeet",
       "changeProfileImage": "Change profile image",
       "logout": "Logout",
       "apply": "Apply"},
@@ -132,9 +134,9 @@
   "meetingCreate": {
     "createMeeting": "Creat meeting",
     "meetingName": "Meeting Name",
-    "NameContent": "Enter meeting name",
+    "NameContent": "Enter meeting name.",
     "meetingDescription": "Meeting Description",
-    "DescriptionContent": "Enter meeting description",
+    "DescriptionContent": "Enter meeting description. Inappropriate or offensive content may be subject to sanctions.",
     "participants": "Number of Participants",
     "selectKeywords": "Select Keywords",
     "meetingCreated":"The meeting has been created",
@@ -149,9 +151,9 @@
     "enterMessage": "Please enter a message.",
     "reasonReporting":"Please state the reason for the report.",
     "JOIN": " has entered the room.",
-    "CREATE": "A new meeting has been created.",
+    "CREATE": "A new meeting has been created.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
     "LEAVE": " has left the chat room.",
-    "MATCHED": "The match has been made."
+    "MATCHED": "The match has been made.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations."
   },
   "ChatList": {
     "leftChatRoom": "has left the chatroom.",

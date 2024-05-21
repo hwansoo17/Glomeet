@@ -97,6 +97,7 @@ const EditProfile = ({navigation, route}) => {
     setLanguage(language)
     i18n.changeLanguage(language);
   }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleAlign: "center",
@@ -112,7 +113,7 @@ const EditProfile = ({navigation, route}) => {
   }, [disabled, t, imageFile]);
   return (
     <View style={{flex:1, backgroundColor:'#fff', padding:10}}>
-      <View style={{flex:2}}/>
+      <View style={{flex:1}}/>
       <Text style={{alignSelf: 'center',fontFamily:"GmarketSansTTFBold", fontSize: 30, color: '#5782F1'}}>{userProfile.nickName}</Text>
       <View style={{flex:1}}/>
       <View style={{width: 180, height: 180, backgroundColor: '#EEF3FF', borderRadius: 90, alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'center',  overflow: 'hidden'}}> 
@@ -145,15 +146,22 @@ const EditProfile = ({navigation, route}) => {
           <Text style={[language == 'en' ? styles.selectedLanguageText : styles.languageText]}>English</Text>
         </TouchableOpacity>
       </View>
-      <View style={{flex:16}}/>
-      <TouchableOpacity
-      style={styles.logoutBox}
-      onPress={() => loggedOut()}
-      >
-        <Text style={{fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'}}>{t("homemain.mypage.logout")}</Text>
-      </TouchableOpacity>
-      
-      <View style={{flex:1}}/>
+      <View style={{flex:8}}/>
+      <View>
+        <Text style={{fontFamily:"Pretendard-Bold", fontSize: 20, color: '#000'}}>{t("homemain.mypage.account")}</Text>
+        <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => loggedOut()}
+        >
+          <Text style={{fontFamily:"Pretendard-regular", fontSize: 16, color: '#000'}}>{t("homemain.mypage.logout")}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        style={styles.accountBox}
+        onPress={() => navigation.navigate("Unregister")}
+        >
+          <Text style={{fontFamily:"Pretendard-regular", fontSize: 16, color: '#000'}}>{t("homemain.mypage.unregister")}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -184,16 +192,11 @@ const styles = StyleSheet.create({
   selectedLanguageText: {
     fontFamily:"Pretendard-SemiBold", fontSize: 14, color: '#fff'
   },
-  logoutBox: {
-    backgroundColor: '#EC3232', 
-    width: 70, 
+  accountBox: {
+    height: 40,
     paddingVertical:6, 
     borderRadius:10, 
-    justifyContent:"center", 
-    borderColor: "#EC3232", 
-    borderWidth:2, 
-    alignItems: "center",
-    alignSelf: 'flex-end'
+    justifyContent:"center",  
   }
 });
 
