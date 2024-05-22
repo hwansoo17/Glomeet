@@ -25,8 +25,8 @@ const LoginScreen = ({navigation}) => {
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
+      clearTimeout(timeoutId);
       if (response.status == 200) {
-        clearTimeout(timeoutId);
         console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('nickName', response.data.nickName)
@@ -142,7 +142,7 @@ const LoginScreen = ({navigation}) => {
         onRequestClose={() => {}}
       >
         <View style={styles.modalBackground}>
-          <View style={styles.activityIndicatorWrapper}>
+          <View>
             <ActivityIndicator size="large" color="#5782F1" />
           </View>
         </View>
