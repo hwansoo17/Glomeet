@@ -75,7 +75,8 @@
     "signup": "회원가입",
     "passwordreset": "비밀번호 변경",
     "forgotpassword": "비밀번호를 잊으셨나요?",
-    "loginfailed": "이메일 혹은 비밀번호가 일치하지 않습니다."
+    "loginfailed": "이메일 혹은 비밀번호가 일치하지 않습니다.",
+    "serverError": "서버에 연결할 수 없습니다. 인터넷 연결을 확인해주세요."
   },
   "register":{
     "terms": "서비스 이용약관 및 개인정보 처리방침에 동의해야 합니다.",

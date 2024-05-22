@@ -76,7 +76,8 @@
     "signup": "Sign Up",
     "passwordreset": "Password Reset",
     "forgotpassword": "Forgot your password?",
-    "loginfailed": "The email or password does not match."
+    "loginfailed": "The email or password does not match.",
+    "serverError": "Unable to connect to the server. Please check your internet connection."
   },
   "register": {
     "terms": "You must agree to the Terms of Service and Privacy Policy.",
