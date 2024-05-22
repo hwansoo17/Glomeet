@@ -4,6 +4,9 @@
     "mypage": {
       "account":"Account",
       "unregister": "Unregister from Glomeet",
+      "unregisterNotice": "· Personal information will be deleted\n  after unregister, and all data cannot be\n  recovered.",
+      "unregisterNotice2": "· You will be removed from all ongoing\n  chat rooms, and any groups you created\n  will also be deleted.",
+      "agree": "I have read all the information and agree to it.",
       "changeProfileImage": "Change profile image",
       "logout": "Logout",
       "apply": "Apply"},
