@@ -16,14 +16,19 @@ const LoginScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const webSocketClient = useWebSocket();
   const [language, setLanguage] = useState(i18n.language);
-
+ 
   const login = async () => {
     setLoading(true);
+    const loadingTimeout = setTimeout(() => {
+      Alert.alert(t('login.serverError'));
+      setLoading(false);
+    }, 10000); // 10 seconds timeout
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
       if (response.status == 200) {
         setLoading(false);
+        clearTimeout(loadingTimeout);
         console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('nickName', response.data.nickName)
@@ -37,6 +42,7 @@ const LoginScreen = ({navigation}) => {
       }
       if (response.status == 201) {
         setLoading(false);
+        clearTimeout(loadingTimeout);
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('nickName', response.data.nickName)
         await AsyncStorage.setItem('accessToken', response.data.tokens.accessToken)
@@ -49,6 +55,7 @@ const LoginScreen = ({navigation}) => {
       }
     } catch (error) {
       setLoading(false);
+      clearTimeout(loadingTimeout);
       console.log(error.response, "너냐 언디파인드?");
       if (error.response.status == 401) {
         console.log('로그인 실패: ', error);
