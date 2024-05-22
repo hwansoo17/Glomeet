@@ -156,7 +156,8 @@
     "JOIN": " has entered the room.",
     "CREATE": "A new meeting has been created.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
     "LEAVE": " has left the chat room.",
-    "MATCHED": "The match has been made.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations."
+    "MATCHED": "The match has been made.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
+    "JOINprivate": "Inappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations."
   },
   "ChatList": {
     "leftChatRoom": "has left the chatroom.",

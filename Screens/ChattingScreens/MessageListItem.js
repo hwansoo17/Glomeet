@@ -10,7 +10,13 @@ const MessageListItem = ({ item, userEmail, setModalVisible, setSelectedChatUser
     if (isSystemMessage) {
       return (
         <View style={styles.systemMessageContainer}>
-          <Text style={styles.systemMessageText}>{item.message}{ta(`ChatRoom.${item.type}`)}</Text>
+          <Text style={styles.systemMessageText}>
+            {item.message}{ta(`ChatRoom.${item.type}`)}
+          </Text>
+          {item.type === 'JOIN' && isMyMessage && 
+          <Text style={styles.systemMessageText}>
+            {ta(`ChatRoom.JOINprivate`)}
+          </Text>}
         </View>
       );
     }
