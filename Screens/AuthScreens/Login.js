@@ -16,16 +16,12 @@ const LoginScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const webSocketClient = useWebSocket();
   const [language, setLanguage] = useState(i18n.language);
+
   const login = async () => {
     setLoading(true);
-    const timeoutId = setTimeout(() => {
-      setLoading(false);
-      Alert.alert(t('login.serverError'));
-    }, 10000); // 10 seconds timeout
     try {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
-      clearTimeout(timeoutId);
       if (response.status == 200) {
         console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
@@ -50,12 +46,11 @@ const LoginScreen = ({navigation}) => {
         });
       }
     } catch (error) {
-      console.log(error.response);
-      clearTimeout(timeoutId);
+      console.log(error.response, "너냐 언디파인드?");
       if (error.response.status == 401) {
         console.log('로그인 실패: ', error);
         Alert.alert(t('login.loginfailed'));
-      }
+      } 
     } finally {
       setLoading(false); // Set loading to false when login completes
     }
@@ -101,7 +96,7 @@ const LoginScreen = ({navigation}) => {
               onChangeText={setPassword}
             />
             <View style={{height: 20}}/>
-            <MainButton onPress={login} title={t("login.login")}/>
+            <MainButton onPress={() => login()} title={t("login.login")}/>
             <View style={{height: 20}}/>
             <MainButton
               style={{backgroundColor: 'white', borderColor: '#5782F1', borderWidth:1.2}}
@@ -142,9 +137,7 @@ const LoginScreen = ({navigation}) => {
         onRequestClose={() => {}}
       >
         <View style={styles.modalBackground}>
-          <View>
             <ActivityIndicator size="large" color="#5782F1" />
-          </View>
         </View>
       </Modal>
     </SafeAreaView>
