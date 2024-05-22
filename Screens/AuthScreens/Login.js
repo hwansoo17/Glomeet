@@ -23,6 +23,7 @@ const LoginScreen = ({navigation}) => {
       const fcmToken = await AsyncStorage.getItem('fcmToken');
       const response = await api.post('/auth/signIn', {email, password, fcmToken})
       if (response.status == 200) {
+        setLoading(false);
         console.log('로그인 성공: ', response.data)
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('nickName', response.data.nickName)
@@ -35,6 +36,7 @@ const LoginScreen = ({navigation}) => {
         });
       }
       if (response.status == 201) {
+        setLoading(false);
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('nickName', response.data.nickName)
         await AsyncStorage.setItem('accessToken', response.data.tokens.accessToken)
@@ -46,13 +48,12 @@ const LoginScreen = ({navigation}) => {
         });
       }
     } catch (error) {
+      setLoading(false);
       console.log(error.response, "너냐 언디파인드?");
       if (error.response.status == 401) {
         console.log('로그인 실패: ', error);
         Alert.alert(t('login.loginfailed'));
       } 
-    } finally {
-      setLoading(false); // Set loading to false when login completes
     }
   };
   const setLocale = async(language) => {
@@ -134,7 +135,7 @@ const LoginScreen = ({navigation}) => {
         transparent={true}
         animationType="fade"
         visible={loading} // Show modal when loading is true
-        onRequestClose={() => {}}
+        onRequestClose={() => {setLoading(false)}}
       >
         <View style={styles.modalBackground}>
             <ActivityIndicator size="large" color="#5782F1" />
