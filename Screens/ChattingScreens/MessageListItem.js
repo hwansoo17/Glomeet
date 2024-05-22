@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   systemMessageText: {
+    textAlign: 'center',
     fontSize: 14,
     color: '#6e6e6e',
     fontFamily: "Pretendard-Medium",

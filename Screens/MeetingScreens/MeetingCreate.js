@@ -167,27 +167,28 @@ const MeetingCreate = ({navigation}) => {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.title}>{t("meetingCreate.meetingName")}</Text>
             <View style={{flex:1}}/>
-            <Text style={styles.contentsLength}>{title.length}/20</Text>
+            <Text style={styles.contentsLength}>{title.length}/30</Text>
           </View>
           <LineInput
             value={title}
             onChangeText={setTitle}
             placeholder={t("meetingCreate.NameContent")}
             placeholderTextColor={'#D3D3D3'}
-            maxLength={20}/>
+            maxLength={30}/>
             <View style={{height:30}}/>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.title}>{t("meetingCreate.meetingDescription")}</Text>
             <View style={{flex:1}}/>
-            <Text style={styles.contentsLength}>{description.length}/80</Text>
+            <Text style={styles.contentsLength}>{description.length}/120</Text>
           </View>
           <LineInput
             value={description}
             onChangeText={setDescription}
             placeholder={t("meetingCreate.DescriptionContent")}
             placeholderTextColor={'#D3D3D3'}
-            maxLength={80}
-            multiline={true}/>
+            maxLength={120}
+            multiline={true}
+            style={{textAlignVertical: 'top'}}/>
           <View style={{height:30}}/>  
           <Text style={styles.title}>{t("meetingCreate.participants")}</Text>
           <View style={{height:5}}/>
