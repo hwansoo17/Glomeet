@@ -149,11 +149,12 @@
   
   "ChatRoom":{
     "noChatRoom": "Non existent chat room.",
-    "report": "The report has been successfully submitted.",
+    "report": "The report has been successfully submitted.\nThe review may take up to 24 hours.",
     "toReport" : "To report",
     "notConversation": "Conversation is not possible.",
     "enterMessage": "Please enter a message.",
     "reasonReporting":"Please state the reason for the report.",
+    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nUsers with three or more processed reports will no longer be able to chat.",
     "JOIN": " has entered the room.",
     "CREATE": "A new meeting has been created.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
     "LEAVE": " has left the chat room.",
@@ -167,6 +168,13 @@
     "leave": "Leave",
     "leaveChatRoom": "Leave the chatroom"
     
+  },
+  "MeetingList": {
+    "toReport": "Report",
+    "report": "The report has been successfully submitted.\nThe review may take up to 24 hours.",
+    "cancel": "Cancel",
+    "reasonReporting": "Please provide a reason for the report.",
+    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nUsers with three or more processed reports will no longer be able to register meetings."
   },
   "time": {
     "AM": "AM",

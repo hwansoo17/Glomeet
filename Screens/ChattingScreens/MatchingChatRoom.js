@@ -121,32 +121,30 @@ const MatchingChatRoom = ({ route, navigation }) => {
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
           <TouchableOpacity 
-            style={{flex:2}}
-            onPress={() => setModalVisible2(false)}/>
-          <View style={{flex:3, flexDirection: 'row'}}>
-            <TouchableOpacity 
             style={{flex:1}}
-            onPress={() => setModalVisible2(false)}
-            />
-            {Platform.OS === 'ios' ? (
+            onPress={() => setModalVisible2(false)}/>
+          <View style={{minHeight:200, flexDirection: 'row'}}>
+          {Platform.OS === 'ios' ? (
             <InputAccessoryView style={{ flexDirection: "row"}}>
-              <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
-                <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatRoom.reasonReporting")}</Text>
+              <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("ChatRoom.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("ChatRoom.reportingNotice")}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <View style={{flex:1}}/>
                   <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
                 </View>
-                <View style={{ width:"100%", flex:4,borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
                   <TextInput
                     value={reportComment}
                     multiline
                     onChangeText={setReportComment}
                     maxLength={255}/>
                 </View>
-                <View style={{ flexDirection:'row', alignItems:'center'}}>
+                <View style={{flex:1}}/>
+                <View style={{ flexDirection:"row"}}>
                   <View style={{flex:1}}/>
                   <TouchableOpacity
-                    onPress={() => {setModalVisible2(false); reportUser(); }}
+                    onPress={() => {setModalVisible2(false); reportUser()}}
                     disabled={!reportEnabled}
                   >
                     <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
@@ -154,39 +152,34 @@ const MatchingChatRoom = ({ route, navigation }) => {
                 </View>
               </View>
             </InputAccessoryView>
-            ) : (
-            <View style={{flex:7, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20, alignItems:'center'}}>
-              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatRoom.reasonReporting")}</Text>
+          ) : (
+            <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("ChatRoom.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("ChatRoom.reportingNotice")}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex:1}}/>
                 <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
               </View>
-              <View style={{ width:"100%", flex:4,borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+              <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
                 <TextInput
                   value={reportComment}
                   multiline
                   onChangeText={setReportComment}
                   maxLength={255}/>
               </View>
-              <View style={{ flexDirection:'row', alignItems:'center'}}>
+              <View style={{flex:1}}/>
+              <View style={{ flexDirection:"row"}}>
                 <View style={{flex:1}}/>
                 <TouchableOpacity
-                  onPress={() => {setModalVisible2(false); reportUser(); }}
+                  onPress={() => {setModalVisible2(false); reportUser()}}
                   disabled={!reportEnabled}
                 >
                   <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            )}
-            <TouchableOpacity 
-            style={{flex:1}}
-            onPress={() => setModalVisible2(false)}
-            />
+          ) }
           </View>
-          <TouchableOpacity 
-            style={{flex:2}}
-            onPress={() => setModalVisible2(false)}/>
         </View>
       </Modal>
       <Modal

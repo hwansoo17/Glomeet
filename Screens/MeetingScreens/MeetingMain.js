@@ -1,5 +1,5 @@
 import React, { useState,useEffect, useLayoutEffect } from "react";
-import {View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import {View, Text, TouchableOpacity, FlatList, Image, Modal, TextInput, Alert} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi } from "../../api"
 import {RefreshControl} from 'react-native';
@@ -12,6 +12,11 @@ const MeetingMain = ({navigation}) => {
   const [filteredMeetingData, setFilteredMeetingData] = useState([]);
   const category = ['ALL', '운동', '여행','게임','문화','음식','언어']
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible2, setModalVisible2] = useState(false)
+  const [selectedMeeting, setSelectedMeeting] = useState([])
+  const [reportComment, setReportComment] = useState('')
+  const [reportEnabled, setReportEnabled] = useState(false)
   
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -24,6 +29,14 @@ const MeetingMain = ({navigation}) => {
       ),
     });
   }, [t]);
+
+  useEffect(() => {
+    if (reportComment != '') {
+      setReportEnabled(true);
+    } else {
+      setReportEnabled(false);
+    }
+  }, [reportComment]);
 
   const filterMeetingData = (category) => {
     if (category === 'ALL') {
@@ -64,10 +77,28 @@ const MeetingMain = ({navigation}) => {
 	const goMeetingRoom = (meeting) => {
     navigation.navigate("MeetingDetail", { meeting });
   };
+
+  const reportMeeing = async() => {
+    setReportComment('')
+    Alert.alert(t("MeetingList.report"))
+    // try {
+    //    const response = await authApi.post('/report/Meeting', { roomId: selectedMeeting.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
+    //   if (response.status == 200) {
+    //     setReportComment('')
+    //     Alert.alert(t("ChatRoom.report"))
+    //   }
+    // } catch (e) {
+    //   console.log(e)
+    // }
+  }
+
 	const renderItem = ({ item }) => (
       <TouchableOpacity
         style={{flex:1}}
-        onPress={() => goMeetingRoom(item)}>
+        onPress={() => goMeetingRoom(item)}
+        onLongPress={()=>{
+          setModalVisible(true) 
+          setSelectedMeeting(item)}}>
         <View style={{flex:1, flexDirection: "row", alignItems: "center"}}>
           <View style={{width: 70, height: 70, backgroundColor:'grey', borderRadius: 10, margin:10, overflow: 'hidden'}}>
             <Image src={item.meetingImageAddress} style={{flex:1}}/>
@@ -93,29 +124,126 @@ const MeetingMain = ({navigation}) => {
   )
   return (
 		<View style={{flex:1, backgroundColor: 'white'}}>
-      {/* <Text style={{fontSize:18, fontFamily: 'Pretendard-Medium', marginRight:5, color: '#09111F', padding:10}}>{t("meeting.category")}</Text>
-      <View>
-        <FlatList
-          data={category}
-          renderItem={renderCategory}
-          horizontal
-          ListHeaderComponent={<View style={{width:10}}/>}
-          ListFooterComponent={<View style={{width:10}}/>}
-          ItemSeparatorComponent={<View style={{width:5}}/>}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View> */}
-      {/* <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 10, marginHorizontal:10,  borderBottomColor:'#E1E5EB', borderBottomWidth: 1}}>
-        {category.map((category) => (
-          <TouchableOpacity
-            key={category}
-            onPress={() => setSelectedCategory(category)}
-            style={[{backgroundColor: '#D1DCFB', paddingHorizontal:13, paddingVertical:5, borderRadius:10}, selectedCategory == category && {backgroundColor: '#5782F1'}]}
-          >
-            <Text style={[{fontSize:12, fontFamily: 'Pretendard-Regular', color: '#6B7079'}, selectedCategory== category && { color: '#ffffff'}]}>{t(`category.${category}`)}</Text>
-          </TouchableOpacity>
-        ))}
-      </View> */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible2}
+        onRequestClose={() => {
+          setModalVisible2(false);
+          setReportComment('')
+        }}
+      >
+        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+          <TouchableOpacity 
+            style={{flex:1}}
+            onPress={() => setModalVisible2(false)}/>
+          <View style={{minHeight:200, flexDirection: 'row'}}>
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView style={{ flexDirection: "row"}}>
+              <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:15}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("MeetingList.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("MeetingList.reportingNotice")}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex:1}}/>
+                  <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
+                </View>
+                <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                  <TextInput
+                    value={reportComment}
+                    multiline
+                    onChangeText={setReportComment}
+                    maxLength={255}/>
+                </View>
+                <View style={{flex:1}}/>
+                <View style={{ flexDirection:"row"}}>
+                  <View style={{flex:1}}/>
+                  <TouchableOpacity
+                    onPress={() => {setModalVisible2(false); reportMeeing()}} //reportMeeing() 기능 추가
+                    disabled={!reportEnabled}
+                  >
+                    <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("MeetingList.toReport")}</Text>
+                  </TouchableOpacity>
+                </View>
+            </View>
+            </InputAccessoryView>
+          ) : (
+            <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("MeetingList.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("MeetingList.reportingNotice")}</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flex:1}}/>
+                <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
+              </View>
+              <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                <TextInput
+                  value={reportComment}
+                  multiline
+                  onChangeText={setReportComment}
+                  maxLength={255}/>
+              </View>
+              <View style={{flex:1}}/>
+              <View style={{ flexDirection:"row"}}>
+                <View style={{flex:1}}/>
+                <TouchableOpacity
+                  onPress={() => {setModalVisible2(false); reportMeeing()}} //reportMeeing() 기능 추가
+                  disabled={!reportEnabled}
+                >
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("MeetingList.toReport")}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) }
+          </View>
+        </View>
+      </Modal>
+      <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+      >
+        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+          <TouchableOpacity style={{flex:3}}
+            onPress={() => setModalVisible(false)}/>
+          <View style={{
+            borderTopRightRadius: 10,
+            borderTopLeftRadius:10,
+            flex:1,
+            backgroundColor: "white",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+          }}>
+            <View style={{flex:6, justifyContent: 'center', borderColor: '#e3e3e3', borderBottomWidth:0.7}}>
+              <Text style={{fontFamily:'Pretendard-SemiBold', fontSize:16, color:'#000', paddingLeft:15}}>{selectedMeeting.title}</Text>
+            </View>
+            <View style={{flex:0.5}}/>
+            <TouchableOpacity
+            style={{flex:5, justifyContent: 'center'}}
+              onPress={() => {
+                setModalVisible2(true)
+                setModalVisible(false)
+                }}
+            >
+              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toReport")}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={{flex:5, justifyContent: 'center'}}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#000', paddingLeft:15}}>{t("MeetingList.cancel")}</Text>
+            </TouchableOpacity>
+            <View style={{flex:1}}/>
+          </View>
+        </View>
+      </Modal>
       <View>
       <FlatList
         ListHeaderComponent={
