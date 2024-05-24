@@ -172,10 +172,13 @@
   },
   "MeetingList": {
     "toReport": "Report",
+    "toBlock": "Block",
+    "blockComplete": "Blocked successfully.",
     "report": "The report has been successfully submitted.\nThe review may take up to 24 hours.",
     "cancel": "Cancel",
     "reasonReporting": "Please provide a reason for the report.",
-    "reportingNotice": "Upon reporting, the group in question will be temporarily blocked, and the administrators will take appropriate action in accordance with Glomeet usage guidelines after review."
+    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nThe administrators will take appropriate action in accordance with Glomeet usage guidelines after review.",
+    "blockNoitce": "This post will not be displayed in the list\nand cannot be undone."
   },
   "time": {
     "AM": "AM",

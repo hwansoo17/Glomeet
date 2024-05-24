@@ -14,6 +14,7 @@ const MeetingMain = ({navigation}) => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [modalVisible, setModalVisible] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
+  const [modalVisible3, setModalVisible3] = useState(false)
   const [selectedMeeting, setSelectedMeeting] = useState([])
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
@@ -77,14 +78,23 @@ const MeetingMain = ({navigation}) => {
 	const goMeetingRoom = (meeting) => {
     navigation.navigate("MeetingDetail", { meeting });
   };
-
   const reportMeeing = async() => {
     try {
       const response = await authApi.post('/meeting/report', { id: selectedMeeting.id, description: reportComment})
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("MeetingList.report"))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const blockMeeing = async() => {
+    try {
+      const response = await authApi.post('/meeting/block', { id: selectedMeeting.id})
+      if (response.status == 200) {
         getMeetingData()
+        Alert.alert(t("MeetingList.blockComplete"))
       }
     } catch (e) {
       console.log(e)
@@ -123,6 +133,41 @@ const MeetingMain = ({navigation}) => {
   )
   return (
 		<View style={{flex:1, backgroundColor: 'white'}}>
+      <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible3}
+          onRequestClose={() => {
+            setModalVisible3(false);
+          }}
+      >
+        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+          <TouchableOpacity style={{flex:6}}
+            onPress={() => setModalVisible3(false)}/>
+          <View style={{flex:1, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+            <View style={{flex:1}}/>
+            <Text style={{fontFamily:'Pretendard-Medium', fontSize:18, color:'#000', textAlign:'center'}}>{t("MeetingList.blockNoitce")}</Text>
+            <View style={{flex:2}}/>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flex:4}}/>
+              <TouchableOpacity
+                style={{justifyContent: 'center'}}
+                onPress={() => {setModalVisible3(false);}}
+              >
+                <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#6B7079', paddingLeft:15}}>{t("MeetingList.cancel")}</Text>
+              </TouchableOpacity>
+              <View style={{flex:1}}/>
+              <TouchableOpacity
+                style={{justifyContent: 'center'}}
+                onPress={() => {setModalVisible3(false); blockMeeing();}}
+              >
+                <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toBlock")}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1}}/>
+          </View>
+        </View>
+      </Modal>
       <Modal
         animationType="fade"
         transparent={true}
@@ -232,6 +277,15 @@ const MeetingMain = ({navigation}) => {
                 }}
             >
               <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toReport")}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={{flex:5, justifyContent: 'center'}}
+              onPress={() => {
+                setModalVisible3(true)
+                setModalVisible(false)
+                }}
+            >
+              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toBlock")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
             style={{flex:5, justifyContent: 'center'}}
