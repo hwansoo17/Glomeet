@@ -79,17 +79,16 @@ const MeetingMain = ({navigation}) => {
   };
 
   const reportMeeing = async() => {
-    setReportComment('')
-    Alert.alert(t("MeetingList.report"))
-    // try {
-    //    const response = await authApi.post('/report/Meeting', { roomId: selectedMeeting.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
-    //   if (response.status == 200) {
-    //     setReportComment('')
-    //     Alert.alert(t("ChatRoom.report"))
-    //   }
-    // } catch (e) {
-    //   console.log(e)
-    // }
+    try {
+      const response = await authApi.post('/meeting/report', { id: selectedMeeting.id, description: reportComment})
+      if (response.status == 200) {
+        setReportComment('')
+        Alert.alert(t("MeetingList.report"))
+        getMeetingData()
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
 	const renderItem = ({ item }) => (

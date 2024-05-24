@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet, ImageBackground, FlatList} from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet, ImageBackground, FlatList, Linking } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formDataApi } from "../../api";
 import { useWebSocket } from '../../WebSocketProvider'
@@ -22,6 +22,9 @@ const MeetingCreate = ({navigation}) => {
   const {publish} = useWebSocket();
   const dataSource = Array.from({ length: 28 }, (_, i) => (i + 3).toString())
   
+  const openCommunityRules = () => {
+    Linking.openURL('https://uttermost-feels-5b2.notion.site/2cdb12ffc4904a0291e9bbfe63c311d9?pvs=4');
+  };
   useEffect(() => {
     if (title != '' && description != '' && category != '' && imageFile!= null) {
       setIsCreateEnabled(true);
@@ -189,7 +192,12 @@ const MeetingCreate = ({navigation}) => {
             maxLength={120}
             multiline={true}
             style={{textAlignVertical: 'top'}}/>
-          <View style={{height:30}}/>  
+          <TouchableOpacity
+            style={{padding: 10}}
+            onPress={()=>openCommunityRules()}>
+            <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 14, color: '#5782F1',textAlign: 'right'}}>{t("meetingCreate.communityGuidelines")}</Text>
+          </TouchableOpacity>
+          <View style={{height:20}}/>  
           <Text style={styles.title}>{t("meetingCreate.participants")}</Text>
           <View style={{height:5}}/>
           <View style={{paddingHorizontal: 80}}>

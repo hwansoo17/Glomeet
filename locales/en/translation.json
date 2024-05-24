@@ -144,7 +144,8 @@
     "participants": "Number of Participants",
     "selectKeywords": "Select Keywords",
     "meetingCreated":"The meeting has been created",
-    "newMeetingCreated": "The new meeting has been created."
+    "newMeetingCreated": "The new meeting has been created.",
+    "communityGuidelines":"View all community guidelines"
   },
   
   "ChatRoom":{
@@ -154,7 +155,7 @@
     "notConversation": "Conversation is not possible.",
     "enterMessage": "Please enter a message.",
     "reasonReporting":"Please state the reason for the report.",
-    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nUsers with three or more processed reports will no longer be able to chat.",
+    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nThe administrators will take appropriate action in accordance with Glomeet usage guidelines after review.",
     "JOIN": " has entered the room.",
     "CREATE": "A new meeting has been created.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
     "LEAVE": " has left the chat room.",
@@ -174,7 +175,7 @@
     "report": "The report has been successfully submitted.\nThe review may take up to 24 hours.",
     "cancel": "Cancel",
     "reasonReporting": "Please provide a reason for the report.",
-    "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nUsers with three or more processed reports will no longer be able to register meetings."
+    "reportingNotice": "Upon reporting, the group in question will be temporarily blocked, and the administrators will take appropriate action in accordance with Glomeet usage guidelines after review."
   },
   "time": {
     "AM": "AM",
