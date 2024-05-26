@@ -422,7 +422,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
         </View>
       </Modal>
 
-        <View>
+        <View style={{flex:1}}>
         <FlatList
             automaticallyAdjustContentInsets={false}
             inverted={true}

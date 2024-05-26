@@ -156,7 +156,7 @@ const MatchingChatList = ({ navigation }) => {
       </Modal>
       <FlatList
         data={chatData}
-        renderItem={({item}) => <ChatListItem item = {item} goChatRoom = {goChatRoom} setModalVisible = {setModalVisible} setSelectedChatRoom = {setSelectedChatRoom}/>}
+        renderItem={({item}) => <ChatListItem t={t} item = {item} goChatRoom = {goChatRoom} setModalVisible = {setModalVisible} setSelectedChatRoom = {setSelectedChatRoom}/>}
         keyExtractor={item => item.id}
       />
     </View>

@@ -1,9 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { formatDate } from "./formatDate";
-import { useTranslation } from "react-i18next";
-const ChatListItem = ({ item, goChatRoom, setModalVisible, setSelectedChatRoom }) => {
-  const {t} = useTranslation()
+const ChatListItem = ({ t, item, goChatRoom, setModalVisible, setSelectedChatRoom }) => {
+  const ta = t
   return(
     <TouchableOpacity 
       style= {{backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E4E5E6', height: 80, alignItems:'center', flexDirection: "row", padding: 10}}
@@ -17,7 +16,7 @@ const ChatListItem = ({ item, goChatRoom, setModalVisible, setSelectedChatRoom }
         <View style={{flex:1}}>
           <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 18, color: '#000'}} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
           {item.lastMessage == "BLOCKED_USER_MESSAGE" ? (
-          <Text style= {{fontFamily: "Pretendard-Light", fontSize: 14, color: '#000'}} numberOfLines={2} ellipsizeMode="tail">{t(`ChatList.${item.lastMessage}`)}</Text>
+          <Text style= {{fontFamily: "Pretendard-Light", fontSize: 14, color: '#000'}} numberOfLines={2} ellipsizeMode="tail">{ta(`ChatList.${item.lastMessage}`)}</Text>
           ) : (
           <Text style= {{fontFamily: "Pretendard-Light", fontSize: 14, color: '#000'}} numberOfLines={2} ellipsizeMode="tail">{item.lastMessage}</Text>
           )}
