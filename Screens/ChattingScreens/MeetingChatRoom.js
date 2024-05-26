@@ -38,16 +38,16 @@ const MeetingChatRoom = ({ route, navigation }) => {
       title: title,
       headerTitleAlign: "center",
       headerRight: () => (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={{ width: 36, height: 36, justifyContent: 'center', alignItems: 'center' }}
           onPress={toggleMenu}>
           <Text style={{fontFamily:'Pretendard-Medium', fontSize: 24, color:'#000'}}>⋮</Text>
         </TouchableOpacity>
       )
     });
-    
+
   }, [navigation, openToggle]);
-  
+
 
   useEffect(() => {
     console.log(roomStatus, '방상태 확인')
@@ -146,7 +146,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible3(false)}/>
           <View style={{minHeight:200, flexDirection: 'row'}}>
@@ -214,15 +214,19 @@ const MeetingChatRoom = ({ route, navigation }) => {
         visible={openToggle}
         onRequestClose={toggleMenu}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-start', alignItems: 'flex-end',}}
           onPress={toggleMenu}
         >
-          <View style={{  width: 150, backgroundColor: '#FFF', borderRadius: 5, padding: 10, margin:10}}>
-            <TouchableOpacity onPress={() => { toggleMenu(); setModalVisible3(true)}}>
-              <Text style={{fontFamily: "Pretendard-Medium", fontSize:16, color:'#000'}}>{t('ChatRoom.reportMeeting')}</Text>
-            </TouchableOpacity>
-          </View>
+          <SafeAreaView>
+            <View style={{ width: 150, backgroundColor: '#FFF', borderRadius: 5, padding: 10, margin: 10 }}>
+              <TouchableOpacity onPress={() => { toggleMenu(); setModalVisible3(true); }}>
+                <Text style={{ fontFamily: "Pretendard-Medium", fontSize: 16, color: '#000' }}>
+                  {t('ChatRoom.reportMeeting')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </TouchableOpacity>
       </Modal>
       <Modal
@@ -235,7 +239,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible2(false)}/>
           <View style={{minHeight:200, flexDirection: 'row'}}>
@@ -306,11 +310,11 @@ const MeetingChatRoom = ({ route, navigation }) => {
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:2}}
             onPress={() => setModalVisible(false)}/>
           <View style={{flex:3, flexDirection: 'row'}}>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible(false)}
             />
@@ -334,12 +338,12 @@ const MeetingChatRoom = ({ route, navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible(false)}
             />
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:2}}
             onPress={() => setModalVisible(false)}/>
         </View>
@@ -350,7 +354,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
         data={messages}
         renderItem={({item}) => <MessageListItem t = {t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser} />}
         keyExtractor={(item, index) => index.toString()}
-        inverted 
+        inverted
         onEndReached={loadMoreMessage}
         onEndReachedThreshold={0.7}/>
       <View style={{ flex: 1 }} />
@@ -365,9 +369,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
               placeholderTextColor={'#d3d3d3'}
               multiline
               textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
-          
+
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
             disabled={message == ""}
             onPress={sendMessage}>
@@ -385,9 +389,9 @@ const MeetingChatRoom = ({ route, navigation }) => {
               placeholderTextColor={'#d3d3d3'}
               multiline
               textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
-          
+
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
             disabled={message == ""}
             onPress={sendMessage}>
@@ -395,7 +399,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
         )
-      }      
+      }
     </SafeAreaView>
   );
 };
@@ -410,7 +414,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:16,
     backgroundColor: "#5782F1",
     borderRadius: 20,
-    
+
     // 기타 스타일
   },
   myMessageText: {
