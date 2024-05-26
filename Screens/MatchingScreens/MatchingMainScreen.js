@@ -113,8 +113,7 @@ const MatchingMainScreen = ({navigation}) => {
         updateMatchStatus()
       }
     } catch (error) {
-      if (error.response.status == 400) {
-      }
+        Alert.alert("매칭취소 실패")
     }
   }
   const renderContent = () => {

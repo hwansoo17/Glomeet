@@ -78,9 +78,9 @@ const MeetingMain = ({navigation}) => {
 	const goMeetingRoom = (meeting) => {
     navigation.navigate("MeetingDetail", { meeting });
   };
-  const reportMeeing = async() => {
+  const reportMeeting = async() => {
     try {
-      const response = await authApi.post('/meeting/report', { id: selectedMeeting.id, description: reportComment})
+      const response = await authApi.post('/report/meeting', { targetMeetingId: selectedMeeting.id, description: reportComment})
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("MeetingList.report"))
@@ -89,15 +89,17 @@ const MeetingMain = ({navigation}) => {
       console.log(e)
     }
   }
-  const blockMeeing = async() => {
+  const blockUser = async() => {
     try {
-      const response = await authApi.post('/meeting/block', { id: selectedMeeting.id})
+      const response = await authApi.post('/user/block', { targetNickname: selectedMeeting.nickName})
       if (response.status == 200) {
         getMeetingData()
         Alert.alert(t("MeetingList.blockComplete"))
       }
     } catch (e) {
-      console.log(e)
+      if (e.response.status == 400) {
+        Alert.alert(t(`MeetingList.${e.response.data.message}`))
+      }
     }
   }
 
@@ -159,7 +161,7 @@ const MeetingMain = ({navigation}) => {
               <View style={{flex:1}}/>
               <TouchableOpacity
                 style={{justifyContent: 'center'}}
-                onPress={() => {setModalVisible3(false); blockMeeing();}}
+                onPress={() => {setModalVisible3(false); blockUser();}}
               >
                 <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toBlock")}</Text>
               </TouchableOpacity>
@@ -202,7 +204,7 @@ const MeetingMain = ({navigation}) => {
                 <View style={{ flexDirection:"row"}}>
                   <View style={{flex:1}}/>
                   <TouchableOpacity
-                    onPress={() => {setModalVisible2(false); reportMeeing()}} //reportMeeing() 기능 추가
+                    onPress={() => {setModalVisible2(false); reportMeeting()}} //reportMeeting() 기능 추가
                     disabled={!reportEnabled}
                   >
                     <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("MeetingList.toReport")}</Text>
@@ -229,7 +231,7 @@ const MeetingMain = ({navigation}) => {
               <View style={{ flexDirection:"row"}}>
                 <View style={{flex:1}}/>
                 <TouchableOpacity
-                  onPress={() => {setModalVisible2(false); reportMeeing()}} //reportMeeing() 기능 추가
+                  onPress={() => {setModalVisible2(false); reportMeeting()}} //reportMeeing() 기능 추가
                   disabled={!reportEnabled}
                 >
                   <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("MeetingList.toReport")}</Text>
@@ -266,7 +268,11 @@ const MeetingMain = ({navigation}) => {
             elevation: 5
           }}>
             <View style={{flex:6, justifyContent: 'center', borderColor: '#e3e3e3', borderBottomWidth:0.7}}>
-              <Text style={{fontFamily:'Pretendard-SemiBold', fontSize:16, color:'#000', paddingLeft:15}}>{selectedMeeting.title}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{fontFamily:'Pretendard-SemiBold', fontSize:16, color:'#000', paddingLeft:15}}>{selectedMeeting.title}</Text>
+                <View style={{flex:1}}/>
+                <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#000', paddingRight:15}}>{t("MeetingList.Host")}: {selectedMeeting.nickName}</Text>
+              </View>
             </View>
             <View style={{flex:0.5}}/>
             <TouchableOpacity

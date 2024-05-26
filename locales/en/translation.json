@@ -149,6 +149,7 @@
   },
   
   "ChatRoom":{
+    "reportMeeting": "Report Meeting",
     "noChatRoom": "Non existent chat room.",
     "report": "The report has been successfully submitted.\nThe review may take up to 24 hours.",
     "toReport" : "To report",
@@ -178,7 +179,10 @@
     "cancel": "Cancel",
     "reasonReporting": "Please provide a reason for the report.",
     "reportingNotice": "After reviewing the reason for the report, we will take appropriate action.\nThe administrators will take appropriate action in accordance with Glomeet usage guidelines after review.",
-    "blockNoitce": "This post will not be displayed in the list\nand cannot be undone."
+    "blockNoitce": "This user's posts will not be displayed in the list\nand cannot be undone.",
+    "ALREADY_BLOCKED": "This user is already blocked.",
+    "SELF_BLOCK": "You cannot block yourself.",
+    "Host": "Host"
   },
   "time": {
     "AM": "AM",

@@ -21,19 +21,34 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
+  const [modalVisible3, setModalVisible3] = useState(false)
   const [selectedChatUser, setSelectedChatUser] = useState([])
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
   const [isRoomActive, setIsRoomActive] = useState(true)
   const webSocketClient = useWebSocket();
+  const [openToggle, setOpenToggle] = useState(false)
+  const toggleMenu = () => {
+    setOpenToggle(!openToggle);
+    console.log(openToggle)
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: title,
       headerTitleAlign: "center",
+      headerRight: () => (
+        <TouchableOpacity 
+          style={{ width: 36, height: 36, justifyContent: 'center', alignItems: 'center' }}
+          onPress={toggleMenu}>
+          <Text style={{fontFamily:'Pretendard-Medium', fontSize: 24, color:'#000'}}>⋮</Text>
+        </TouchableOpacity>
+      )
     });
-  }, [navigation]);
+    
+  }, [navigation, openToggle]);
   
+
   useEffect(() => {
     console.log(roomStatus, '방상태 확인')
     if (roomStatus == 'INACTIVE') {
@@ -99,7 +114,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
 
   const reportUser = async() => {
     try {
-      const response = await authApi.post('/report/user', { roomId: selectedChatUser.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
+      const response = await authApi.post('/report/user', { targetNickname: selectedChatUser.senderNickName, description: reportComment})
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("ChatRoom.report"))
@@ -108,22 +123,108 @@ const MeetingChatRoom = ({ route, navigation }) => {
       console.log(e)
     }
   }
+  const reportMeeting = async() => {
+    try {
+      const response = await authApi.post('/report/meeting', { targetMeetingId: id, description: reportComment})
+      if (response.status == 200) {
+        setReportComment('')
+        Alert.alert(t("MeetingList.report"))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <TouchableOpacity style={{flexDirection: "row", padding: 20, borderBottomWidth:1, borderBottomColor:"#E4E5E6"}}>
-        <View style={styles.avatar}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible3}
+        onRequestClose={() => {
+          setModalVisible3(false);
+          setReportComment('')
+        }}
+      >
+        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+          <TouchableOpacity 
+            style={{flex:1}}
+            onPress={() => setModalVisible3(false)}/>
+          <View style={{minHeight:200, flexDirection: 'row'}}>
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView style={{ flexDirection: "row"}}>
+              <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("ChatRoom.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("ChatRoom.reportingNotice")}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex:1}}/>
+                  <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
+                </View>
+                <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                  <TextInput
+                    value={reportComment}
+                    multiline
+                    onChangeText={setReportComment}
+                    maxLength={255}/>
+                </View>
+                <View style={{flex:1}}/>
+                <View style={{ flexDirection:"row"}}>
+                  <View style={{flex:1}}/>
+                  <TouchableOpacity
+                    onPress={() => {setModalVisible3(false); reportMeeting()}}
+                    disabled={!reportEnabled}
+                  >
+                    <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </InputAccessoryView>
+          ) : (
+            <View style={{flex:1,backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079', alignSelf:'center'}}>{t("ChatRoom.reasonReporting")}</Text>
+              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 12, color: '#6B7079', alignSelf:'center', textAlign:'center'}}>{t("ChatRoom.reportingNotice")}</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flex:1}}/>
+                <Text style={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#D3D3D3'}}>{reportComment.length}/255</Text>
+              </View>
+              <View style={{borderRadius:10, backgroundColor: "#EEF3FF", padding:5, margin:10}}>
+                <TextInput
+                  value={reportComment}
+                  multiline
+                  onChangeText={setReportComment}
+                  maxLength={255}/>
+              </View>
+              <View style={{flex:1}}/>
+              <View style={{ flexDirection:"row"}}>
+                <View style={{flex:1}}/>
+                <TouchableOpacity
+                  onPress={() => {setModalVisible3(false); reportMeeting()}}
+                  disabled={!reportEnabled}
+                >
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: reportEnabled ? '#EC3232' : '#D3D3D3'}}>{t("ChatRoom.toReport")}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) }
+          </View>
         </View>
-        <View style={{flex:1}}/>
-        <View>
-          <Text>
-            모임 카테고리
-          </Text>
-          <View style={{flex:1}}/>
-          <Text>
-            인원숫자
-          </Text>
-        </View>
-      </TouchableOpacity> */}
+      </Modal>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={openToggle}
+        onRequestClose={toggleMenu}
+      >
+        <TouchableOpacity 
+          style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-start', alignItems: 'flex-end',}}
+          onPress={toggleMenu}
+        >
+          <View style={{  width: 150, backgroundColor: '#FFF', borderRadius: 5, padding: 10, margin:10}}>
+            <TouchableOpacity onPress={() => { toggleMenu(); setModalVisible3(true)}}>
+              <Text style={{fontFamily: "Pretendard-Medium", fontSize:16, color:'#000'}}>{t('ChatRoom.reportMeeting')}</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
       <Modal
         animationType="fade"
         transparent={true}
