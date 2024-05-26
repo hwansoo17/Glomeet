@@ -103,7 +103,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   }
   const reportUser = async() => {
     try {
-      const response = await authApi.post('/report/user', { roomId: selectedChatUser.roomId, targetNickName: selectedChatUser.senderNickName, comment: reportComment})
+      const response = await authApi.post('/report/user', { roomId: selectedChatUser.roomId, targetNickname: selectedChatUser.senderNickName, description: reportComment})
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("ChatRoom.report"))
