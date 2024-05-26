@@ -178,9 +178,9 @@ const MatchingMainScreen = ({navigation}) => {
               <View style={{ width:100, height:100, borderRadius: 60, overflow: 'hidden', backgroundColor: 'grey'}}>
                 <Image src={partnerProfileImage} style={{ width:100, height:100}}/>
               </View>
-              <View style={{flex:1}}/>
-              <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 28, color: '#5782F1'}}>{partnerNickName}</Text>
               <View style={{flex:0.5}}/>
+              <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 28, color: '#5782F1'}}>{partnerNickName}</Text>
+              <View style={{flex:1}}/>
               <View style={{flexDirection:'row'}}>
                 <View style={{flex:2}}/>
                 <Text style={{fontFamily:"Pretendard-Regular", fontSize: 14, color: '#6B7079'}}># {t(`onboarding.${partnerCountry}`)}</Text>

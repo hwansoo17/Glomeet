@@ -161,14 +161,16 @@
     "CREATE": "A new meeting has been created.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
     "LEAVE": " has left the chat room.",
     "MATCHED": "The match has been made.\nInappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
-    "JOINprivate": "Inappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations."
+    "JOINprivate": "Inappropriate or offensive content\nmay be subject to sanctions.\nPlease engage in healthy conversations.",
+    "blockNoitce": "Block this user without showing messages.\nThis cannot be undone."
   },
   "ChatList": {
     "leftChatRoom": "has left the chatroom.",
     "leaveChatRoom?": "Would you like to leave the chatroom?",
     "cancel": "Cancel",
     "leave": "Leave",
-    "leaveChatRoom": "Leave the chatroom"
+    "leaveChatRoom": "Leave the chatroom",
+    "BLOCKED_USER_MESSAGE": "This is a message from a blocked user."
     
   },
   "MeetingList": {
@@ -188,5 +190,6 @@
     "AM": "AM",
     "PM": "PM"
   }
+
 
 }

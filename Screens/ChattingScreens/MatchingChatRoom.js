@@ -20,6 +20,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false)
   const [modalVisible2, setModalVisible2] = useState(false)
+  const [modalVisible4, setModalVisible4] = useState(false)
   const [selectedChatUser, setSelectedChatUser] = useState([])
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
@@ -108,8 +109,55 @@ const MatchingChatRoom = ({ route, navigation }) => {
       console.log(e)
     }
   }
+  const blockUser = async() => {
+    try {
+      const response = await authApi.post('/user/block', { targetNickname: selectedChatUser.senderNickName})
+      if (response.status == 200) {
+        Alert.alert(t("MeetingList.blockComplete"))
+      }
+    } catch (e) {
+      if (e.response.status == 400) {
+        Alert.alert(t(`MeetingList.${e.response.data.message}`))
+      }
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible4}
+          onRequestClose={() => {
+            setModalVisible4(false);
+          }}
+      >
+        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+          <TouchableOpacity style={{flex:6}}
+            onPress={() => setModalVisible4(false)}/>
+          <View style={{flex:1, backgroundColor: "white", shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
+            <View style={{flex:1}}/>
+            <Text style={{fontFamily:'Pretendard-Medium', fontSize:18, color:'#000', textAlign:'center'}}>{t("ChatRoom.blockNoitce")}</Text>
+            <View style={{flex:2}}/>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flex:4}}/>
+              <TouchableOpacity
+                style={{justifyContent: 'center'}}
+                onPress={() => {setModalVisible4(false);}}
+              >
+                <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#6B7079', paddingLeft:15}}>{t("MeetingList.cancel")}</Text>
+              </TouchableOpacity>
+              <View style={{flex:1}}/>
+              <TouchableOpacity
+                style={{justifyContent: 'center'}}
+                onPress={() => {setModalVisible4(false); blockUser();}}
+              >
+                <Text style={{fontFamily:'Pretendard-Medium', fontSize:16, color:'#EC3232', paddingLeft:15}}>{t("MeetingList.toBlock")}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1}}/>
+          </View>
+        </View>
+      </Modal>
       <Modal
         animationType="fade"
         transparent={true}
@@ -208,6 +256,14 @@ const MatchingChatRoom = ({ route, navigation }) => {
               <Text style={{fontFamily:"GmarketSansTTFBold", fontSize: 28, color: '#000'}}>{selectedChatUser.senderNickName}</Text>
               <View style={{flex:1}}/>
               <View style={{flexDirection:'row', alignItems:'center'}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(false)
+                    setModalVisible4(true)
+                  }}
+                >
+                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 14, color: '#EC3232'}}>{t("MeetingList.toBlock")}</Text>
+                </TouchableOpacity>
                 <View style={{flex:1}}/>
                 <TouchableOpacity
                   onPress={() => {

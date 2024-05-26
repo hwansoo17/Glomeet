@@ -20,7 +20,7 @@ Object.assign("global", {
 });
 
 export const WebSocketProvider = ({ children }) => {
-
+  const [blockedUsers, setBlockedUsers] = useState(["playground99@ajou.ac.kr", 'swoolee97@ajou.ac.kr'])
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -159,7 +159,7 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   const handleWebSocketMessage = async (message) => {
-    // 메시지 이벤트를 발생시키는 메서드
+    // 메시지 이벤트를 발생시키는 메서드  
     console.log(message.body, '온앱 푸시알림 이벤트 발생');
     const newMessage = JSON.parse(message.body);
     await pushNoti.displayNoti(newMessage.senderNickName, newMessage.message);

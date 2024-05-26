@@ -8,33 +8,48 @@ import { useWebSocket } from "../WebSocketProvider";
 const useChatRoom = (id) => {
   const [messages, setMessages] = useState([]);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const blockedUsersRef = useRef([]);
   const backgroundMessageCount = useRef(0);
   const webSocketClient = useWebSocket();
   const appState = useRef(AppState.currentState);
   let subscription = null;
-  
   const backgroundMessageCountEventListener = (message) => {
     backgroundMessageCount.current += 1
     console.log(message, 'useChatRoom', '백그라운드메시지')
   }
- 
+  const getBlockedUsers = async() => {
+    try {
+      const response = await authApi.get("/block/list")
+      if (response.status ==200) {
+        blockedUsersRef.current = response.data;
+        console.log(response.data,1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const initialize = async () => {
       const email = await AsyncStorage.getItem("email");
+      await getBlockedUsers()
+      console.log(blockedUsersRef.current,2)
       subscription = webSocketClient.subscribe("/sub/chat/"+id, (message) => {
+        console.log(blockedUsersRef.current,3)
         console.log("@@@@@@@@@@")
         const newMessage = JSON.parse(message.body);
-        if(newMessage.type === "SEND") {
-          setMessages((prevMessages) => [newMessage, ...prevMessages]);
-          EventEmitter.emit("chatRoomMessage", message);
-        }
-        if(newMessage.type === "JOIN") {
-          setMessages((prevMessages) => [newMessage, ...prevMessages]);
-        }
-        if(newMessage.type === "LEAVE") {
-          setMessages((prevMessages) => [newMessage, ...prevMessages]);
-        }
-        if(newMessage.type === "ENTER") {// 새 타입 커넥트
-          EventEmitter.emit("chatRoomConnect", message);
+        if (!blockedUsersRef.current.includes(newMessage.senderNickName)) {
+          if(newMessage.type === "SEND") {
+            setMessages((prevMessages) => [newMessage, ...prevMessages]);
+            EventEmitter.emit("chatRoomMessage", message);
+          }
+          if(newMessage.type === "JOIN") {
+            setMessages((prevMessages) => [newMessage, ...prevMessages]);
+          }
+          if(newMessage.type === "LEAVE") {
+            setMessages((prevMessages) => [newMessage, ...prevMessages]);
+          }
+          if(newMessage.type === "ENTER") {// 새 타입 커넥트
+            EventEmitter.emit("chatRoomConnect", message);
+          }
         }
       }, {'email' : email});
   };
@@ -157,6 +172,7 @@ const useChatRoom = (id) => {
     }
     
   }
+
   useEffect(()=>{
     console.log(hasMoreData)
     EventEmitter.on("loadMoreMessage", loadMoreMessageEventListener)
