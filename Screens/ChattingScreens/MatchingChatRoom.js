@@ -289,7 +289,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
             onPress={() => setModalVisible(false)}/>
         </View>
       </Modal>
-      <View style={{flex:1}}>
+      <View style={{flex: Platform.OS === 'ios' ? 0 : 1}}>
       <FlatList
         automaticallyAdjustKeyboardInsets={true}
         keyboardDismissMode="interactive"
