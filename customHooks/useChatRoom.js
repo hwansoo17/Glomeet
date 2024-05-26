@@ -5,7 +5,7 @@ import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useWebSocket } from "../WebSocketProvider";
 
-const useChatRoom = (id) => {
+const useChatRoom = (id, key) => {
   const [messages, setMessages] = useState([]);
   const [hasMoreData, setHasMoreData] = useState(true);
   const blockedUsersRef = useRef([]);
@@ -207,7 +207,7 @@ const useChatRoom = (id) => {
       const email = await AsyncStorage.getItem("email");
       subscription.unsubscribe({"email" : email, "destination" : "/sub/chat/"+id});
     };
-  }, []);
+  }, [key]);
 
   return messages
 }

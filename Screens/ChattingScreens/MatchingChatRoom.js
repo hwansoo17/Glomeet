@@ -17,7 +17,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const unRead = route.params.chat.unRead;
   const roomStatus = route.params.chat.roomStatus;
 
-  const messages = useChatRoom(id);
+  
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false)
@@ -27,9 +27,10 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
   const [isRoomActive, setIsRoomActive] = useState(true)
+  const [key, setKey] = useState(0);
   const webSocketClient = useWebSocket();
   const insets = useSafeAreaInsets();
-
+  const messages = useChatRoom(id, key);
   useLayoutEffect(() => {
     navigation.setOptions({
       title: chat.title,
@@ -107,6 +108,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("ChatRoom.report"))
+        
       }
     } catch (e) {
       console.log(e)
@@ -117,6 +119,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       const response = await authApi.post('/user/block', { targetNickname: selectedChatUser.senderNickName})
       if (response.status == 200) {
         Alert.alert(t("MeetingList.blockComplete"))
+        setKey(prevKey => prevKey + 1);
       }
     } catch (e) {
       if (e.response.status == 400) {

@@ -22,7 +22,6 @@ import SendIcon from "../../assets/SendIcon.svg";
 import EventEmitter from "react-native-eventemitter";
 import { authApi } from "../../api";
 import { useTranslation } from "react-i18next";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
@@ -32,7 +31,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const unRead = route.params.chat.unRead;
   const title = route.params.chat.title;
   const roomStatus = route.params.chat.roomStatus;
-  const messages = useChatRoom(id);
+  
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false)
@@ -43,6 +42,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
   const [reportComment, setReportComment] = useState('')
   const [reportEnabled, setReportEnabled] = useState(false)
   const [isRoomActive, setIsRoomActive] = useState(true)
+  const [key, setKey] = useState(0);
   const webSocketClient = useWebSocket();
   const [openToggle, setOpenToggle] = useState(false)
   const toggleMenu = () => {
@@ -50,6 +50,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
     console.log(openToggle)
   };
   const insets = useSafeAreaInsets();
+  const messages = useChatRoom(id, key);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -146,10 +147,13 @@ const MeetingChatRoom = ({ route, navigation }) => {
       const response = await authApi.post('/user/block', { targetNickname: selectedChatUser.senderNickName})
       if (response.status == 200) {
         Alert.alert(t("MeetingList.blockComplete"))
+        setKey(prevKey => prevKey + 1);
+
       }
     } catch (e) {
       if (e.response.status == 400) {
         Alert.alert(t(`MeetingList.${e.response.data.message}`))
+        setKey(prevKey => prevKey + 1);
       }
     }
   }
