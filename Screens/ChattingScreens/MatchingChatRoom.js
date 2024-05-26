@@ -17,7 +17,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const unRead = route.params.chat.unRead;
   const roomStatus = route.params.chat.roomStatus;
 
-  
+
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false)
@@ -108,7 +108,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
       if (response.status == 200) {
         setReportComment('')
         Alert.alert(t("ChatRoom.report"))
-        
+
       }
     } catch (e) {
       console.log(e)
@@ -294,8 +294,15 @@ const MatchingChatRoom = ({ route, navigation }) => {
       </Modal>
       <View style={{flex: Platform.OS === 'ios' ? 0 : 1}}>
       <FlatList
+        automaticallyAdjustContentInsets={false}
         automaticallyAdjustKeyboardInsets={true}
         keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        contentInsetAdjustmentBehavior="never"
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 80,
+        }}
         data={messages}
         renderItem={({item}) => <MessageListItem t={t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
         keyExtractor={(item, index) => index.toString()}
