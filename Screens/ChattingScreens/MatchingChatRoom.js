@@ -8,6 +8,8 @@ import MessageListItem from "./MessageListItem";
 import SendIcon from "../../assets/SendIcon.svg";
 import { authApi } from "../../api";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 const MatchingChatRoom = ({ route, navigation }) => {
   const { t } = useTranslation();
   const id =  route.params.chat.id;
@@ -26,6 +28,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
   const [reportEnabled, setReportEnabled] = useState(false)
   const [isRoomActive, setIsRoomActive] = useState(true)
   const webSocketClient = useWebSocket();
+  const insets = useSafeAreaInsets();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -121,8 +124,9 @@ const MatchingChatRoom = ({ route, navigation }) => {
       }
     }
   }
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, paddingBottom : Platform.OS === 'ios' ? insets.bottom + 50 : 0, backgroundColor: "white" }}>
       <Modal
           animationType="fade"
           transparent={true}
@@ -168,7 +172,7 @@ const MatchingChatRoom = ({ route, navigation }) => {
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible2(false)}/>
           <View style={{minHeight:200, flexDirection: 'row'}}>
@@ -239,11 +243,11 @@ const MatchingChatRoom = ({ route, navigation }) => {
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:2}}
             onPress={() => setModalVisible(false)}/>
           <View style={{flex:3, flexDirection: 'row'}}>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible(false)}
             />
@@ -275,26 +279,26 @@ const MatchingChatRoom = ({ route, navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={{flex:1}}
             onPress={() => setModalVisible(false)}
             />
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{flex:2}}
             onPress={() => setModalVisible(false)}/>
         </View>
       </Modal>
+      <View>
       <FlatList
         automaticallyAdjustKeyboardInsets={true}
         keyboardDismissMode="interactive"
         data={messages}
         renderItem={({item}) => <MessageListItem t={t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser}/>}
         keyExtractor={(item, index) => index.toString()}
-        inverted 
+        inverted
         onEndReached={loadMoreMessage}
         onEndReachedThreshold={0.7}/>
-      <View style={{ flex: 1 }} />
       {Platform.OS === 'ios' ? (
         <InputAccessoryView style={{ flexDirection: "row"}}>
           <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
@@ -306,9 +310,9 @@ const MatchingChatRoom = ({ route, navigation }) => {
               multiline
               placeholderTextColor={'#d3d3d3'}
               textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
-          
+
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
             disabled={message == ""}
             onPress={sendMessage}>
@@ -326,9 +330,9 @@ const MatchingChatRoom = ({ route, navigation }) => {
               multiline
               placeholderTextColor={'#d3d3d3'}
               textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3', textAlignVertical:'center'}}>{t("ChatRoom.notConversation")}</Text>)}
-          
+
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
             disabled={message == ""}
             onPress={sendMessage}>
@@ -337,7 +341,8 @@ const MatchingChatRoom = ({ route, navigation }) => {
         </View>
         )
       }
-    </SafeAreaView>
+      </View>
+    </View>
   );
 };
 
