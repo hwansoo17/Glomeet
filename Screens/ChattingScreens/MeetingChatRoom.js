@@ -1,5 +1,19 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { View, Text, TouchableOpacity, TextInput, FlatList, StyleSheet, SafeAreaView, Modal, Image, Alert, InputAccessoryView, Platform } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    FlatList,
+    StyleSheet,
+    SafeAreaView,
+    Modal,
+    Image,
+    Alert,
+    InputAccessoryView,
+    Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useWebSocket } from "../../WebSocketProvider";
 import useChatRoom from "../../customHooks/useChatRoom";
@@ -8,6 +22,8 @@ import SendIcon from "../../assets/SendIcon.svg";
 import EventEmitter from "react-native-eventemitter";
 import { authApi } from "../../api";
 import { useTranslation } from "react-i18next";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 // 채팅방 아이디 받아와서 서버에 요청해서 채팅방 정보 받아오기
 // 채팅방 정보 받아오면 채팅방 정보를 채팅방 화면에 띄우기
 const MeetingChatRoom = ({ route, navigation }) => {
@@ -33,6 +49,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
     setOpenToggle(!openToggle);
     console.log(openToggle)
   };
+  const insets = useSafeAreaInsets();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -148,7 +165,7 @@ const MeetingChatRoom = ({ route, navigation }) => {
     }
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{ flex: 1, paddingBottom : Platform.OS === 'ios' ? insets.bottom + 50 : 0, backgroundColor: "white" }}>
       <Modal
           animationType="fade"
           transparent={true}
@@ -404,59 +421,72 @@ const MeetingChatRoom = ({ route, navigation }) => {
             onPress={() => setModalVisible(false)}/>
         </View>
       </Modal>
-      <FlatList
-        automaticallyAdjustKeyboardInsets={true}
-        keyboardDismissMode="interactive"
+
+        <View>
+        <FlatList
+            automaticallyAdjustContentInsets={false}
+            inverted={true}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            contentInsetAdjustmentBehavior="never"
+            maintainVisibleContentPosition={{
+              minIndexForVisible: 0,
+              autoscrollToTopThreshold: 80,
+            }}
+            automaticallyAdjustKeyboardInsets={true}
         data={messages}
         renderItem={({item}) => <MessageListItem t = {t} item={item} userEmail={email} setModalVisible = {setModalVisible} setSelectedChatUser = {setSelectedChatUser} />}
         keyExtractor={(item, index) => index.toString()}
-        inverted
+        // inverted
         onEndReached={loadMoreMessage}
         onEndReachedThreshold={0.7}/>
-      <View style={{ flex: 1 }} />
-      {Platform.OS === 'ios' ? (
-        <InputAccessoryView style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
-          {isRoomActive ? (<TextInput
-              style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
-              placeholder={t("ChatRoom.enterMessage")}
-              value={message}
-              onChangeText={setMessage}
-              placeholderTextColor={'#d3d3d3'}
-              multiline
-              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
+        {Platform.OS === 'ios' ? (
+            <InputAccessoryView>
+                <View style={{flexDirection: "row"}}>
+                    <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
+                        {isRoomActive ? (<TextInput
+                            style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
+                            placeholder={t("ChatRoom.enterMessage")}
+                            value={message}
+                            onChangeText={setMessage}
+                            placeholderTextColor={'#d3d3d3'}
+                            multiline
+                            textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
 
-          </View>
-          <TouchableOpacity
-            style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
-            disabled={message == ""}
-            onPress={sendMessage}>
-            <SendIcon/>
-          </TouchableOpacity>
-        </InputAccessoryView>
+                    </View>
+                    <TouchableOpacity
+                        style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
+                        disabled={message == ""}
+                        onPress={sendMessage}>
+                        <SendIcon/>
+                    </TouchableOpacity>
+                </View>
+            </InputAccessoryView>
         ) : (
-        <View style={{ flexDirection: "row"}}>
-          <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
-          {isRoomActive ? (<TextInput
-              style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
-              placeholder={t("ChatRoom.enterMessage")}
-              value={message}
-              onChangeText={setMessage}
-              placeholderTextColor={'#d3d3d3'}
-              multiline
-              textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
+            <View style={{ flexDirection: "row"}}>
+                <View style={{ backgroundColor:'#F1F1F1', flex:5, minHeight:50, justifyContent:'center', paddingHorizontal:5}}>
+                    {isRoomActive ? (<TextInput
+                        style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#000'}}
+                        placeholder={t("ChatRoom.enterMessage")}
+                        value={message}
+                        onChangeText={setMessage}
+                        placeholderTextColor={'#d3d3d3'}
+                        multiline
+                        textAlignVertical='center'/>): (<Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#d3d3d3'}}>{t("ChatRoom.notConversation")}</Text>)}
 
-          </View>
-          <TouchableOpacity
-            style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
-            disabled={message == ""}
-            onPress={sendMessage}>
-            <SendIcon/>
-          </TouchableOpacity>
-        </View>
+                </View>
+                <TouchableOpacity
+                    style={{ backgroundColor:'#5782F1', flex:1, justifyContent:'center', alignItems: 'center'}}
+                    disabled={message == ""}
+                    onPress={sendMessage}>
+                    <SendIcon/>
+                </TouchableOpacity>
+            </View>
         )
-      }
-    </SafeAreaView>
+        }
+        </View>
+        {/*<View style={{ flex: 1 }} />*/}
+    </View>
   );
 };
 

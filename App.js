@@ -27,9 +27,9 @@ import { useTranslation } from "react-i18next";
 import i18n from './locales/i18n';
 import { View, ActivityIndicator } from "react-native";
 
-// console.log = () => {};
-// console.warn = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
 
 if (process.env.NODE_ENV === "production") {
 	console = window.console || {};
@@ -56,59 +56,59 @@ function BottomTabNavigator() {
       <Tab.Screen
         name="Home"
         component={HomeStackScreen}
-        options={{ 
-          headerShown: false, 
+        options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <HomeIcon
-              width="28" 
+              width="28"
               height="28"
               color={focused? "#5782F1" : "#949698"}
             />
           ),
           tabBarLabel: t("nav.home"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
-        }} 
+        }}
       />
       <Tab.Screen
         name="Matching"
         component={MatchingStackScreen}
-        options={{ 
-          headerShown: false, 
+        options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <MatchingIcon
-              width="28" 
+              width="28"
               height="28"
               color={focused? "#5782F1" : "#949698"}
             />
           ),
           tabBarLabel: t("nav.matching"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
-        }} 
+        }}
       />
       <Tab.Screen
         name="Meeting"
         component={MeetingStackScreen}
-        options={{ 
-          headerShown: false, 
+        options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <MeetingIcon
-              width="28" 
+              width="28"
               height="28"
               color={focused? "#5782F1" : "#949698"}
             />
           ),
           tabBarLabel: t("nav.meeting"),
           tabBarLabelStyle: {fontFamily:"GmarketSansTTFMedium", fontSize:12}
-        }}  
+        }}
       />
       <Tab.Screen
         name="Chatting"
         component={ChattingStackScreen}
-        options={{ 
-          headerShown: false, 
+        options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <ChattingIcon
-              width="28" 
+              width="28"
               height="28"
               color={focused? "#5782F1" : "#949698"}
             />
@@ -190,7 +190,7 @@ const App = () => {
   useEffect(() => {
     LogBox.ignoreAllLogs()
   }, []);
-  
+
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log("[온 앱 메시지]", remoteMessage);
