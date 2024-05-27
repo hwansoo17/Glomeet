@@ -7,6 +7,8 @@ import { authApi } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useWebSocket } from '../../WebSocketProvider'
 import { useTranslation } from "react-i18next";
+import ChatRoomInfoModal from "../../customComponents/ChatRoomInfoModal";
+import LeaveChatRoomModal from "../../customComponents/LeaveChatRoomModal";
 const MatchingChatList = ({ navigation }) => {
   const { t } = useTranslation();
   const { chatData, getChatList } = useChatList("/matching/list");
@@ -47,113 +49,23 @@ const MatchingChatList = ({ navigation }) => {
   
   return (
     <View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible2}
-        onRequestClose={() => {
-          setModalVisible2(false);
-        }}
-      >
-        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity 
-            style={{flex:5}}
-            onPress={() => setModalVisible2(false)}/>
-          <View style={{flex:3, flexDirection: 'row'}}>
-            <TouchableOpacity 
-            style={{flex:1}}
-            onPress={() => setModalVisible2(false)}
-            />
-            <View style={{flex:7, backgroundColor: "white",shadowColor: "#000",shadowOffset: { width:0, height:2}, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, borderRadius:10, padding:20}}>
-              <View style={{flexDirection:'row', alignItems:'center'}}>
-                <View style={{ backgroundColor: 'grey', width:48, height:48, borderRadius: 24, marginRight:10}}>
-                  <Image 
-                    src={selectedChatRoom.imageAddress}
-                    style={{width:48, height:48, borderRadius: 24}}/>
-                </View>
-                <View>
-                  <Text style= {{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#000'}} numberOfLines={1} ellipsizeMode="tail">{selectedChatRoom.title}</Text>
-                </View>
-              </View>
-              <View style={{flex:1}}/>
-              <Text style={{fontFamily: "Pretendard-Regular", fontSize: 14, color: '#6B7079'}}>{t("ChatList.leaveChatRoom?")}</Text>
-              <View style={{flex:1}}/>
-              <View style={{flexDirection:'row', alignItems:'center'}}>
-                <View style={{flex:2}}/>
-                <TouchableOpacity 
-                  onPress={() => setModalVisible2(false)}
-                >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#6B7079'}}>{t("ChatList.cancel")}</Text>
-                </TouchableOpacity>
-                <View style={{flex:1}}/>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible2(false)
-                    leaveChatRoom(selectedChatRoom)
-                  }}
-                >
-                  <Text style={{fontFamily: "Pretendard-SemiBold", fontSize: 16, color: '#EC3232'}}>{t("ChatList.leave")}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <TouchableOpacity 
-            style={{flex:1}}
-            onPress={() => setModalVisible2(false)}
-            />
-          </View>
-          <TouchableOpacity 
-            style={{flex:5}}
-            onPress={() => setModalVisible2(false)}/>
-        </View>
-      </Modal>
-      <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-          }}
-      >
-        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <TouchableOpacity style={{flex:3}}
-            onPress={() => setModalVisible(false)}/>
-          <View style={{
-            borderTopRightRadius: 10,
-            borderTopLeftRadius:10,
-            flex:1,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-          }}>
-            <View style={{flex:6, justifyContent: 'center', borderColor: '#e3e3e3', borderBottomWidth:0.7}}>
-              <Text style={{fontFamily:'Pretendard-SemiBold', fontSize:16, color:'#000', paddingLeft:15}}>{selectedChatRoom.title}</Text>
-            </View>
-            <View style={{flex:0.5}}/>
-            <TouchableOpacity
-            style={{flex:5, justifyContent: 'center'}}
-              onPress={() => {
-                setModalVisible2(true)
-                setModalVisible(false)
-                }}
-            >
-              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#EC3232', paddingLeft:15}}>{t("ChatList.leaveChatRoom")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-            style={{flex:5, justifyContent: 'center'}}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={{fontFamily:'Pretendard-Medium', fontSize:15, color:'#000', paddingLeft:15}}>{t("ChatList.cancel")}</Text>
-            </TouchableOpacity>
-            <View style={{flex:1}}/>
-          </View>
-        </View>
-      </Modal>
+      <LeaveChatRoomModal
+        modalVisible={modalVisible2}
+        setModalVisible={setModalVisible2}
+        selectedChatRoom={selectedChatRoom}
+        leaveChatRoom={leaveChatRoom}
+        askLeaveChatRoom={t("ChatList.leaveChatRoom?")}
+        cancel={t("ChatList.cancel")}
+        leave={t("ChatList.leave")}
+      />
+      <ChatRoomInfoModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        openLeaveChatRoomModal={setModalVisible2}
+        selectedChatRoom={selectedChatRoom}
+        leaveChatRoom={t("ChatList.leaveChatRoom")}
+        cancel={t("ChatList.cancel")}
+      />
       <FlatList
         data={chatData}
         renderItem={({item}) => <ChatListItem t={t} item = {item} goChatRoom = {goChatRoom} setModalVisible = {setModalVisible} setSelectedChatRoom = {setSelectedChatRoom}/>}
