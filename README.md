@@ -1,79 +1,234 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Glomeet 클라이언트
 
-# Getting Started
+## 소개
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Glomeet은 재학생과 교환학생 간의 교류를 활성화하기 위한 매칭과 미팅 서비스입니다.
+최근 국내 대학교에서 교환학생의 비율이 높아지고 있는것에 비해 교환학생과의 교류가 적은 것에 아쉬움을 느껴 기획했습니다.
+서비스는 실시간 매칭, 채팅, JWT 기반 로그인 등 다양한 기능을 제공합니다.
 
-## Step 1: Start the Metro Server
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 배포
 
-To start Metro, run the following command from the _root_ of your React Native project:
+서비스 시작 - 24.05.27 ~
+앱스토어 : https://apps.apple.com/kr/app/glomeet/id6502836378
+
+## 프로젝트 정보
+
+- **개발 인원:** 2명
+- **개발 기간:** 2024.01.01 ~
+
+## 기술 스택
+
+Java 17
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
+
+<img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=yellow">
+
+
+### 협업 툴
+
+<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=yellow"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=yellow">
+
+## 기능 시연 및 구현 방법
+
+### 읽지 않은 메시지 개수 및 마지막 메시지
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/31926cf9-cbc1-4be0-a542-ad7fe2de6547
+
+- 메시지의 타입을 ENTER, EXIT으로 나누어 사용자가 채팅방에 입장, 퇴장할 때를 파악했습니다.
+- ENTER, EXIT 타입의 메시지가 발행되면 서버는 MongoDB의 LastReadAt 컬렉션을 업데이트합니다.
+- 채팅탭으로 들어가면 LastReadAt을 찾고, 그 시간 이후의 메시지 중 해당 채팅방의 SEND 타입인 메시지를 찾아 카운트하여 반환합니다.
+- 각 메시지가 저장되는 시간은 밀리초까지 저장하여 카운트의 정확도를 높일 수 있었습니다.
+- **마지막 메시지**는 SEND타입의 메시지가 발행되면 채팅방 별 LastMessage를 캐싱하여 관리했습니다.
+
+---
+
+### 모임 참여 : 운동, 문화 등 교류할 수 있는 활동을 만들고 참여하는 기능
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/11a908cc-9fe2-4ba2-a94f-4a6e29b4fd7c
+
+- 미팅에 속한 유저는 상태를 ACTIVE, INACTIVE로 분류하여 관리했습니다.
+- MeetingUser또한 입장시간을 밀리초까지 저장하여 입장한 이후의 메시지만 표시할 수 있도록 구현했습니다.
+- 나가거나 신고당한 유저는 INACTIVE로 변경됩니다.
+
+---
+
+### 매칭 시작/취소
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/fa55e362-3ba5-4905-8a46-3e8bc8d5cf35
+
+--- 
+
+### 프로필사진 변경
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/b07a5636-25b8-4558-9c5d-7ef5a0d48fc6
+
+---
+
+### 매칭 성사 : 관심사가 맞는 재학생과 교환학생을 매칭
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/2b3cd0db-7f2c-4d4e-a30c-13d4fd6687fd
+
+- 매칭은 재학생/외국인학생 두 분류의 Redis 큐로 나누어 관리했습니다.
+- 대기열에 있는 두 유저의 성향을 확인한 후 일치하는 성향이 있는 유저들을 우선 매칭시킵니다.
+- 만약 성향이 일치하는 유저가 없다면 무작위로 두 유저가 매칭됩니다.
+- Spring 스케쥴러를 사용해 5초마다 매칭을 시도하도록 구현하였습니다.
+
+---
+
+### 유저 차단 : 차단한 이후의 메시지와 컨텐츠를 볼 수 없습니다.
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/aa7a7ddd-4370-4571-a578-bb7bf05ad014
+
+- 채팅방에 입장시 본인이 차단한 유저들의 닉네임을 주어 해당 유저들이 발행한 메시지를 볼 수 없게 필터링했습니다.
+
+---
+
+## ERD
+
+<img width="788" alt="image" src="https://github.com/swoolee97/glomeet-server/assets/73256853/1fc63869-0768-486b-8135-4df6bcc3a564">
+
+## 디렉토리 구조
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+├── GlomeetApplication.java
+├── auth
+│   ├── ExceptionHandlerFilter.java
+│   ├── JwtAuthenticationFilter.java
+│   └── JwtTokenProvider.java
+├── config
+│   ├── FCMConfig.java
+│   ├── MessageConfig.java
+│   ├── MongoConfig.java
+│   ├── MyBatisConfig.java
+│   ├── RedisConfig.java
+│   ├── S3Config.java
+│   ├── SecurityConfig.java
+│   └── WebSocketConfig.java
+├── constants
+│   ├── AdditionalInfo.java
+│   ├── RedisConstants.java
+│   └── WebSocketConstants.java
+├── controller
+│   ├── AuthController.java
+│   ├── BlockController.java
+│   ├── ChattingController.java
+│   ├── FCMController.java
+│   ├── HealthyController.java
+│   ├── ImageController.java
+│   ├── MailController.java
+│   ├── MatchController.java
+│   ├── MatchingController.java
+│   ├── MatchingListRequestDTO.java
+│   ├── MeetingController.java
+│   ├── MessageController.java
+│   ├── NotificationController.java
+│   ├── PointController.java
+│   ├── ReportController.java
+│   ├── TokenController.java
+│   └── UserController.java
+├── dto
+│   ├── BlockDTO.java
+│   ├── ChatInfoDTO.java
+│   ├── ChatMessageDTO.java
+│   ├── ChattingStatusDTO.java
+│   ├── CountMeetingDTO.java
+│   ├── FCMMessage.java
+│   ├── LoginResponseDTO.java
+│   ├── MatchingMessageDTO.java
+│   ├── MatchingResultDTO.java
+│   ├── MeetingCreateRequestDTO.java
+│   ├── MeetingInfoDTO.java
+│   ├── MeetingReportRequestDTO.java
+│   ├── MemberDTO.java
+│   ├── MemberJoinRequestDTO.java
+│   ├── MessageListRequestDTO.java
+│   ├── PushMessageRequestDTO.java
+│   ├── ResponseBody.java
+│   ├── TokenDTO.java
+│   ├── UpdateLastReadTimeDTO.java
+│   ├── UserDTO.java
+│   └── UserReportRequestDTO.java
+├── entity
+│   ├── Block.java
+│   ├── ChatInfoInterface.java
+│   ├── ChatRoom.java
+│   ├── FcmToken.java
+│   ├── MatchingRoom.java
+│   ├── MatchingUser.java
+│   ├── MatchingUserId.java
+│   ├── Meeting.java
+│   ├── MeetingInfoInterface.java
+│   ├── MeetingReport.java
+│   ├── MeetingUser.java
+│   ├── MeetingUserId.java
+│   ├── Member.java
+│   ├── Message.java
+│   ├── Point.java
+│   ├── RefreshToken.java
+│   └── UserReport.java
+├── exception
+│   ├── AccessDeniedHandlerImpl.java
+│   ├── DuplicatedUserBlockException.java
+│   ├── FCMTokenNotFoundException.java
+│   ├── FCMTokenNotFoundExceptionHandler.java
+│   ├── GlobalExceptionHandler.java
+│   └── InvalidSchoolEmailException.java
+├── mapper
+│   └── MatchingMapper.java
+├── message
+│   ├── DatabaseMessageRetriever.java
+│   ├── MessageFinder.java
+│   ├── MessageRetriever.java
+│   └── RedisMessageRetriever.java
+├── mongo
+│   └── model
+│       ├── ChatMessage.java
+│       ├── LastReadTime.java
+│       ├── MeetingMessage.java
+│       └── Sequence.java
+├── repository
+│   ├── BlockRepository.java
+│   ├── ChatMessageRepository.java
+│   ├── ChatMessageRepositoryCustom.java
+│   ├── ChatMessageRepositoryCustomImpl.java
+│   ├── EmitterRepository.java
+│   ├── FCMTokenRepository.java
+│   ├── LastReadTimeRepository.java
+│   ├── MatchingRepository.java
+│   ├── MatchingRoomRepository.java
+│   ├── MatchingUserRepository.java
+│   ├── MeetingReportRepository.java
+│   ├── MeetingRepository.java
+│   ├── MeetingUserRepository.java
+│   ├── MemberRepository.java
+│   ├── PointRepository.java
+│   ├── RefreshTokenRepository.java
+│   ├── UserReportRepository.java
+│   └── VerificationRepository.java
+├── response
+│   └── Response.java
+├── security
+│   └── CustomAuthenticationEntryPoint.java
+├── service
+│   ├── AuthService.java
+│   ├── BlockService.java
+│   ├── ChattingService.java
+│   ├── CustomSessionExpiredStrategy.java
+│   ├── FCMService.java
+│   ├── ImageService.java
+│   ├── MailService.java
+│   ├── MatchService.java
+│   ├── MatchingService.java
+│   ├── MeetingService.java
+│   ├── MemberService.java
+│   ├── MessageService.java
+│   ├── NotificationService.java
+│   ├── PointService.java
+│   ├── ReportService.java
+│   ├── S3Service.java
+│   ├── StompHandler.java
+│   ├── TokenService.java
+│   ├── UserDetailsServiceImpl.java
+│   └── UserService.java
 ```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
