@@ -18,7 +18,7 @@ Glomeet은 재학생과 교환학생 간의 교류를 활성화하기 위한 매
 - **개발 기간:** 2024.01.01 ~
 
 ## 기술 스택
-<img src="https://img.shields.io/badge/JavaScriptF7DF1E?style=for-the-badge&logo=React&logoColor=black">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
 <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=yellow">
 
