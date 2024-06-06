@@ -7,7 +7,16 @@ Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 
 - 매칭 기능과 모임 기능을 통해 외국인 유학생들의 한국 적응을 돕고자 합니다.
 - 또한 한국인 재학생들에게는 외국인 친구들과 교류할 기회를 제공하고자 합니다.
 
-## 소개
+## 프로젝트 소개
+
+![002](https://github.com/hwansoo17/Glomeet/assets/138691211/13e92236-d4fb-4e1e-b73c-c8aa8c6b39a9)
+![003](https://github.com/hwansoo17/Glomeet/assets/138691211/5af26e3d-997b-4895-81b0-ca1909ccbb47)
+![006](https://github.com/hwansoo17/Glomeet/assets/138691211/08b15321-6ebc-4fd2-b0d5-741f32dafc9a)
+![007](https://github.com/hwansoo17/Glomeet/assets/138691211/0fbbc479-7838-4ca6-b0c2-13da02b3fbbd)
+![008](https://github.com/hwansoo17/Glomeet/assets/138691211/6c474933-e2f2-40b2-868a-d07444ec39c3)
+![009](https://github.com/hwansoo17/Glomeet/assets/138691211/e516f844-c9d7-4f65-ad1c-8cc78efcfcb8)
+![010](https://github.com/hwansoo17/Glomeet/assets/138691211/07ea2df9-f817-42b3-b404-7e124f67baf6)
+
 
 ## 배포
 
@@ -23,6 +32,7 @@ Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
 <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=yellow">
+![017](https://github.com/hwansoo17/Glomeet/assets/138691211/522edb8d-2477-4dc8-ba58-c2b58527b0e4)
 
 
 ### 협업 툴
@@ -31,19 +41,18 @@ Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 
 
 ## 기능 시연 및 구현 방법
 
-### 읽지 않은 메시지 개수 및 마지막 메시지
+### 채팅 기능 : 매칭이나 모임 가입을 통해 유저들과 채팅할 수 있는 기능
+
+![016](https://github.com/hwansoo17/Glomeet/assets/138691211/7b255e2b-5033-41c2-b15b-fa82dd534416)
 
 https://github.com/swoolee97/glomeet-server/assets/73256853/31926cf9-cbc1-4be0-a542-ad7fe2de6547
 
-- 메시지의 타입을 ENTER, EXIT으로 나누어 사용자가 채팅방에 입장, 퇴장할 때를 파악했습니다.
-- ENTER, EXIT 타입의 메시지가 발행되면 서버는 MongoDB의 LastReadAt 컬렉션을 업데이트합니다.
-- 채팅탭으로 들어가면 LastReadAt을 찾고, 그 시간 이후의 메시지 중 해당 채팅방의 SEND 타입인 메시지를 찾아 카운트하여 반환합니다.
-- 각 메시지가 저장되는 시간은 밀리초까지 저장하여 카운트의 정확도를 높일 수 있었습니다.
-- **마지막 메시지**는 SEND타입의 메시지가 발행되면 채팅방 별 LastMessage를 캐싱하여 관리했습니다.
 
 ---
 
 ### 모임 참여 : 운동, 문화 등 교류할 수 있는 활동을 만들고 참여하는 기능
+
+![014](https://github.com/hwansoo17/Glomeet/assets/138691211/0bd141ab-4c9f-4f87-8c41-d30238d5184c)
 
 https://github.com/swoolee97/glomeet-server/assets/73256853/11a908cc-9fe2-4ba2-a94f-4a6e29b4fd7c
 
@@ -53,26 +62,21 @@ https://github.com/swoolee97/glomeet-server/assets/73256853/11a908cc-9fe2-4ba2-a
 
 ---
 
-### 매칭 시작/취소
+### 매칭 기능 : 취미, 성향을 기반으로 재학생 - 외국인학생, 외국인학생 - 외국인학생을 매칭해주는 기능
+
+![015](https://github.com/hwansoo17/Glomeet/assets/138691211/16e96ca3-fdf1-419e-a2f3-c1c5b48cb922)
 
 https://github.com/swoolee97/glomeet-server/assets/73256853/fa55e362-3ba5-4905-8a46-3e8bc8d5cf35
 
---- 
-
-### 프로필사진 변경
-
-https://github.com/swoolee97/glomeet-server/assets/73256853/b07a5636-25b8-4558-9c5d-7ef5a0d48fc6
-
----
-
-### 매칭 성사 : 관심사가 맞는 재학생과 교환학생을 매칭
-
 https://github.com/swoolee97/glomeet-server/assets/73256853/2b3cd0db-7f2c-4d4e-a30c-13d4fd6687fd
 
-- 매칭은 재학생/외국인학생 두 분류의 Redis 큐로 나누어 관리했습니다.
-- 대기열에 있는 두 유저의 성향을 확인한 후 일치하는 성향이 있는 유저들을 우선 매칭시킵니다.
-- 만약 성향이 일치하는 유저가 없다면 무작위로 두 유저가 매칭됩니다.
-- Spring 스케쥴러를 사용해 5초마다 매칭을 시도하도록 구현하였습니다.
+--- 
+
+### 홈 화면 & 마이페이지 화면
+
+![013](https://github.com/hwansoo17/Glomeet/assets/138691211/877a6721-e34a-4b6f-b852-badd70cac29f)
+
+https://github.com/swoolee97/glomeet-server/assets/73256853/b07a5636-25b8-4558-9c5d-7ef5a0d48fc6
 
 ---
 
