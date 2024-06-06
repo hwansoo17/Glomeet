@@ -48,7 +48,6 @@ Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 
 
 https://github.com/swoolee97/glomeet-server/assets/73256853/31926cf9-cbc1-4be0-a542-ad7fe2de6547
 
-
 ---
 
 ### 모임 참여 : 운동, 문화 등 교류할 수 있는 활동을 만들고 참여하는 기능
@@ -56,10 +55,6 @@ https://github.com/swoolee97/glomeet-server/assets/73256853/31926cf9-cbc1-4be0-a
 ![014](https://github.com/hwansoo17/Glomeet/assets/138691211/0bd141ab-4c9f-4f87-8c41-d30238d5184c)
 
 https://github.com/swoolee97/glomeet-server/assets/73256853/11a908cc-9fe2-4ba2-a94f-4a6e29b4fd7c
-
-- 미팅에 속한 유저는 상태를 ACTIVE, INACTIVE로 분류하여 관리했습니다.
-- MeetingUser또한 입장시간을 밀리초까지 저장하여 입장한 이후의 메시지만 표시할 수 있도록 구현했습니다.
-- 나가거나 신고당한 유저는 INACTIVE로 변경됩니다.
 
 ---
 
