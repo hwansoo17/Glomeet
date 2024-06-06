@@ -32,6 +32,7 @@ Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
 <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=yellow">
+
 ![017](https://github.com/hwansoo17/Glomeet/assets/138691211/522edb8d-2477-4dc8-ba58-c2b58527b0e4)
 
 
