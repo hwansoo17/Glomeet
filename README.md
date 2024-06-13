@@ -1,17 +1,15 @@
-# Glomeet 클라이언트
-
-## 배포
-
-서비스 시작 - 24.05.27 ~
-- 앱스토어 : https://apps.apple.com/kr/app/glomeet/id6502836378
-- 플레이스토어 : https://play.google.com/store/apps/details?id=com.glomeet
-
 ![001](https://github.com/hwansoo17/Glomeet/assets/138691211/de381d6e-a325-4b6b-bc62-02b3ed6cff6e)
 
 Glomeet은 재학생과 외국인학생 간의 교류를 활성화하기 위한 취미 기반 외국인학생 매칭 플랫폼입니다.
 
 - 매칭 기능과 모임 기능을 통해 외국인 유학생들의 한국 적응을 돕고자 합니다.
 - 또한 한국인 재학생들에게는 외국인 친구들과 교류할 기회를 제공하고자 합니다.
+
+## 배포
+
+서비스 시작 - 24.05.27 ~
+- 앱스토어 : https://apps.apple.com/kr/app/glomeet/id6502836378
+- 플레이스토어 : https://play.google.com/store/apps/details?id=com.glomeet
 
 ## 프로젝트 소개
 
